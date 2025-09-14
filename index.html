@@ -3,25 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ METADONNÉES DE BASE                                         ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <title>BlackBones — Hub Twitch</title>
-  <meta name="description" content="Liens, lecteur Twitch, planning, formulaire de contact.">
+  <meta name="description" content="Liens, lecteur Twitch, planning, galerie et contact de BlackBones.">
+
+  <!-- Police (modifiable ou supprimable) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Feuille de style principale -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="theme-dark">
-  <!-- ===== Header ===== -->
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ HEADER — Navigation alignée à gauche + badge LIVE            ║
+       ║ - Pour ajouter un logo, insère une <img> dans .brand         ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <header class="site-header">
     <div class="container header-inner">
+
+      <!-- Marque : ici uniquement le badge LIVE (affiché si la chaîne est en direct) -->
       <a class="brand" href="#top" aria-label="Accueil">
-        <!-- Badge LIVE -->
         <span id="liveBadge" class="live-badge" hidden>LIVE</span>
+        <!-- Exemple si tu veux un logo à gauche :
+        <img src="assets/logo.png" alt="Logo BlackBones" style="height:28px">
+        -->
       </a>
 
-      <button class="btn-icon only-mobile" id="btnMenu" aria-expanded="false" aria-controls="mainNav" aria-label="Ouvrir le menu">☰</button>
-
-      <nav id="mainNav" class="nav">
+      <!-- NAV PRINCIPALE — Ajoute/supprime des <li> selon tes besoins -->
+      <nav id="mainNav" class="nav" aria-label="Navigation principale">
         <ul class="nav-list">
           <li><a href="#top">À propos</a></li>
+
+          <!-- Sous-menu "Réseaux" (liens externes) -->
           <li class="has-submenu">
             <button class="submenu-trigger" aria-haspopup="true" aria-expanded="false">Réseaux</button>
             <ul class="submenu">
@@ -30,27 +47,38 @@
               <li><a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a></li>
             </ul>
           </li>
+
           <li><a href="#links">Liens utiles</a></li>
           <li><a href="#gallery">Galerie</a></li>
           <li><a href="#schedule">Planning</a></li>
           <li><a href="#contact">Contact</a></li>
-          <li><button id="btnTheme" class="btn-secondary" aria-label="Changer de thème">🌙</button></li>
         </ul>
       </nav>
+
+      <!-- Bouton burger (mobile). Active/ferme via JS en ajoutant/retirant .open sur .nav -->
+      <button class="btn-icon only-mobile" id="btnMenu" aria-expanded="false" aria-controls="mainNav" aria-label="Ouvrir le menu">☰</button>
     </div>
   </header>
 
-  <!-- ===== Hero : A propos gauche / Twitch droite ===== -->
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ HERO — À propos (gauche en boxs verticales) + Twitch (droite)║
+       ║ - Titre "À propos" centré                                   ║
+       ║ - Boutons sous le lecteur Twitch                            ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <section class="hero" id="top" aria-label="Présentation">
     <div class="container hero-inner hero-grid">
-      <!-- Colonne gauche -->
+
+      <!-- Colonne gauche : pile de boxs "À propos"
+           ➜ Duplique/supprime un .about-box pour modifier le contenu -->
       <aside class="hero-about">
-        <h1 class="sr-only">À propos</h1>
+        <h1 class="about-title">À propos</h1>
+
         <div class="about-stack">
           <div class="about-box">
             <h3>Qui suis-je ?</h3>
             <p>Je suis <strong>BlackBones</strong>, streamer chill & cosy. Ambiance tranquille, jeux indés & découverte.</p>
           </div>
+
           <div class="about-box">
             <h3>Jeux du moment</h3>
             <ul class="clean">
@@ -59,22 +87,28 @@
               <li>Indés chill</li>
             </ul>
           </div>
+
           <div class="about-box">
             <h3>Horaires</h3>
-            <p>Soirs (Europe/Paris) — voir annonce sur Discord.</p>
+            <p>Soirs (Europe/Paris) — annonces sur Discord.</p>
           </div>
         </div>
       </aside>
 
-      <!-- Colonne droite -->
+      <!-- Colonne droite : lecteur Twitch agrandi + CTA
+           IMPORTANT : le src de l'iframe est défini dans script.js pour injecter le "parent" correct -->
       <div class="hero-player">
         <div class="twitch-embed">
+          <!-- Laisse l'id = "twitchPlayer" (utilisé par script.js) -->
           <iframe id="twitchPlayer" title="Twitch Player" allowfullscreen frameborder="0"></iframe>
-          <small>En local : <code>localhost</code> • En ligne : <code>tonutilisateur.github.io</code></small>
+
+          <!-- Note d'aide (supprimable en prod si tu veux plus "clean")
+               En local => parent=localhost ; En ligne (GitHub Pages) => parent=tonutilisateur.github.io -->
+          <!-- <small>En local : <code>localhost</code> • En ligne : <code>tonutilisateur.github.io</code></small> -->
         </div>
 
-        <!-- ✅ Boutons déplacés ici -->
-        <div class="hero-cta" style="margin-top:16px;">
+        <!-- CTA : modifie les libellés/liens au besoin -->
+        <div class="hero-cta">
           <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
           <a class="btn-outline" href="#links">Parcourir les liens</a>
         </div>
@@ -82,7 +116,10 @@
     </div>
   </section>
 
-  <!-- ===== Links ===== -->
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ LIENS UTILES — Tuiles cliquables                            ║
+       ║ - Remplace/ajoute des <a.link-tile>                         ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <section id="links" class="section alt">
     <div class="container">
       <h2>Liens utiles</h2>
@@ -95,19 +132,24 @@
     </div>
   </section>
 
-  <!-- ===== Gallery ===== -->
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ GALERIE — Remplace les images par les tiennes (assets/*.png) ║
+       ║ - La lightbox fonctionne si ton JS cible .gallery-item       ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <section id="gallery" class="section">
     <div class="container">
       <h2>Galerie</h2>
+
+      <!-- Remplace par tes propres fichiers .png -->
       <div class="gallery-grid">
-        <img loading="lazy" src="https://picsum.photos/seed/1/600/600" alt="Aperçu 1" class="gallery-item"/>
-        <img loading="lazy" src="https://picsum.photos/seed/2/600/600" alt="Aperçu 2" class="gallery-item"/>
-        <img loading="lazy" src="https://picsum.photos/seed/3/600/600" alt="Aperçu 3" class="gallery-item"/>
-        <img loading="lazy" src="https://picsum.photos/seed/4/600/600" alt="Aperçu 4" class="gallery-item"/>
+        <img loading="lazy" src="assets/gallery/shot-01.png" alt="Coulisses du live" class="gallery-item"/>
+        <img loading="lazy" src="assets/gallery/shot-02.png" alt="Setup streaming" class="gallery-item"/>
+        <img loading="lazy" src="assets/gallery/shot-03.png" alt="Moment fun en stream" class="gallery-item"/>
+        <img loading="lazy" src="assets/gallery/shot-04.png" alt="Communauté BlackBones" class="gallery-item"/>
       </div>
     </div>
 
-    <!-- Lightbox -->
+    <!-- Lightbox (facultative) -->
     <div id="lightbox" aria-hidden="true">
       <button class="lb-close" id="lbClose" aria-label="Fermer">×</button>
       <img id="lbImg" alt="" />
@@ -115,51 +157,97 @@
     </div>
   </section>
 
-  <!-- ===== Schedule ===== -->
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ PLANNING — Exemple statique                                 ║
+       ║ - Tu peux remplacer par un Google Agenda embarqué plus tard ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <section id="schedule" class="section alt">
     <div class="container">
-      <h2>Planning</h2>
+      <h2>Planning "Uniquement pour les évènements"</h2>
       <div class="table-wrap">
         <table class="table">
           <thead><tr><th>Jour</th><th>Heure</th><th>Programme</th></tr></thead>
           <tbody>
-            <tr><td>Mardi</td><td>20:30</td><td>Chill & indés</td></tr>
-            <tr><td>Jeudi</td><td>21:00</td><td>Découverte</td></tr>
-            <tr><td>Vendredi</td><td>22:00</td><td>Late stream</td></tr>
+            <tr><td>Lundi</td><td>Pas Prévu</td><td>Evenement ?</td></tr>
+            <tr><td>Mardi</td><td>Pas Prévu</td><td>Evenement ?</td></tr>
+            <tr><td>Mercredi</td><td>Pas Prévu</td><td>Evenement ?</td></tr>
+            <tr><td>Jeudi</td><td>Pas Prévu</td><td>Evenement ?</td></tr>
+            <tr><td>Vendredi</td><td>Pas Prévu</td><td>Evenement ?</td></tr>
+            <tr><td>Samedi</td><td>Pas Prévu</td><td>Evenement ?</td></tr>
+            <tr><td>Dimanche</td><td>Pas Prévu</td><td>Evenement ?</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- ===== Contact ===== -->
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ CONTACT — Formulaire (gauche, plus étroit) + 4 images (droite)║
+       ║ - Grille 0.7fr / 1fr + vignettes 2×2                         ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <section id="contact" class="section">
     <div class="container">
       <h2>Contact</h2>
-      <form action="https://formspree.io/f/TON_ENDPOINT" method="POST" class="card" style="max-width:560px">
-        <label style="display:block; margin-bottom:10px;">Ton email
-          <input type="email" name="email" required autocomplete="email"
-                 style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)">
-        </label>
-        <label style="display:block; margin-bottom:10px;">Message
-          <textarea name="message" rows="5" required
-                    style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)"></textarea>
-        </label>
-        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-        <button class="btn-primary" type="submit">Envoyer</button>
-      </form>
-      <p style="opacity:.7;margin-top:10px">Tu peux aussi passer par le <a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a>.</p>
+
+      <div class="contact-grid">
+        <!-- Formulaire (Formspree) — Remplace TON_ENDPOINT -->
+        <form action="https://formspree.io/f/xrbavbky" method="POST" class="card contact-form">
+          <label style="display:block; margin-bottom:10px;">Ton email
+            <input type="email" name="email" required autocomplete="email"
+                   style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)">
+          </label>
+
+          <label style="display:block; margin-bottom:10px;">Message
+            <textarea name="message" rows="5" required
+                      style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)"></textarea>
+          </label>
+
+          <!-- Honeypot anti-spam (laisse tel quel) -->
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+          <button class="btn-primary" type="submit">Envoyer</button>
+        </form>
+
+        <!-- Colonne droite : 4 vignettes cliquables (2 colonnes × 2 lignes)
+             ➜ Remplace href/src/alt/texte pour chaque tuile -->
+        <div class="contact-links">
+          <a class="contact-thumb" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">
+            <img src="assets/Twitch.png" alt="Aller sur Twitch">
+            <span>Aller sur Twitch</span>
+          </a>
+
+          <a class="contact-thumb" href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">
+            <img src="assets/Discord.png" alt="Rejoindre le Discord">
+            <span>Rejoindre le Discord</span>
+          </a>
+
+          <a class="contact-thumb" href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">
+            <img src="assets/Youtube.png" alt="Voir YouTube">
+            <span>Voir YouTube</span>
+          </a>
+
+          <a class="contact-thumb" href="https://streamlabs.com/blackbonesv2/tip" target="_blank" rel="noopener">
+            <img src="assets/Dons.png" alt="Soutenir la chaîne">
+            <span>Soutenir la chaîne</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tu m'as demandé de retirer la phrase "Tu peux aussi passer par le Discord" : c'est fait. -->
     </div>
   </section>
 
-  <!-- ===== Footer ===== -->
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ FOOTER — Centré + texte en gras (© BlackBones — ...)         ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
   <footer class="site-footer">
     <div class="container">
-      <p>© <span id="year"></span> BlackBones — Tous droits réservés</p>
-      <p class="byline">by BlackBones</p>
+      <p class="copyright"><strong>© BlackBones — Tous droits réservés</strong></p>
     </div>
   </footer>
 
+  <!-- JS principal
+       ➜ Gère l'iframe Twitch (parent auto), le badge LIVE, la lightbox, le menu mobile, etc. -->
   <script src="script.js" defer></script>
 </body>
 </html>

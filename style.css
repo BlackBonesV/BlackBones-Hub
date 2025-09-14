@@ -1,3 +1,6 @@
+/* =======================================================================
+   THEME & VARIABLES — Change les couleurs ici si besoin
+   ======================================================================= */
 :root{
   --bg:#0b0f14;
   --bg-alt:#0f151c;
@@ -9,26 +12,35 @@
   --tile:#162233;
   --shadow:0 8px 24px rgba(0,0,0,.35);
 }
+/* Mode clair optionnel (non activé par défaut) */
 body.theme-light{
   --bg:#f6f8fb; --bg-alt:#fff; --text:#0e1320; --muted:#475569;
   --accent:#0066ff; --card:#fff; --border:#e5e7eb; --tile:#eef2ff;
   --shadow:0 8px 24px rgba(0,0,0,.08);
 }
 
+/* Base typographique */
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:var(--bg); color:var(--text); line-height:1.6;
 }
+
+/* =======================================================================
+   CONTAINER — Version "collée à gauche"
+   Pour revenir à un centrage : width:min(1120px,92%); margin-inline:auto;
+   ======================================================================= */
 .container{
   width:100%;
-  margin:0;          /* supprime le centrage */
-  padding-left:0;    /* enlève tout padding gauche */
-  padding-right:16px;/* garde juste un petit espace à droite si tu veux */
+  margin:0;            /* pas de centrage */
+  padding-left:0;      /* colle au bord gauche */
+  padding-right:16px;  /* petite respiration à droite */
 }
 
-/* ===== Header / Nav ===== */
+/* =======================================================================
+   HEADER & NAVIGATION — Onglets alignés à gauche
+   ======================================================================= */
 .site-header{
   position:sticky; top:0; z-index:50;
   background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0));
@@ -37,37 +49,42 @@ body{
 }
 @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
 
-.header-inner{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
+.header-inner{
+  display:flex; align-items:center; justify-content:flex-start; /* à gauche */
+  gap:20px; padding:12px 0;
+}
 .brand{display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800}
+
+/* Burger (mobile) */
 .btn-icon{font-size:22px; background:transparent; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:10px}
 .only-mobile{display:none}
 
+/* Nav desktop */
 .nav{display:block}
-.nav-list{display:flex; align-items:center; gap:10px; list-style:none; margin:0; padding:0}
-.nav a,.submenu-trigger,.btn-secondary{
+.nav-list{display:flex; align-items:center; gap:18px; list-style:none; margin:0; padding:0}
+.nav a,.submenu-trigger{
   color:var(--text); text-decoration:none; padding:8px 12px; border-radius:10px; border:1px solid transparent;
   position:relative; overflow:hidden;
 }
 .nav a:hover,.submenu-trigger:hover{background:var(--tile); border-color:var(--border)}
-.btn-secondary{background:transparent; border-color:var(--border)}
+/* Soulignement animé */
 .nav a::after,.submenu-trigger::after{
   content:""; position:absolute; left:0; bottom:4px; height:2px; width:0; background:var(--accent); transition:width .3s ease;
 }
 .nav a:hover::after,.submenu-trigger:hover::after{width:100%}
 
-/* Bouton Réseaux lisible */
+/* Bouton "Réseaux" (lisible) */
 .submenu-trigger{
   background:transparent; color:var(--text); border:1px solid var(--border);
-  border-radius:10px; padding:8px 12px; cursor:pointer;
+  border-radius:10px; cursor:pointer;
   transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
 }
 .submenu-trigger:hover{background:var(--tile); border-color:var(--accent); color:var(--accent); transform:translateY(-2px)}
 
-/* Sous-menu animé + puces internes */
+/* Sous-menu animé + puces internes (custom) */
 .has-submenu{position:relative}
 .submenu{
-  position:absolute; top:100%; left:0;
-  min-width:180px;
+  position:absolute; top:100%; left:0; min-width:180px;
   background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
   padding:4px 0;
   opacity:0; transform:translateY(-6px) scaleY(.95);
@@ -75,16 +92,15 @@ body{
   visibility:hidden; pointer-events:none;
 }
 .has-submenu.open .submenu{opacity:1; transform:translateY(0) scaleY(1); visibility:visible; pointer-events:auto}
-
 .submenu ul{margin:0; padding:0}
 .submenu li{list-style:none; position:relative; margin:0}
+/* Puce interne (au lieu des list-style qui "débordent") */
 .submenu li::before{
   content:""; position:absolute; left:12px; top:50%; transform:translateY(-50%);
   width:6px; height:6px; border-radius:50%; background:var(--muted);
   opacity:0; transition:opacity .25s ease, background .2s ease;
 }
 .has-submenu.open .submenu li::before{opacity:1}
-
 .submenu a{
   display:block; padding:8px 12px 8px 28px;
   color:var(--text); border-radius:6px; text-decoration:none;
@@ -93,6 +109,7 @@ body{
 }
 .submenu a:hover{background:var(--tile)}
 .submenu li:hover::before{background:var(--accent)}
+/* Stagger (apparition décalée item par item) */
 .has-submenu.open .submenu li:nth-child(1) a{transition-delay:.05s}
 .has-submenu.open .submenu li:nth-child(2) a{transition-delay:.1s}
 .has-submenu.open .submenu li:nth-child(3) a{transition-delay:.15s}
@@ -100,70 +117,56 @@ body{
 .has-submenu.open .submenu li:nth-child(5) a{transition-delay:.25s}
 .has-submenu.open .submenu a{opacity:1; transform:translateY(0)}
 
-/* ===== Hero (layout global) ===== */
+/* =======================================================================
+   HERO — À propos (colonne gauche) + Twitch (colonne droite)
+   ======================================================================= */
 .hero{
-  padding:0px 0 8px;  /* réduit l’espace sous le player */
+  padding:0 0 8px; /* collé tout en haut (tu avais demandé 0) */
   background:
     radial-gradient(1000px 600px at 80% -30%, rgba(123,211,255,.18), transparent),
     radial-gradient(800px 400px at 10% -20%, rgba(123,211,255,.12), transparent);
 }
-.hero-inner h1{font-size:clamp(28px,4vw,44px); margin:10px 0}
-.accent{color:var(--accent)}
-.hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin:10px 0 16px}
+
+/* Grille : gauche 360px / droite flexible */
+.hero-grid{
+  display:grid; grid-template-columns:360px 1fr; align-items:start; gap:12px;
+}
+
+/* Titre “À propos” centré */
+.about-title{
+  text-align:center; width:100%;
+  font-size:1.8rem; font-weight:800;
+  margin:6px 0 14px;
+}
+
+/* Pile de boxs (colonne) */
+.about-stack{display:flex; flex-direction:column; gap:12px; padding-right:8px}
+.about-box{
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:14px 16px; box-shadow:var(--shadow);
+}
+.about-box h3{margin:0 0 6px; font-size:1.05rem}
+
+/* Lecteur Twitch + CTA sous le player */
+.twitch-embed{margin-top:0}
+.hero-player iframe{width:100%; height:480px; border-radius:12px} /* ↑ augmente ici si tu veux 540px par ex. */
+.hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
+
+/* Boutons */
 .btn-primary,.btn-outline{
   display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; font-weight:600; text-decoration:none; border:1px solid var(--border);
 }
 .btn-primary{background:var(--accent); color:#081018; border-color:transparent}
 .btn-outline{background:transparent; color:var(--text)}
-.twitch-embed{margin-top:8px}
 
-/* ===== Hero grille : À propos gauche / Twitch droite ===== */
-.hero-grid{
-  display:grid;
-  grid-template-columns: 360px 1fr; /* gauche fixe, droite flexible */
-  align-items:start;
-  gap:24px;
-}
-
-/* Pile de boxs À propos */
-.about-stack{display:flex; flex-direction:column; gap:12px}
-.about-box{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px 16px;
-  box-shadow:var(--shadow);
-}
-.about-box h3{margin:0 0 6px; font-size:1.05rem}
-.about-cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:4px}
-
-/* Lecteur Twitch agrandi */
-.hero-player iframe{
-  width:100%;
-  height:480px;   /* hauteur desktop */
-  border-radius:12px;
-}
-.twitch-embed{margin-top:0}
-
-/* Mobile : empile en colonne */
-@media (max-width:900px){
-  .hero-grid{grid-template-columns:1fr}
-  .hero-player iframe{height:360px}
-}
-
-/* ===== Sections ===== */
+/* =======================================================================
+   SECTIONS GÉNÉRIQUES (Liens, Galerie, Planning)
+   ======================================================================= */
 .section{padding:56px 0}
 .section.alt{background:var(--bg-alt)}
 h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
-.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px}
-.card{
-  background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:var(--shadow);
-  transition:transform .25s ease, box-shadow .25s ease;
-}
-.card:hover{transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(0,0,0,.4)}
-.clean{margin:0; padding-left:18px}
 
-/* ===== Liens utiles ===== */
+/* Liens utiles */
 .link-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px}
 .link-tile{
   background:var(--tile); border:1px solid var(--border); border-radius:14px; padding:16px; text-decoration:none; color:var(--text);
@@ -172,11 +175,9 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 .link-tile:hover{transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(0,0,0,.4)}
 .link-tile small{color:var(--muted)}
 
-/* ===== Galerie ===== */
+/* Galerie */
 .gallery-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px}
-.gallery-item{
-  width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s ease;
-}
+.gallery-item{width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s ease}
 .gallery-item:hover{transform:scale(1.02)}
 #lightbox{position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px; z-index:100}
 #lightbox.open{display:flex}
@@ -184,26 +185,76 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 .lb-close{position:absolute; top:20px; right:20px; font-size:28px; line-height:1; background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:4px 10px; cursor:pointer}
 #lbCaption{color:#cbd5e1; margin-top:10px}
 
-/* ===== Table ===== */
+/* Planning (table) */
 .table-wrap{overflow:auto; border-radius:12px; border:1px solid var(--border)}
 .table{width:100%; border-collapse:collapse; background:var(--card)}
 .table th,.table td{padding:12px 14px; border-bottom:1px solid var(--border)}
 .table thead th{background:var(--tile); text-align:left}
 
-/* ===== Footer ===== */
+/* =======================================================================
+   CONTACT — Formulaire plus étroit + grille d’images 2×2
+   ======================================================================= */
+#contact .container{
+  padding-left:16px; /* décale légèrement le titre “Contact” du bord gauche */
+}
+/* ➜ Form (0.7fr) + Images (1fr) : les images ont plus d’espace */
+.contact-grid{
+  display:grid;
+  grid-template-columns: 0.7fr 1fr;
+  gap:20px;
+  align-items:start;
+}
+
+/* Formulaire contenu */
+.contact-form{
+  max-width:500px; /* limite visuelle agréable (ajuste 420–520px si tu veux) */
+  width:100%;
+}
+
+/* Colonne images : 2 colonnes × 2 lignes */
+.contact-links{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
+  grid-auto-rows: auto;
+  gap:16px;
+}
+.contact-thumb{
+  display:block; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+  text-decoration:none; color:var(--text);
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.contact-thumb img{
+  width:100%; height:160px; object-fit:cover; display:block; /* ↑ hauteur des vignettes */
+}
+.contact-thumb span{ display:block; padding:10px 12px; font-weight:600; }
+.contact-thumb:hover{ transform:translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.4); border-color:var(--accent); }
+
+/* =======================================================================
+   FOOTER
+   ======================================================================= */
 .site-footer{padding:36px 0; border-top:1px solid var(--border); background:var(--bg-alt)}
 .site-footer .byline{text-align:center; opacity:.7; margin-top:8px}
 
-/* ===== LIVE badge ===== */
+/* =======================================================================
+   BADGE LIVE — petit pill rouge animé
+   ======================================================================= */
 .live-badge{
   margin-left:10px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.5px;
   background:#ff2d55; color:#fff; box-shadow:0 0 0 0 rgba(255,45,85,.7); animation:pulse 1.6s infinite;
 }
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}70%{box-shadow:0 0 0 10px rgba(255,45,85,0)}100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}
+  70%{box-shadow:0 0 0 10px rgba(255,45,85,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}
+}
 
-/* ===== Responsive nav ===== */
+/* =======================================================================
+   RESPONSIVE — Mobile & tablettes
+   ======================================================================= */
 @media (max-width:960px){
   .only-mobile{display:inline-flex}
+
+  /* Menu mobile (à ouvrir via JS en ajoutant .open sur .nav) */
   .nav{display:none}
   .nav.open{
     display:block; position:absolute; top:64px; left:0; right:0; background:var(--card); padding:8px 0;
@@ -211,9 +262,18 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
   }
   .nav-list{flex-direction:column; align-items:stretch}
   .has-submenu .submenu{position:static; margin-top:6px; min-width:unset}
+
+  /* Hero empilé + player plus petit */
+  .hero-grid{grid-template-columns:1fr}
+  .hero-player iframe{height:360px}
+
+  /* Contact empilé (form au-dessus, images en dessous, 1 colonne) */
+  .contact-grid{grid-template-columns:1fr}
+  .contact-links{grid-template-columns:1fr}
 }
-.about-title{
-  text-align:center;
-  font-size:1.6rem;
-  margin-bottom:14px;
+/* Footer : centrer le texte et enlever les marges parasites */
+.site-footer .container{ text-align:center; }
+.site-footer .copyright{
+  margin:0;
+  font-weight:800;   /* garde bien le gras */
 }
