@@ -67,3 +67,23 @@ lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLightbox(); });
     player.src = `https://player.twitch.tv/?channel=${encodeURIComponent(channel)}&parent=${encodeURIComponent(parent)}`;
   }
 })();
+// ===== Badge LIVE (via DecAPI — pas de clé requise) =====
+// Renvoie un texte type "BlackBonesV2 is offline" ou "is live..."
+(async function liveBadgeOnce(){
+  const channel = "blackbonesv2";              // ← ton channel
+  const badge = document.getElementById('liveBadge');
+  if (!badge) return;
+
+  try{
+    const res = await fetch(`https://decapi.me/twitch/status/${encodeURIComponent(channel)}`, { cache: "no-store" });
+    const txt = (await res.text()).toLowerCase();
+    const online = txt.includes("live") && !txt.includes("offline");
+    badge.hidden = !online;
+  }catch(e){
+    console.warn("LIVE badge error:", e);
+    badge.hidden = true;
+  }
+})();
+
+// (Optionnel) Re-check toutes les 60s :
+// setInterval(() => liveBadgeOnce(), 60000);

@@ -16,7 +16,8 @@
         <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9S3 16.97 3 12zm9-6a1 1 0 011 1v8a1 1 0 11-2 0V7a1 1 0 011-1zm0 12a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z"/>
         </svg>
-        <span>BlackBones</span>
+      <a class="brand" href="#top" aria-label="Accueil">
+        <span id="liveBadge" class="live-badge" hidden>LIVE</span>
       </a>
 
       <button class="btn-icon only-mobile" id="btnMenu" aria-expanded="false" aria-controls="mainNav" aria-label="Ouvrir le menu">☰</button>
@@ -45,8 +46,8 @@
   <!-- ===== Hero ===== -->
   <section class="hero" id="top">
     <div class="container hero-inner">
-      <h1>Bienvenue sur le Hub Twitch de <span class="accent">BlackBones</span></h1>
-      <p>Retrouve ici tous mes liens, infos, médias et façons de me contacter.</p>
+      <h1>Bienvenue au Palais des Bains de <span class="accent">BlackBones</span></h1>
+      <p>Retrouve ici tous mes liens et informations</p>
       <div class="hero-cta">
         <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
         <a class="btn-outline" href="#links">Parcourir les liens</a>
@@ -66,7 +67,7 @@
     <div class="container">
       <h2>À propos</h2>
       <div class="cards">
-        <article class="card"><h3>Jeux du moment</h3><ul class="clean"><li>Stardew Valley</li><li>FFXIV</li><li>Indés chill</li></ul></article>
+        <article class="card"><h3>Jeux du moment</h3><ul class="clean"><li>League Of Legends</li><li>Apex Legends</li><li>Counter Strike 2</li></ul></article>
         <article class="card"><h3>Ambiance</h3><p>Doux, chaleureux. 🍃</p></article>
         <article class="card"><h3>Horaires</h3><p>En soirée (Europe/Paris)</p></article>
       </div>
@@ -123,13 +124,33 @@
     </div>
   </section>
 
-  <!-- ===== Contact ===== -->
-  <section id="contact" class="section">
-    <div class="container">
-      <h2>Contact & crédits</h2>
-      <p>Aucun contact direct, rejoins le <a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a> pour échanger !</p>
-    </div>
-  </section>
+<!-- ===== Contact ===== -->
+<section id="contact" class="section">
+  <div class="container">
+    <h2>Contact</h2>
+
+    <form action="https://formspree.io/f/xrbavbky" method="POST" class="card" style="max-width:560px">
+      <label style="display:block; margin-bottom:10px;">Ton email
+        <input type="email" name="email" required autocomplete="email"
+               style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)">
+      </label>
+
+      <label style="display:block; margin-bottom:10px;">Message
+        <textarea name="message" rows="5" required
+                  style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)"></textarea>
+      </label>
+
+      <!-- Anti-spam honeypot (facultatif mais utile) -->
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+      <button class="btn-primary" type="submit">Envoyer</button>
+    </form>
+
+    <p style="opacity:.7;margin-top:10px">
+      Tu peux aussi passer par le <a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a>.
+    </p>
+  </div>
+</section>
 
   <footer class="site-footer">
     <div class="container">
