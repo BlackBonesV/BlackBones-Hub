@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BlackBones — Hub Twitch</title>
+  <meta name="description" content="Liens, photos, infos et contacts de ma chaîne Twitch." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-dark">
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Accueil">
+        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9S3 16.97 3 12zm9-6a1 1 0 011 1v8a1 1 0 11-2 0V7a1 1 0 011-1zm0 12a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z"/>
+        </svg>
+        <span>BlackBones</span>
+      </a>
+
+      <button class="btn-icon only-mobile" id="btnMenu" aria-expanded="false" aria-controls="mainNav" aria-label="Ouvrir le menu">☰</button>
+
+      <nav id="mainNav" class="nav">
+        <ul class="nav-list">
+          <li><a href="#about">À propos</a></li>
+          <li class="has-submenu">
+            <button class="submenu-trigger" aria-haspopup="true" aria-expanded="false">Réseaux</button>
+            <ul class="submenu">
+              <li><a href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">Twitch</a></li>
+              <li><a href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">YouTube</a></li>
+              <li><a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a></li>
+            </ul>
+          </li>
+          <li><a href="#links">Liens utiles</a></li>
+          <li><a href="#gallery">Galerie</a></li>
+          <li><a href="#schedule">Planning</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><button id="btnTheme" class="btn-secondary" aria-label="Changer de thème">🌙</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <h1>Bienvenue sur le Hub Twitch de <span class="accent">BlackBones</span></h1>
+      <p>Retrouve ici tous mes liens, infos, médias et façons de me contacter.</p>
+      <div class="hero-cta">
+        <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
+        <a class="btn-outline" href="#links">Parcourir les liens</a>
+      </div>
+
+      <!-- Twitch Player -->
+      <div class="twitch-embed">
+        <iframe id="twitchPlayer" title="Twitch Player" allowfullscreen frameborder="0"></iframe>
+        <small>En local, le parent est <code>localhost</code>.  
+        Sur GitHub Pages : <code>tonutilisateur.github.io</code>.</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2>À propos</h2>
+      <div class="cards">
+        <article class="card"><h3>Jeux du moment</h3><ul class="clean"><li>Stardew Valley</li><li>FFXIV</li><li>Indés chill</li></ul></article>
+        <article class="card"><h3>Ambiance</h3><p>Doux, chaleureux. 🍃</p></article>
+        <article class="card"><h3>Horaires</h3><p>En soirée (Europe/Paris)</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Links ===== -->
+  <section id="links" class="section alt">
+    <div class="container">
+      <h2>Liens utiles</h2>
+      <div class="link-grid">
+        <a class="link-tile" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener"><span>🎮 Twitch</span><small>Suivre + s’abonner</small></a>
+        <a class="link-tile" href="https://streamlabs.com/blackbonesv2/tip" target="_blank" rel="noopener"><span>💜 Dons</span><small>Soutenir la chaîne</small></a>
+        <a class="link-tile" href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener"><span>💬 Discord</span><small>Rejoins la commu</small></a>
+        <a class="link-tile" href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener"><span>▶️ YouTube</span><small>VOD & vidéos</small></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Gallery ===== -->
+  <section id="gallery" class="section">
+    <div class="container">
+      <h2>Galerie</h2>
+      <div class="gallery-grid">
+        <img src="https://picsum.photos/seed/1/600/600" alt="Aperçu 1" class="gallery-item"/>
+        <img src="https://picsum.photos/seed/2/600/600" alt="Aperçu 2" class="gallery-item"/>
+        <img src="https://picsum.photos/seed/3/600/600" alt="Aperçu 3" class="gallery-item"/>
+        <img src="https://picsum.photos/seed/4/600/600" alt="Aperçu 4" class="gallery-item"/>
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" aria-hidden="true">
+      <button class="lb-close" id="lbClose" aria-label="Fermer">×</button>
+      <img id="lbImg" alt="" />
+      <p id="lbCaption"></p>
+    </div>
+  </section>
+
+  <!-- ===== Schedule ===== -->
+  <section id="schedule" class="section alt">
+    <div class="container">
+      <h2>Planning</h2>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Jour</th><th>Heure</th><th>Programme</th></tr></thead>
+          <tbody>
+            <tr><td>Mardi</td><td>20:30</td><td>Chill & indés</td></tr>
+            <tr><td>Jeudi</td><td>21:00</td><td>Découverte</td></tr>
+            <tr><td>Vendredi</td><td>22:00</td><td>Late stream</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2>Contact & crédits</h2>
+      <p>Aucun contact direct, rejoins le <a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a> pour échanger !</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> BlackBones — Tous droits réservés</p>
+      <p class="byline">by BlackBones</p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
