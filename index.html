@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BlackBones — Hub Twitch</title>
-  <meta name="description" content="Liens, photos, infos et contacts de ma chaîne Twitch." />
+  <meta name="description" content="Liens, lecteur Twitch, planning, formulaire de contact.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -13,10 +13,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="#top" aria-label="Accueil">
-        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9S3 16.97 3 12zm9-6a1 1 0 011 1v8a1 1 0 11-2 0V7a1 1 0 011-1zm0 12a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z"/>
-        </svg>
-      <a class="brand" href="#top" aria-label="Accueil">
+        <!-- Badge LIVE -->
         <span id="liveBadge" class="live-badge" hidden>LIVE</span>
       </a>
 
@@ -24,7 +21,7 @@
 
       <nav id="mainNav" class="nav">
         <ul class="nav-list">
-          <li><a href="#about">À propos</a></li>
+          <li><a href="#top">À propos</a></li>
           <li class="has-submenu">
             <button class="submenu-trigger" aria-haspopup="true" aria-expanded="false">Réseaux</button>
             <ul class="submenu">
@@ -43,33 +40,44 @@
     </div>
   </header>
 
-  <!-- ===== Hero ===== -->
-  <section class="hero" id="top">
-    <div class="container hero-inner">
-      <h1>Bienvenue au Palais des Bains de <span class="accent">BlackBones</span></h1>
-      <p>Retrouve ici tous mes liens et informations</p>
-      <div class="hero-cta">
-        <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
-        <a class="btn-outline" href="#links">Parcourir les liens</a>
-      </div>
+  <!-- ===== Hero : A propos gauche / Twitch droite ===== -->
+  <section class="hero" id="top" aria-label="Présentation">
+    <div class="container hero-inner hero-grid">
+      <!-- Colonne gauche -->
+      <aside class="hero-about">
+        <h1 class="sr-only">À propos</h1>
+        <div class="about-stack">
+          <div class="about-box">
+            <h3>Qui suis-je ?</h3>
+            <p>Je suis <strong>BlackBones</strong>, streamer chill & cosy. Ambiance tranquille, jeux indés & découverte.</p>
+          </div>
+          <div class="about-box">
+            <h3>Jeux du moment</h3>
+            <ul class="clean">
+              <li>Stardew Valley</li>
+              <li>FFXIV</li>
+              <li>Indés chill</li>
+            </ul>
+          </div>
+          <div class="about-box">
+            <h3>Horaires</h3>
+            <p>Soirs (Europe/Paris) — voir annonce sur Discord.</p>
+          </div>
+        </div>
+      </aside>
 
-      <!-- Twitch Player -->
-      <div class="twitch-embed">
-        <iframe id="twitchPlayer" title="Twitch Player" allowfullscreen frameborder="0"></iframe>
-        <small>En local, le parent est <code>localhost</code>.  
-        Sur GitHub Pages : <code>tonutilisateur.github.io</code>.</small>
-      </div>
-    </div>
-  </section>
+      <!-- Colonne droite -->
+      <div class="hero-player">
+        <div class="twitch-embed">
+          <iframe id="twitchPlayer" title="Twitch Player" allowfullscreen frameborder="0"></iframe>
+          <small>En local : <code>localhost</code> • En ligne : <code>tonutilisateur.github.io</code></small>
+        </div>
 
-  <!-- ===== About ===== -->
-  <section id="about" class="section">
-    <div class="container">
-      <h2>À propos</h2>
-      <div class="cards">
-        <article class="card"><h3>Jeux du moment</h3><ul class="clean"><li>League Of Legends</li><li>Apex Legends</li><li>Counter Strike 2</li></ul></article>
-        <article class="card"><h3>Ambiance</h3><p>Doux, chaleureux. 🍃</p></article>
-        <article class="card"><h3>Horaires</h3><p>En soirée (Europe/Paris)</p></article>
+        <!-- ✅ Boutons déplacés ici -->
+        <div class="hero-cta" style="margin-top:16px;">
+          <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
+          <a class="btn-outline" href="#links">Parcourir les liens</a>
+        </div>
       </div>
     </div>
   </section>
@@ -92,10 +100,10 @@
     <div class="container">
       <h2>Galerie</h2>
       <div class="gallery-grid">
-        <img src="https://picsum.photos/seed/1/600/600" alt="Aperçu 1" class="gallery-item"/>
-        <img src="https://picsum.photos/seed/2/600/600" alt="Aperçu 2" class="gallery-item"/>
-        <img src="https://picsum.photos/seed/3/600/600" alt="Aperçu 3" class="gallery-item"/>
-        <img src="https://picsum.photos/seed/4/600/600" alt="Aperçu 4" class="gallery-item"/>
+        <img loading="lazy" src="https://picsum.photos/seed/1/600/600" alt="Aperçu 1" class="gallery-item"/>
+        <img loading="lazy" src="https://picsum.photos/seed/2/600/600" alt="Aperçu 2" class="gallery-item"/>
+        <img loading="lazy" src="https://picsum.photos/seed/3/600/600" alt="Aperçu 3" class="gallery-item"/>
+        <img loading="lazy" src="https://picsum.photos/seed/4/600/600" alt="Aperçu 4" class="gallery-item"/>
       </div>
     </div>
 
@@ -124,34 +132,27 @@
     </div>
   </section>
 
-<!-- ===== Contact ===== -->
-<section id="contact" class="section">
-  <div class="container">
-    <h2>Contact</h2>
+  <!-- ===== Contact ===== -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2>Contact</h2>
+      <form action="https://formspree.io/f/TON_ENDPOINT" method="POST" class="card" style="max-width:560px">
+        <label style="display:block; margin-bottom:10px;">Ton email
+          <input type="email" name="email" required autocomplete="email"
+                 style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)">
+        </label>
+        <label style="display:block; margin-bottom:10px;">Message
+          <textarea name="message" rows="5" required
+                    style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)"></textarea>
+        </label>
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <button class="btn-primary" type="submit">Envoyer</button>
+      </form>
+      <p style="opacity:.7;margin-top:10px">Tu peux aussi passer par le <a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a>.</p>
+    </div>
+  </section>
 
-    <form action="https://formspree.io/f/xrbavbky" method="POST" class="card" style="max-width:560px">
-      <label style="display:block; margin-bottom:10px;">Ton email
-        <input type="email" name="email" required autocomplete="email"
-               style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)">
-      </label>
-
-      <label style="display:block; margin-bottom:10px;">Message
-        <textarea name="message" rows="5" required
-                  style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)"></textarea>
-      </label>
-
-      <!-- Anti-spam honeypot (facultatif mais utile) -->
-      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-
-      <button class="btn-primary" type="submit">Envoyer</button>
-    </form>
-
-    <p style="opacity:.7;margin-top:10px">
-      Tu peux aussi passer par le <a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a>.
-    </p>
-  </div>
-</section>
-
+  <!-- ===== Footer ===== -->
   <footer class="site-footer">
     <div class="container">
       <p>© <span id="year"></span> BlackBones — Tous droits réservés</p>

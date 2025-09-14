@@ -21,8 +21,12 @@ body{
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:var(--bg); color:var(--text); line-height:1.6;
 }
-
-.container{width:min(1120px,92%); margin-inline:auto}
+.container{
+  width:100%;
+  margin:0;          /* supprime le centrage */
+  padding-left:0;    /* enlève tout padding gauche */
+  padding-right:16px;/* garde juste un petit espace à droite si tu veux */
+}
 
 /* ===== Header / Nav ===== */
 .site-header{
@@ -34,8 +38,7 @@ body{
 @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
 
 .header-inner{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
-.brand{display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800; letter-spacing:.3px}
-.brand svg{fill:var(--accent)}
+.brand{display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800}
 .btn-icon{font-size:22px; background:transparent; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:10px}
 .only-mobile{display:none}
 
@@ -52,7 +55,7 @@ body{
 }
 .nav a:hover::after,.submenu-trigger:hover::after{width:100%}
 
-/* Bouton Réseaux (option 1 visible en sombre) */
+/* Bouton Réseaux lisible */
 .submenu-trigger{
   background:transparent; color:var(--text); border:1px solid var(--border);
   border-radius:10px; padding:8px 12px; cursor:pointer;
@@ -60,52 +63,36 @@ body{
 }
 .submenu-trigger:hover{background:var(--tile); border-color:var(--accent); color:var(--accent); transform:translateY(-2px)}
 
-/* ===== Sous-menu ===== */
+/* Sous-menu animé + puces internes */
 .has-submenu{position:relative}
-
-/* visible/invisible via opacity/visibility pour permettre l’animation */
 .submenu{
   position:absolute; top:100%; left:0;
   min-width:180px;
   background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
-
-  padding:4px 0;            /* compact */
+  padding:4px 0;
   opacity:0; transform:translateY(-6px) scaleY(.95);
   transform-origin:top; transition:opacity .25s ease, transform .25s ease;
   visibility:hidden; pointer-events:none;
 }
-.has-submenu.open .submenu{
-  opacity:1; transform:translateY(0) scaleY(1);
-  visibility:visible; pointer-events:auto;
-}
+.has-submenu.open .submenu{opacity:1; transform:translateY(0) scaleY(1); visibility:visible; pointer-events:auto}
 
-/* items */
 .submenu ul{margin:0; padding:0}
-.submenu li{
-  list-style:none;           /* on enlève les puces natives */
-  position:relative; margin:0;
-}
-
-/* puce custom interne */
+.submenu li{list-style:none; position:relative; margin:0}
 .submenu li::before{
   content:""; position:absolute; left:12px; top:50%; transform:translateY(-50%);
-  width:6px; height:6px; border-radius:50%;
-  background:var(--muted);
+  width:6px; height:6px; border-radius:50%; background:var(--muted);
   opacity:0; transition:opacity .25s ease, background .2s ease;
 }
 .has-submenu.open .submenu li::before{opacity:1}
 
-/* lien */
 .submenu a{
-  display:block; padding:8px 12px 8px 28px; /* place pour la puce */
+  display:block; padding:8px 12px 8px 28px;
   color:var(--text); border-radius:6px; text-decoration:none;
   opacity:0; transform:translateY(-4px);
   transition:opacity .25s ease, transform .25s ease, background .2s ease;
 }
 .submenu a:hover{background:var(--tile)}
 .submenu li:hover::before{background:var(--accent)}
-
-/* stagger CORRECT basé sur li:nth-child() */
 .has-submenu.open .submenu li:nth-child(1) a{transition-delay:.05s}
 .has-submenu.open .submenu li:nth-child(2) a{transition-delay:.1s}
 .has-submenu.open .submenu li:nth-child(3) a{transition-delay:.15s}
@@ -113,23 +100,56 @@ body{
 .has-submenu.open .submenu li:nth-child(5) a{transition-delay:.25s}
 .has-submenu.open .submenu a{opacity:1; transform:translateY(0)}
 
-/* ===== Hero ===== */
+/* ===== Hero (layout global) ===== */
 .hero{
-  padding:64px 0 32px;
+  padding:0px 0 8px;  /* réduit l’espace sous le player */
   background:
     radial-gradient(1000px 600px at 80% -30%, rgba(123,211,255,.18), transparent),
     radial-gradient(800px 400px at 10% -20%, rgba(123,211,255,.12), transparent);
 }
 .hero-inner h1{font-size:clamp(28px,4vw,44px); margin:10px 0}
 .accent{color:var(--accent)}
-.hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin:10px 0 24px}
+.hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin:10px 0 16px}
 .btn-primary,.btn-outline{
   display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; font-weight:600; text-decoration:none; border:1px solid var(--border);
 }
 .btn-primary{background:var(--accent); color:#081018; border-color:transparent}
 .btn-outline{background:transparent; color:var(--text)}
-.twitch-embed{margin-top:16px}
-.twitch-embed iframe{width:100%; height:360px; border-radius:12px}
+.twitch-embed{margin-top:8px}
+
+/* ===== Hero grille : À propos gauche / Twitch droite ===== */
+.hero-grid{
+  display:grid;
+  grid-template-columns: 360px 1fr; /* gauche fixe, droite flexible */
+  align-items:start;
+  gap:24px;
+}
+
+/* Pile de boxs À propos */
+.about-stack{display:flex; flex-direction:column; gap:12px}
+.about-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+}
+.about-box h3{margin:0 0 6px; font-size:1.05rem}
+.about-cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:4px}
+
+/* Lecteur Twitch agrandi */
+.hero-player iframe{
+  width:100%;
+  height:480px;   /* hauteur desktop */
+  border-radius:12px;
+}
+.twitch-embed{margin-top:0}
+
+/* Mobile : empile en colonne */
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-player iframe{height:360px}
+}
 
 /* ===== Sections ===== */
 .section{padding:56px 0}
@@ -174,7 +194,14 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 .site-footer{padding:36px 0; border-top:1px solid var(--border); background:var(--bg-alt)}
 .site-footer .byline{text-align:center; opacity:.7; margin-top:8px}
 
-/* ===== Responsive ===== */
+/* ===== LIVE badge ===== */
+.live-badge{
+  margin-left:10px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.5px;
+  background:#ff2d55; color:#fff; box-shadow:0 0 0 0 rgba(255,45,85,.7); animation:pulse 1.6s infinite;
+}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}70%{box-shadow:0 0 0 10px rgba(255,45,85,0)}100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}}
+
+/* ===== Responsive nav ===== */
 @media (max-width:960px){
   .only-mobile{display:inline-flex}
   .nav{display:none}
@@ -183,25 +210,10 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
     border-top:1px solid var(--border); border-bottom:1px solid var(--border);
   }
   .nav-list{flex-direction:column; align-items:stretch}
-  .has-submenu .submenu{
-    position:static; margin-top:6px; min-width:unset;
-  }
+  .has-submenu .submenu{position:static; margin-top:6px; min-width:unset}
 }
-/* LIVE badge */
-.live-badge{
-  margin-left:10px;
-  padding:2px 8px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.5px;
-  background:#ff2d55;
-  color:#fff;
-  box-shadow:0 0 0 0 rgba(255,45,85,.7);
-  animation:pulse 1.6s infinite;
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}
-  70%{box-shadow:0 0 0 10px rgba(255,45,85,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}
+.about-title{
+  text-align:center;
+  font-size:1.6rem;
+  margin-bottom:14px;
 }
