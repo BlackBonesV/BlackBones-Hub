@@ -13,6 +13,7 @@
   --shadow:0 8px 24px rgba(0,0,0,.35);
 }
 body.theme-light{
+  /* Mode clair optionnel (non activé par défaut) */
   --bg:#f6f8fb; --bg-alt:#fff; --text:#0e1320; --muted:#475569;
   --accent:#0066ff; --card:#fff; --border:#e5e7eb; --tile:#eef2ff;
   --shadow:0 8px 24px rgba(0,0,0,.08);
@@ -53,6 +54,7 @@ body{
 }
 .brand{display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800}
 
+/* Burger (mobile) */
 .btn-icon{font-size:22px; background:transparent; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:10px}
 .only-mobile{display:none}
 
@@ -64,12 +66,13 @@ body{
   position:relative; overflow:hidden;
 }
 .nav a:hover,.submenu-trigger:hover{background:var(--tile); border-color:var(--border)}
+/* Soulignement animé des items */
 .nav a::after,.submenu-trigger::after{
   content:""; position:absolute; left:0; bottom:4px; height:2px; width:0; background:var(--accent); transition:width .3s ease;
 }
 .nav a:hover::after,.submenu-trigger:hover::after{width:100%}
 
-/* Sous-menu animé + puces internes */
+/* Sous-menu “Réseaux” animé + puces internes */
 .submenu-trigger{
   background:transparent; color:var(--text); border:1px solid var(--border);
   border-radius:10px; cursor:pointer;
@@ -88,6 +91,7 @@ body{
 .has-submenu.open .submenu{opacity:1; transform:translateY(0) scaleY(1); visibility:visible; pointer-events:auto}
 .submenu ul{margin:0; padding:0}
 .submenu li{list-style:none; position:relative; margin:0}
+/* Puce interne (évite les list-style qui débordent) */
 .submenu li::before{
   content:""; position:absolute; left:12px; top:50%; transform:translateY(-50%);
   width:6px; height:6px; border-radius:50%; background:var(--muted);
@@ -102,6 +106,7 @@ body{
 }
 .submenu a:hover{background:var(--tile)}
 .submenu li:hover::before{background:var(--accent)}
+/* Stagger d’apparition */
 .has-submenu.open .submenu li:nth-child(1) a{transition-delay:.05s}
 .has-submenu.open .submenu li:nth-child(2) a{transition-delay:.1s}
 .has-submenu.open .submenu li:nth-child(3) a{transition-delay:.15s}
@@ -113,7 +118,7 @@ body{
    HERO — À propos (gauche) + Twitch (droite)
    ======================================================================= */
 .hero{
-  padding:0 0 8px; /* collé en haut comme demandé */
+  padding:0 0 8px; /* collé en haut */
   background:
     radial-gradient(1000px 600px at 80% -30%, rgba(123,211,255,.18), transparent),
     radial-gradient(800px 400px at 10% -20%, rgba(123,211,255,.12), transparent);
@@ -121,15 +126,19 @@ body{
 .hero-grid{
   display:grid; grid-template-columns:360px 1fr; align-items:start; gap:12px;
 }
+/* Titre “À propos” centré */
 .about-title{
   text-align:center; width:100%; font-size:1.8rem; font-weight:800; margin:6px 0 14px;
 }
+/* Pile de boxs */
 .about-stack{display:flex; flex-direction:column; gap:12px; padding-right:8px}
 .about-box{
   background:var(--card); border:1px solid var(--border); border-radius:14px;
   padding:14px 16px; box-shadow:var(--shadow);
 }
 .about-box h3{margin:0 0 6px; font-size:1.05rem}
+
+/* Lecteur Twitch + CTA */
 .twitch-embed{margin-top:0}
 .hero-player iframe{width:100%; height:480px; border-radius:12px}
 .hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
@@ -146,6 +155,7 @@ body{
 .section.alt{background:var(--bg-alt)}
 h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 
+/* Liens utiles (tuiles) */
 .link-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px}
 .link-tile{
   background:var(--tile); border:1px solid var(--border); border-radius:14px; padding:16px; text-decoration:none; color:var(--text);
@@ -154,17 +164,25 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 .link-tile:hover{transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(0,0,0,.4)}
 .link-tile small{color:var(--muted)}
 
+/* Galerie */
 .gallery-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px}
 .gallery-item{
   width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s ease;
 }
 .gallery-item:hover{transform:scale(1.02)}
 
-/* Lightbox */
-#lightbox{position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px; z-index:100}
+/* Lightbox (pour les images “classiques”) */
+#lightbox{
+  position:fixed; inset:0; background:rgba(0,0,0,.8);
+  display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px; z-index:100
+}
 #lightbox.open{display:flex}
 #lightbox img{max-width:92vw; max-height:72vh; border-radius:12px}
-.lb-close{position:absolute; top:20px; right:20px; font-size:28px; line-height:1; background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:4px 10px; cursor:pointer}
+.lb-close{
+  position:absolute; top:20px; right:20px; font-size:28px; line-height:1;
+  background:var(--card); color:var(--text); border:1px solid var(--border);
+  border-radius:12px; padding:4px 10px; cursor:pointer
+}
 #lbCaption{color:#cbd5e1; margin-top:10px}
 
 /* Planning (table) */
@@ -200,25 +218,34 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 .feature-panel{ position:fixed; inset:0; z-index:120; display:none; }
 .feature-panel.open{ display:block; }
 
-.fp-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.6); opacity:0; transition:opacity .2s ease; }
-.feature-panel.open .fp-backdrop{ opacity:1; }
+/* Backdrop (fond assombri) — base */
+.fp-backdrop{
+  position:absolute; inset:0;
+  background:rgba(0,0,0,.6);
+  opacity:0;
+  transition:opacity .25s ease; /* blur et transitions étendues plus bas */
+}
 
+/* Carte centrale (le “panneau”) — base */
 .fp-card{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(.98);
+  position:absolute; left:50%; top:50%;
   width:min(1100px, 96vw);
   background:var(--card); border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,.55);
   border-radius:16px;
   display:grid; grid-template-columns: 1fr 1.2fr; gap:16px; padding:18px;
-  opacity:0; transition:opacity .2s ease, transform .2s ease;
+  opacity:0; /* transitions dans la section animations */
 }
-.feature-panel.open .fp-card{ opacity:1; transform:translate(-50%,-50%) scale(1); }
 
+/* Bouton fermer */
 .fp-close{
   position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:10px;
-  border:1px solid var(--border); background:var(--bg-alt); color:var(--text); cursor:pointer; font-size:20px; line-height:1;
+  border:1px solid var(--border); background:var(--bg-alt); color:var(--text);
+  cursor:pointer; font-size:20px; line-height:1;
 }
 .fp-close:hover{ background:var(--tile) }
+.fp-close:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 
+/* Colonne gauche (texte + points) */
 .fp-left{ display:flex; flex-direction:column; gap:8px; }
 .fp-left h3{ margin:0; font-size:1.25rem; }
 .fp-left p{ margin:0; color:var(--muted); }
@@ -235,7 +262,7 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
   transition:background .2s ease;
 }
 .fp-points a{
-  color:var(--text); text-decoration:none;
+  color:var(--text); text-decoration:none;          /* renforce la lisibilité */
   border-bottom:1px dashed transparent;
   transition:color .2s ease, border-color .2s ease, transform .15s ease;
 }
@@ -246,6 +273,7 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 }
 .fp-points li:hover::before{ background:var(--accent); }
 
+/* Colonne droite (vidéo responsive) */
 .fp-right{}
 .fp-video-wrap{
   position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:#000;
@@ -273,10 +301,82 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 }
 
 /* =======================================================================
-   RESPONSIVE
+   ANIMATIONS — Panneau "feature" (ouverture en douceur)
+   ======================================================================= */
+
+/* Backdrop : fondu + léger flou */
+.fp-backdrop{
+  backdrop-filter: blur(0px);
+  transition: opacity .25s ease, backdrop-filter .35s ease;
+}
+.feature-panel.open .fp-backdrop{
+  opacity: 1;
+  backdrop-filter: blur(4px);
+}
+
+/* Carte : drop-in (scale + slide) */
+.fp-card{
+  transform: translate(-50%, calc(-50% - 6px)) scale(.96);
+  opacity: 0;
+  transition: opacity .35s ease, transform .40s cubic-bezier(.2,.7,.2,1);
+  will-change: transform, opacity;
+}
+.feature-panel.open .fp-card{
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Contenu interne : on part caché… */
+.fp-left > *,.fp-right{
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+/* …et on révèle en cascade (stagger) */
+.feature-panel.open .fp-left h3{ transition-delay: .06s; opacity:1; transform:none; }
+.feature-panel.open .fp-left p{ transition-delay: .12s; opacity:1; transform:none; }
+
+/* ✅ CORRECTIF : rendre le UL (.fp-points) visible + animé */
+.feature-panel.open .fp-left .fp-points{
+  opacity:1;
+  transform:none;
+  transition-delay:.16s;  /* après le paragraphe */
+}
+
+/* Stagger des éléments de liste (les liens) */
+.fp-points li{
+  opacity:0; transform: translateY(8px);
+  transition: opacity .30s ease, transform .30s ease;
+}
+.feature-panel.open .fp-points li:nth-child(1){ transition-delay: .20s; opacity:1; transform:none; }
+.feature-panel.open .fp-points li:nth-child(2){ transition-delay: .25s; opacity:1; transform:none; }
+.feature-panel.open .fp-points li:nth-child(3){ transition-delay: .30s; opacity:1; transform:none; }
+.feature-panel.open .fp-points li:nth-child(4){ transition-delay: .35s; opacity:1; transform:none; }
+.feature-panel.open .fp-points li:nth-child(5){ transition-delay: .40s; opacity:1; transform:none; }
+
+/* Vidéo (colonne droite) : apparaît après le texte */
+.feature-panel.open .fp-right{
+  transition-delay: .22s;
+  opacity:1; transform:none;
+}
+
+/* Accessibilité : réduire les animations si demandé par l’utilisateur */
+@media (prefers-reduced-motion: reduce){
+  .fp-backdrop{ transition: none; backdrop-filter:none; }
+  .fp-card,
+  .fp-left > *,
+  .fp-points li,
+  .fp-right{ transition: none; transform:none !important; }
+}
+
+/* =======================================================================
+   RESPONSIVE — Mobile & tablettes
    ======================================================================= */
 @media (max-width:960px){
   .only-mobile{display:inline-flex}
+
+  /* Menu mobile (s’ouvre en ajoutant .open à .nav via JS) */
   .nav{display:none}
   .nav.open{
     display:block; position:absolute; top:64px; left:0; right:0; background:var(--card); padding:8px 0;
@@ -285,11 +385,14 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
   .nav-list{flex-direction:column; align-items:stretch}
   .has-submenu .submenu{position:static; margin-top:6px; min-width:unset}
 
+  /* Hero empilé + player plus petit */
   .hero-grid{grid-template-columns:1fr}
   .hero-player iframe{height:360px}
 
+  /* Contact empilé (form au-dessus, images en dessous, 1 colonne) */
   .contact-grid{grid-template-columns:1fr}
   .contact-links{grid-template-columns:1fr}
 
+  /* Panneau : passe en 1 colonne sur mobile */
   .fp-card{ grid-template-columns:1fr; width:min(720px, 96vw); }
 }
