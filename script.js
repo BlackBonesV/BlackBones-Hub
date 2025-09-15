@@ -1,252 +1,176 @@
 /* ===========================================================================
    script.js — BlackBones Hub
-   Fonctions incluses :
+   Fonctions :
    1) Twitch Player (parent auto)
    2) Badge LIVE (DecAPI)
    3) Menu mobile (burger)
-   4) Sous-menu "Réseaux" (ouverture/fermeture + clavier)
-   5) Lightbox Galerie
+   4) Sous-menu "Réseaux"
+   5) Lightbox Galerie (exclut la 1ʳᵉ image)
    6) Année du footer
+   7) Feature Panel (panneau pour la 1ʳᵉ image) + 2 points cliquables
    =========================================================================== */
 
-/* ---------------------------------------------------------------------------
-   0) Utilitaires simples
-   --------------------------------------------------------------------------- */
+/* --- Utils --- */
+const $  = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+const isLocal = () => ["localhost","127.0.0.1"].includes(location.hostname);
 
-/** Raccourcis pour query */
-const $ = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-
-/** Ajoute/retire une classe en sécurité */
-const toggleClass = (el, className, force) => {
-  if (!el) return;
-  if (typeof force === "boolean") el.classList.toggle(className, force);
-  else el.classList.toggle(className);
-};
-
-/** Petite aide pour savoir si on est en local (utile pour Twitch parent) */
-const isLocal = () => {
-  const h = location.hostname;
-  return h === "localhost" || h === "127.0.0.1";
-};
-
-/* ---------------------------------------------------------------------------
-   1) Twitch Player (parent auto)
-   - Twitch impose un paramètre ?parent=<domaine> sur l'iframe
-   - On construit l'URL dynamiquement selon location.hostname
-   - Si on est en file:// (aucun hostname), on force "localhost" pour tester
-   --------------------------------------------------------------------------- */
-(function initTwitchPlayer() {
+/* 1) Twitch Player (parent auto) */
+(function initTwitchPlayer(){
   const iframe = $("#twitchPlayer");
   if (!iframe) return;
-
-  const channel = "blackbonesv2";              // ← Ton channel
-  let parentHost = location.hostname || "localhost";
-
-  // Cas particuliers utiles en dev
-  if (parentHost === "") parentHost = "localhost"; // file://
-  // Optionnel : si tu préfères forcer "github.io" en prod, à activer :
-  // if (!isLocal()) parentHost = "tonutilisateur.github.io";
-
-  const params = new URLSearchParams({
-    channel,
-    parent: parentHost,
-    // Autres options possibles :
-    // autoplay: "false",
-    // muted: "false",
-  });
-
-  const src = `https://player.twitch.tv/?${params.toString()}`;
-  iframe.src = src;
+  const channel = "blackbonesv2"; // ← Ton channel
+  let parentHost = location.hostname || "localhost"; // file:// -> localhost
+  const params = new URLSearchParams({ channel, parent: parentHost });
+  iframe.src = `https://player.twitch.tv/?${params.toString()}`;
 })();
 
-/* ---------------------------------------------------------------------------
-   2) Badge LIVE (via DecAPI — pas de clé nécessaire)
-   - Affiche "LIVE" si la chaîne est en direct
-   - Vérifie au chargement (et optionnellement toutes les 60s)
-   --------------------------------------------------------------------------- */
-(function initLiveBadge() {
+/* 2) Badge LIVE (DecAPI) */
+(function initLiveBadge(){
   const badge = $("#liveBadge");
   if (!badge) return;
-
-  const channel = "blackbonesv2"; // ← Ton channel
-  const endpoint = `https://decapi.me/twitch/status/${encodeURIComponent(channel)}`;
-
-  async function checkLiveOnce() {
-    try {
-      const res = await fetch(endpoint, { cache: "no-store" });
+  const channel = "blackbonesv2";
+  async function check(){
+    try{
+      const res = await fetch(`https://decapi.me/twitch/status/${encodeURIComponent(channel)}`, {cache:"no-store"});
       const txt = (await res.text()).toLowerCase();
-      const online = txt.includes("live") && !txt.includes("offline");
-      badge.hidden = !online;
-    } catch (e) {
-      console.warn("LIVE badge error:", e);
-      badge.hidden = true; // on cache en cas d'erreur réseau
-    }
+      badge.hidden = !(txt.includes("live") && !txt.includes("offline"));
+    }catch{ badge.hidden = true; }
   }
-
-  checkLiveOnce();
-  // Option : réactiver pour rechecker régulièrement (ex. toutes les 60s)
-  // setInterval(checkLiveOnce, 60000);
+  check();
+  // setInterval(check, 60000); // optionnel (recheck chaque minute)
 })();
 
-/* ---------------------------------------------------------------------------
-   3) Menu mobile (burger)
-   - Le bouton #btnMenu ouvre/ferme la nav (ajoute .open sur .nav)
-   - Gère aria-expanded pour accessibilité
-   --------------------------------------------------------------------------- */
-(function initMobileMenu() {
-  const btn = $("#btnMenu");
-  const nav = $("#mainNav");
+/* 3) Menu mobile */
+(function initMobileMenu(){
+  const btn = $("#btnMenu"), nav = $("#mainNav");
   if (!btn || !nav) return;
-
-  function toggleMenu() {
-    const isOpen = nav.classList.toggle("open");
-    btn.setAttribute("aria-expanded", String(isOpen));
-  }
-
-  btn.addEventListener("click", toggleMenu);
-
-  // Fermer le menu si on clique sur un lien du menu (utile en mobile)
-  nav.addEventListener("click", (e) => {
-    const a = e.target.closest("a");
-    if (a && nav.classList.contains("open")) {
+  btn.addEventListener("click", ()=>{
+    const open = nav.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(open));
+  });
+  nav.addEventListener("click", e=>{
+    if (e.target.closest("a") && nav.classList.contains("open")) {
       nav.classList.remove("open");
-      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-expanded","false");
     }
   });
-
-  // Fermer sur "Escape"
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && nav.classList.contains("open")) {
-      nav.classList.remove("open");
-      btn.setAttribute("aria-expanded", "false");
-      btn.focus();
+  document.addEventListener("keydown", e=>{
+    if (e.key==="Escape" && nav.classList.contains("open")) {
+      nav.classList.remove("open"); btn.setAttribute("aria-expanded","false"); btn.focus();
     }
   });
 })();
 
-/* ---------------------------------------------------------------------------
-   4) Sous-menu "Réseaux"
-   - Ouverture au clic sur .submenu-trigger
-   - Fermeture si clic à l'extérieur ou Escape
-   - Support clavier (ArrowDown passe le focus sur le premier lien)
-   --------------------------------------------------------------------------- */
-(function initSubmenu() {
-  const container = $(".has-submenu");
-  if (!container) return;
-
-  const trigger = $(".submenu-trigger", container);
-  const menu = $(".submenu", container);
-
+/* 4) Sous-menu "Réseaux" */
+(function initSubmenu(){
+  const wrap = $(".has-submenu"); if (!wrap) return;
+  const trigger = $(".submenu-trigger", wrap), menu = $(".submenu", wrap);
   if (!trigger || !menu) return;
-
-  function openMenu() {
-    container.classList.add("open");
-    trigger.setAttribute("aria-expanded", "true");
-  }
-  function closeMenu() {
-    container.classList.remove("open");
-    trigger.setAttribute("aria-expanded", "false");
-  }
-  function toggleMenu() {
-    if (container.classList.contains("open")) closeMenu();
-    else openMenu();
-  }
-
-  trigger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    toggleMenu();
+  const open  = ()=>{ wrap.classList.add("open"); trigger.setAttribute("aria-expanded","true"); };
+  const close = ()=>{ wrap.classList.remove("open"); trigger.setAttribute("aria-expanded","false"); };
+  trigger.addEventListener("click", (e)=>{ e.stopPropagation(); wrap.classList.contains("open")?close():open(); });
+  document.addEventListener("click", (e)=>{ if (!wrap.contains(e.target)) close(); });
+  trigger.addEventListener("keydown", (e)=>{
+    if (e.key==="ArrowDown"){ e.preventDefault(); open(); $("a", menu)?.focus(); }
+    if (e.key==="Escape"){ close(); }
   });
-
-  // Clic en dehors -> fermeture
-  document.addEventListener("click", (e) => {
-    if (!container.contains(e.target)) closeMenu();
-  });
-
-  // Clavier : Escape pour fermer ; ArrowDown pour focus 1er lien
-  trigger.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      openMenu();
-      const firstLink = $("a", menu);
-      firstLink?.focus();
-    }
-    if (e.key === "Escape") {
-      closeMenu();
-    }
-  });
-  menu.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeMenu();
-      trigger.focus();
-    }
-  });
+  menu.addEventListener("keydown", (e)=>{ if (e.key==="Escape"){ close(); trigger.focus(); } });
 })();
 
-/* ---------------------------------------------------------------------------
-   5) Lightbox Galerie
-   - Clique sur .gallery-item => ouvre #lightbox avec l'image en grand
-   - Clique sur la croix / fond / Escape => ferme
-   - Le <p id="lbCaption"> reprend l'attribut alt si présent
-   --------------------------------------------------------------------------- */
-(function initLightbox() {
-  const items = $$(".gallery-item");
-  const lightbox = $("#lightbox");
-  const img = $("#lbImg");
-  const caption = $("#lbCaption");
-  const btnClose = $("#lbClose");
-
+/* 5) Lightbox (sauf 1ʳᵉ image) */
+(function initLightbox(){
+  // Exclut #galleryFeature : elle ouvre le panneau custom
+  const items = $$(".gallery-item:not(#galleryFeature)");
+  const lightbox = $("#lightbox"), img = $("#lbImg"), caption=$("#lbCaption"), btnClose=$("#lbClose");
   if (!items.length || !lightbox || !img || !btnClose) return;
 
-  function open(src, alt = "") {
-    img.src = src;
-    img.alt = alt;
-    if (caption) caption.textContent = alt || "";
-    toggleClass(lightbox, "open", true);
-    // Empêche le scroll de fond si tu veux :
-    // document.body.style.overflow = "hidden";
-  }
+  const open = (src, alt="")=>{
+    img.src = src; img.alt = alt; if (caption) caption.textContent = alt || "";
+    lightbox.classList.add("open");
+  };
+  const close = ()=>{
+    lightbox.classList.remove("open"); img.src=""; img.alt=""; if (caption) caption.textContent="";
+  };
 
-  function close() {
-    toggleClass(lightbox, "open", false);
-    img.src = "";
-    img.alt = "";
-    if (caption) caption.textContent = "";
-    // document.body.style.overflow = "";
-  }
-
-  // Ouvrir au clic sur l'aperçu
-  items.forEach((el) => {
-    el.addEventListener("click", () => open(el.src, el.alt));
-  });
-
-  // Fermer via la croix
+  items.forEach(el => el.addEventListener("click", ()=> open(el.src, el.alt)));
   btnClose.addEventListener("click", close);
-
-  // Fermer si clic en dehors de l'image
-  lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) close();
-  });
-
-  // Fermer via clavier
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && lightbox.classList.contains("open")) close();
-  });
+  lightbox.addEventListener("click", e=>{ if (e.target===lightbox) close(); });
+  document.addEventListener("keydown", e=>{ if (e.key==="Escape" && lightbox.classList.contains("open")) close(); });
 })();
 
-/* ---------------------------------------------------------------------------
-   6) Année du footer
-   - Injecte l'année courante dans <span id="year"> si présent
-   --------------------------------------------------------------------------- */
-(function setFooterYear() {
-  const y = $("#year");
-  if (y) y.textContent = new Date().getFullYear();
+/* 6) Année footer (si <span id="year"> est présent) */
+(function setYear(){
+  const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
 })();
 
-/* ---------------------------------------------------------------------------
-   Fin — Ajoute ici d'autres fonctions si nécessaire.
-   Astuces :
-   - Pour modifier l'API LIVE (Twitch Helix officielle), je peux te fournir
-     une version avec Client-ID/Token côté client ou via une micro-fonction.
-   - Pour smooth-scroll, tu peux ajouter : html { scroll-behavior: smooth; }
-   --------------------------------------------------------------------------- */
+/* 7) Feature Panel (panneau pour la 1ʳᵉ image) — avec points cliquables */
+(function initFeaturePanel(){
+  const trigger  = $("#galleryFeature"),
+        panel    = $("#featurePanel"),
+        backdrop = $("#fpBackdrop"),
+        btnClose = $("#fpClose"),
+        titleEl  = $("#fpTitle"),
+        descEl   = $("#fpDesc"),
+        videoEl  = $("#fpVideo"),
+        pointsUl = $("#fpPoints");
+  if (!trigger || !panel || !titleEl || !descEl || !videoEl || !pointsUl) return;
+
+  // Parse JSON en sécurité (retourne [] si invalide/absent)
+  function safeParseJSON(str){
+    try{ return JSON.parse(str || "[]"); }
+    catch{ return []; }
+  }
+
+  // Construit la liste <ul> des points cliquables
+  function renderPoints(points){
+    pointsUl.innerHTML = "";
+    pointsUl.hidden = true;
+    if (!Array.isArray(points) || points.length === 0) return;
+
+    const frag = document.createDocumentFragment();
+    points.forEach(({label, url}) => {
+      if (!label || !url) return;
+      const li = document.createElement("li");
+      const a  = document.createElement("a");
+      a.href = url; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = label;
+      li.appendChild(a);
+      frag.appendChild(li);
+    });
+    pointsUl.appendChild(frag);
+    pointsUl.hidden = false;
+  }
+
+  function openPanel(){
+    // 1) Titre / Desc / Vidéo depuis data-*
+    const title = trigger.dataset.title || "Détail";
+    const desc  = trigger.dataset.desc  || "";
+    const video = trigger.dataset.video || ""; // ⚠️ URL d'embed YouTube/Twitch
+
+    titleEl.textContent = title;
+    descEl.textContent  = desc;
+    videoEl.src         = video;
+
+    // 2) Points (2 exemples fournis à modifier dans index.html)
+    const points = safeParseJSON(trigger.dataset.points);
+    renderPoints(points);
+
+    // 3) Ouvrir
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden","false");
+  }
+
+  function closePanel(){
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden","true");
+    videoEl.src = "";   // Stop lecture
+    trigger.focus();    // Focus retour
+  }
+
+  // Ouverture / Fermeture
+  trigger.addEventListener("click", (e)=>{ e.preventDefault(); openPanel(); });
+  btnClose?.addEventListener("click", closePanel);
+  backdrop?.addEventListener("click", closePanel);
+  document.addEventListener("keydown", (e)=>{ if (e.key==="Escape" && panel.classList.contains("open")) closePanel(); });
+})();

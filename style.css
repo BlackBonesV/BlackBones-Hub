@@ -1,5 +1,5 @@
 /* =======================================================================
-   THEME & VARIABLES — Change les couleurs ici si besoin
+   THEME & VARIABLES — harmonise les couleurs ici
    ======================================================================= */
 :root{
   --bg:#0b0f14;
@@ -12,14 +12,13 @@
   --tile:#162233;
   --shadow:0 8px 24px rgba(0,0,0,.35);
 }
-/* Mode clair optionnel (non activé par défaut) */
 body.theme-light{
   --bg:#f6f8fb; --bg-alt:#fff; --text:#0e1320; --muted:#475569;
   --accent:#0066ff; --card:#fff; --border:#e5e7eb; --tile:#eef2ff;
   --shadow:0 8px 24px rgba(0,0,0,.08);
 }
 
-/* Base typographique */
+/* Base typographie/layout */
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
@@ -28,18 +27,17 @@ body{
 }
 
 /* =======================================================================
-   CONTAINER — Version "collée à gauche"
-   Pour revenir à un centrage : width:min(1120px,92%); margin-inline:auto;
+   CONTAINER — collé à gauche (full width)
    ======================================================================= */
 .container{
   width:100%;
-  margin:0;            /* pas de centrage */
-  padding-left:0;      /* colle au bord gauche */
-  padding-right:16px;  /* petite respiration à droite */
+  margin:0;
+  padding-left:0;     /* colle bord gauche */
+  padding-right:16px; /* petite respiration à droite */
 }
 
 /* =======================================================================
-   HEADER & NAVIGATION — Onglets alignés à gauche
+   HEADER & NAVIGATION — onglets à gauche
    ======================================================================= */
 .site-header{
   position:sticky; top:0; z-index:50;
@@ -50,16 +48,15 @@ body{
 @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
 
 .header-inner{
-  display:flex; align-items:center; justify-content:flex-start; /* à gauche */
+  display:flex; align-items:center; justify-content:flex-start;
   gap:20px; padding:12px 0;
 }
 .brand{display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800}
 
-/* Burger (mobile) */
 .btn-icon{font-size:22px; background:transparent; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:10px}
 .only-mobile{display:none}
 
-/* Nav desktop */
+/* Nav */
 .nav{display:block}
 .nav-list{display:flex; align-items:center; gap:18px; list-style:none; margin:0; padding:0}
 .nav a,.submenu-trigger{
@@ -67,13 +64,12 @@ body{
   position:relative; overflow:hidden;
 }
 .nav a:hover,.submenu-trigger:hover{background:var(--tile); border-color:var(--border)}
-/* Soulignement animé */
 .nav a::after,.submenu-trigger::after{
   content:""; position:absolute; left:0; bottom:4px; height:2px; width:0; background:var(--accent); transition:width .3s ease;
 }
 .nav a:hover::after,.submenu-trigger:hover::after{width:100%}
 
-/* Bouton "Réseaux" (lisible) */
+/* Sous-menu animé + puces internes */
 .submenu-trigger{
   background:transparent; color:var(--text); border:1px solid var(--border);
   border-radius:10px; cursor:pointer;
@@ -81,20 +77,17 @@ body{
 }
 .submenu-trigger:hover{background:var(--tile); border-color:var(--accent); color:var(--accent); transform:translateY(-2px)}
 
-/* Sous-menu animé + puces internes (custom) */
 .has-submenu{position:relative}
 .submenu{
   position:absolute; top:100%; left:0; min-width:180px;
   background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
-  padding:4px 0;
-  opacity:0; transform:translateY(-6px) scaleY(.95);
+  padding:4px 0; opacity:0; transform:translateY(-6px) scaleY(.95);
   transform-origin:top; transition:opacity .25s ease, transform .25s ease;
   visibility:hidden; pointer-events:none;
 }
 .has-submenu.open .submenu{opacity:1; transform:translateY(0) scaleY(1); visibility:visible; pointer-events:auto}
 .submenu ul{margin:0; padding:0}
 .submenu li{list-style:none; position:relative; margin:0}
-/* Puce interne (au lieu des list-style qui "débordent") */
 .submenu li::before{
   content:""; position:absolute; left:12px; top:50%; transform:translateY(-50%);
   width:6px; height:6px; border-radius:50%; background:var(--muted);
@@ -109,7 +102,6 @@ body{
 }
 .submenu a:hover{background:var(--tile)}
 .submenu li:hover::before{background:var(--accent)}
-/* Stagger (apparition décalée item par item) */
 .has-submenu.open .submenu li:nth-child(1) a{transition-delay:.05s}
 .has-submenu.open .submenu li:nth-child(2) a{transition-delay:.1s}
 .has-submenu.open .submenu li:nth-child(3) a{transition-delay:.15s}
@@ -118,41 +110,29 @@ body{
 .has-submenu.open .submenu a{opacity:1; transform:translateY(0)}
 
 /* =======================================================================
-   HERO — À propos (colonne gauche) + Twitch (colonne droite)
+   HERO — À propos (gauche) + Twitch (droite)
    ======================================================================= */
 .hero{
-  padding:0 0 8px; /* collé tout en haut (tu avais demandé 0) */
+  padding:0 0 8px; /* collé en haut comme demandé */
   background:
     radial-gradient(1000px 600px at 80% -30%, rgba(123,211,255,.18), transparent),
     radial-gradient(800px 400px at 10% -20%, rgba(123,211,255,.12), transparent);
 }
-
-/* Grille : gauche 360px / droite flexible */
 .hero-grid{
   display:grid; grid-template-columns:360px 1fr; align-items:start; gap:12px;
 }
-
-/* Titre “À propos” centré */
 .about-title{
-  text-align:center; width:100%;
-  font-size:1.8rem; font-weight:800;
-  margin:6px 0 14px;
+  text-align:center; width:100%; font-size:1.8rem; font-weight:800; margin:6px 0 14px;
 }
-
-/* Pile de boxs (colonne) */
 .about-stack{display:flex; flex-direction:column; gap:12px; padding-right:8px}
 .about-box{
   background:var(--card); border:1px solid var(--border); border-radius:14px;
   padding:14px 16px; box-shadow:var(--shadow);
 }
 .about-box h3{margin:0 0 6px; font-size:1.05rem}
-
-/* Lecteur Twitch + CTA sous le player */
 .twitch-embed{margin-top:0}
-.hero-player iframe{width:100%; height:480px; border-radius:12px} /* ↑ augmente ici si tu veux 540px par ex. */
+.hero-player iframe{width:100%; height:480px; border-radius:12px}
 .hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
-
-/* Boutons */
 .btn-primary,.btn-outline{
   display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; font-weight:600; text-decoration:none; border:1px solid var(--border);
 }
@@ -160,13 +140,12 @@ body{
 .btn-outline{background:transparent; color:var(--text)}
 
 /* =======================================================================
-   SECTIONS GÉNÉRIQUES (Liens, Galerie, Planning)
+   SECTIONS (Liens / Galerie / Planning)
    ======================================================================= */
 .section{padding:56px 0}
 .section.alt{background:var(--bg-alt)}
 h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 
-/* Liens utiles */
 .link-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px}
 .link-tile{
   background:var(--tile); border:1px solid var(--border); border-radius:14px; padding:16px; text-decoration:none; color:var(--text);
@@ -175,10 +154,13 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 .link-tile:hover{transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(0,0,0,.4)}
 .link-tile small{color:var(--muted)}
 
-/* Galerie */
 .gallery-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px}
-.gallery-item{width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s ease}
+.gallery-item{
+  width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s ease;
+}
 .gallery-item:hover{transform:scale(1.02)}
+
+/* Lightbox */
 #lightbox{position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px; z-index:100}
 #lightbox.open{display:flex}
 #lightbox img{max-width:92vw; max-height:72vh; border-radius:12px}
@@ -192,51 +174,93 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 .table thead th{background:var(--tile); text-align:left}
 
 /* =======================================================================
-   CONTACT — Formulaire plus étroit + grille d’images 2×2
+   CONTACT — Form plus étroit + vignettes 2×2
    ======================================================================= */
-#contact .container{
-  padding-left:16px; /* décale légèrement le titre “Contact” du bord gauche */
-}
-/* ➜ Form (0.7fr) + Images (1fr) : les images ont plus d’espace */
+#contact .container{ padding-left:16px; } /* décoller légèrement “Contact” du bord */
 .contact-grid{
   display:grid;
-  grid-template-columns: 0.7fr 1fr;
-  gap:20px;
-  align-items:start;
+  grid-template-columns: 0.7fr 1fr; /* form (70%) + images (100%) */
+  gap:20px; align-items:start;
 }
-
-/* Formulaire contenu */
-.contact-form{
-  max-width:500px; /* limite visuelle agréable (ajuste 420–520px si tu veux) */
-  width:100%;
-}
-
-/* Colonne images : 2 colonnes × 2 lignes */
+.contact-form{ max-width:500px; width:100%; }
 .contact-links{
-  display:grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
-  grid-auto-rows: auto;
-  gap:16px;
+  display:grid; grid-template-columns:repeat(2, 1fr); grid-auto-rows:auto; gap:16px;
 }
 .contact-thumb{
   display:block; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
-  text-decoration:none; color:var(--text);
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  text-decoration:none; color:var(--text); transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.contact-thumb img{
-  width:100%; height:160px; object-fit:cover; display:block; /* ↑ hauteur des vignettes */
-}
+.contact-thumb img{ width:100%; height:160px; object-fit:cover; display:block; }
 .contact-thumb span{ display:block; padding:10px 12px; font-weight:600; }
 .contact-thumb:hover{ transform:translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.4); border-color:var(--accent); }
 
 /* =======================================================================
-   FOOTER
+   PANNEAU (ONGLET) pour la 1ʳᵉ image de la galerie
    ======================================================================= */
-.site-footer{padding:36px 0; border-top:1px solid var(--border); background:var(--bg-alt)}
-.site-footer .byline{text-align:center; opacity:.7; margin-top:8px}
+.feature-panel{ position:fixed; inset:0; z-index:120; display:none; }
+.feature-panel.open{ display:block; }
+
+.fp-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.6); opacity:0; transition:opacity .2s ease; }
+.feature-panel.open .fp-backdrop{ opacity:1; }
+
+.fp-card{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(.98);
+  width:min(1100px, 96vw);
+  background:var(--card); border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,.55);
+  border-radius:16px;
+  display:grid; grid-template-columns: 1fr 1.2fr; gap:16px; padding:18px;
+  opacity:0; transition:opacity .2s ease, transform .2s ease;
+}
+.feature-panel.open .fp-card{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+.fp-close{
+  position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:10px;
+  border:1px solid var(--border); background:var(--bg-alt); color:var(--text); cursor:pointer; font-size:20px; line-height:1;
+}
+.fp-close:hover{ background:var(--tile) }
+
+.fp-left{ display:flex; flex-direction:column; gap:8px; }
+.fp-left h3{ margin:0; font-size:1.25rem; }
+.fp-left p{ margin:0; color:var(--muted); }
+
+/* Points cliquables (liens) */
+.fp-points{
+  list-style:none; padding:0; margin:12px 0 0 0;
+  display:flex; flex-direction:column; gap:8px;
+}
+.fp-points li{ position:relative; padding-left:22px; }
+.fp-points li::before{
+  content:""; position:absolute; left:6px; top:50%; transform:translateY(-50%);
+  width:6px; height:6px; border-radius:50%; background:var(--muted);
+  transition:background .2s ease;
+}
+.fp-points a{
+  color:var(--text); text-decoration:none;
+  border-bottom:1px dashed transparent;
+  transition:color .2s ease, border-color .2s ease, transform .15s ease;
+}
+.fp-points a:hover{
+  color:var(--accent);
+  border-color:var(--accent);
+  transform:translateX(2px);
+}
+.fp-points li:hover::before{ background:var(--accent); }
+
+.fp-right{}
+.fp-video-wrap{
+  position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:#000;
+}
+.fp-video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
 
 /* =======================================================================
-   BADGE LIVE — petit pill rouge animé
+   FOOTER — centré + gras
+   ======================================================================= */
+.site-footer{ padding:36px 0; border-top:1px solid var(--border); background:var(--bg-alt) }
+.site-footer .container{ text-align:center; }
+.site-footer .copyright{ margin:0; font-weight:800; }
+
+/* =======================================================================
+   LIVE badge (petit pill rouge)
    ======================================================================= */
 .live-badge{
   margin-left:10px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.5px;
@@ -249,12 +273,10 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
 }
 
 /* =======================================================================
-   RESPONSIVE — Mobile & tablettes
+   RESPONSIVE
    ======================================================================= */
 @media (max-width:960px){
   .only-mobile{display:inline-flex}
-
-  /* Menu mobile (à ouvrir via JS en ajoutant .open sur .nav) */
   .nav{display:none}
   .nav.open{
     display:block; position:absolute; top:64px; left:0; right:0; background:var(--card); padding:8px 0;
@@ -263,17 +285,11 @@ h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
   .nav-list{flex-direction:column; align-items:stretch}
   .has-submenu .submenu{position:static; margin-top:6px; min-width:unset}
 
-  /* Hero empilé + player plus petit */
   .hero-grid{grid-template-columns:1fr}
   .hero-player iframe{height:360px}
 
-  /* Contact empilé (form au-dessus, images en dessous, 1 colonne) */
   .contact-grid{grid-template-columns:1fr}
   .contact-links{grid-template-columns:1fr}
-}
-/* Footer : centrer le texte et enlever les marges parasites */
-.site-footer .container{ text-align:center; }
-.site-footer .copyright{
-  margin:0;
-  font-weight:800;   /* garde bien le gras */
+
+  .fp-card{ grid-template-columns:1fr; width:min(720px, 96vw); }
 }
