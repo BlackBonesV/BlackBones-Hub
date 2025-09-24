@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <!-- Favicon (logo de l’onglet du site) -->
+<link rel="icon" type="image/png" href="assets/favicon.png">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ META                                                        ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <title>BlackBones — Hub Twitch</title>
+  <meta name="description" content="Liens, lecteur Twitch, sondage, galerie et contact de BlackBones.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-dark">
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ HEADER — Nav alignée à gauche + badge LIVE                  ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Accueil">
+        <span id="liveBadge" class="live-badge" hidden>LIVE</span>
+      </a>
+
+      <nav id="mainNav" class="nav" aria-label="Navigation principale">
+        <ul class="nav-list">
+          <li><a href="#top">À propos</a></li>
+          <li><a href="#poll">Sondage</a></li>
+          <li><a href="#links">Liens utiles</a></li>
+          <li><a href="#gallery">Galerie</a></li>
+          <li><a href="#schedule">Planning</a></li>
+          <li><a href="#contact">Contact</a></li>
+
+                    <!-- Sous-menu Réseaux -->
+          <li class="has-submenu">
+            <button class="submenu-trigger" aria-haspopup="true" aria-expanded="false">Réseaux</button>
+            <ul class="submenu">
+              <li><a href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">Twitch</a></li>
+              <li><a href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">YouTube</a></li>
+              <li><a href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">Discord</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <button class="btn-icon only-mobile" id="btnMenu" aria-expanded="false" aria-controls="mainNav" aria-label="Ouvrir le menu">☰</button>
+    </div>
+  </header>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ HERO — À propos (gauche) + Twitch (droite + CTA)            ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <section class="hero" id="top" aria-label="Présentation">
+    <div class="container hero-inner hero-grid">
+<!-- Grille 2 colonnes : lecteur + chat -->
+<div class="hero-media">
+  <!-- Lecteur -->
+  <div class="hero-player">
+    <div class="twitch-embed">
+      <iframe id="twitchPlayer" title="Twitch Player" allowfullscreen frameborder="0"></iframe>
+    </div>
+    <div class="hero-cta">
+      <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
+      <a class="btn-outline" href="#links">Parcourir les liens</a>
+    </div>
+  </div>
+
+  <!-- Chat (lecture seule via overlay transparent) -->
+  <aside class="hero-chat" aria-label="Chat Twitch (lecture seule)">
+    <div class="chat-wrap">
+      <iframe id="twitchChat" title="Twitch Chat" frameborder="0" scrolling="no"></iframe>
+      <div class="chat-overlay" aria-hidden="true" title="Lecture seule"></div>
+    </div>
+  </aside>
+</div>
+
+      <!-- Colonne gauche : pile de boxs -->
+      <aside class="hero-about">
+        <h1 class="about-title">À propos</h1>
+
+        <div class="about-stack">
+          <div class="about-box">
+            <h3>Qui suis-je ?</h3>
+            <p>Je me présente, j'ai 22 ans et en plus du stream je suis vendeur dans le prêt à porter.
+Je suis un grand fan de Ghibli comme tu peux le voir ici (San et Calcifer les goat) !
+Par rapport aux streams je fais un peu de tout, FPS, Battle Royal, tout en passant par les jeux à histoire.</p>
+          </div>
+
+          <div class="about-box">
+            <h3>Jeux du moment</h3>
+            <ul class="clean">
+              <li>League Of Legends</li>
+              <li>Apex Legends</li>
+              <li>GTA 5</li>
+            </ul>
+          </div>
+
+          <div class="about-box">
+            <h3>Horaires</h3>
+            <p>🗓️ Variable, en fonction de mon envie </p>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ LIENS UTILES — tuiles cliquables                            ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+<section id="links" class="section">
+  <div class="container">
+    <h2>Liens utiles</h2>
+
+    <!-- WRAPPER de grille manquant jusqu’ici -->
+    <div class="link-grid">
+      <!-- TWITCH -->
+      <a class="link-tile accent-twitch" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">
+        <span class="lt-icon">🎮</span>
+        <span class="lt-text">
+          <span class="lt-title">Twitch</span>
+          <span class="lt-sub">Suivre + s’abonner</span>
+        </span>
+        <span class="lt-go" aria-hidden="true">↗</span>
+      </a>
+
+      <!-- DONS -->
+      <a class="link-tile accent-dons" href="https://streamlabs.com/blackbonesv2/tip" target="_blank" rel="noopener">
+        <span class="lt-icon">💜</span>
+        <span class="lt-text">
+          <span class="lt-title">Dons</span>
+          <span class="lt-sub">Soutenir la chaîne</span>
+        </span>
+        <span class="lt-go" aria-hidden="true">↗</span>
+      </a>
+
+      <!-- DISCORD -->
+      <a class="link-tile accent-discord" href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">
+        <span class="lt-icon">💬</span>
+        <span class="lt-text">
+          <span class="lt-title">Discord</span>
+          <span class="lt-sub">Rejoins la commu</span>
+        </span>
+        <span class="lt-go" aria-hidden="true">↗</span>
+      </a>
+
+      <!-- YOUTUBE -->
+      <a class="link-tile accent-youtube" href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">
+        <span class="lt-icon">▶️</span>
+        <span class="lt-text">
+          <span class="lt-title">YouTube</span>
+          <span class="lt-sub">VOD & vidéos</span>
+        </span>
+        <span class="lt-go" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║                            GALERIE                           ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <section id="gallery" class="section">
+    <div class="container">
+      <h2>Galerie</h2>
+      <div class="gallery-grid">
+
+      <!-- Box 1 : Image fixe avec panneau infos -->
+      <div class="gallery-box">
+        <img
+          id="galleryFeature"
+          class="gallery-item"
+          src="assets/gallery/PC.png"
+          alt="Mon PC"
+          data-title="Ma compo PC"
+          data-desc=""
+          data-video="https://www.youtube.com/embed/ElDZj5oV4v4"
+          data-points='[
+            {"label":"Boitier : O11 DYNAMIQUE EVO XL BLANC","url":"https://lian-li.com/fr/product/o11-dynamic-evo-xl/?fbclid=IwZXh0bgNhZW0CMTEAAR2xAvin_B7_CbQud035s6DKpEPTiA39RQtEHXc3y9GH7LLDuvfqIEE_tSo_aem_8DHEX7RI5rbMYby-pEKXHw"},
+            {"label":"PROC : AMD Ryzen™ 7 7700X","url":"https://www.amd.com/fr/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7700x.html"},
+            {"label":"CM : B650 AORUS ELITE AX ICE","url":"https://www.gigabyte.com/fr/Motherboard/B650-AORUS-ELITE-AX-ICE"},
+            {"label":"RAM : CORSAIR VENGEANCE RGB 32 Go DDR5 5 600 MHz","url":"https://www.corsair.com/fr/fr/p/memory/cmh32gx5m2b5600c36wk/vengeance-rgb-32gb-2x16gb-ddr5-dram-5600mhz-c36-memory-kit-white-cmh32gx5m2b5600c36wk"},
+            {"label":"CG : GeForce RTX™ 3070 GAMING OC","url":"https://www.gigabyte.com/fr/Graphics-Card/GV-N3070GAMING-OC-8GD-rev-10"},
+            {"label":"Ecran : G-MASTER GB3466WQSU-B1 (x2)","url":"https://iiyama.com/fr_fr/produits/g-master-gb3466wqsu-b1"},
+            {"label":"Clavier : LOGITECH G715","url":"https://www.logitechg.com/fr-fr/shop/p/g715-tkl-mechanical-wireless-keyboard.920-010459"},
+            {"label":"Souris : LOGITECH G PRO","url":"https://www.logitechg.com/fr-be/products/gaming-mice/pro-wireless-mouse.910-005273.html"}
+          ]'
+        />
+          <p class="gallery-caption">Setup</p>
+      </div>
+
+      <!-- Box 2 : Slideshow #2 -->
+      <div class="gallery-box">
+        <div class="x-slideshow" id="ss-2" aria-label="Slideshow 2">
+          <img class="slide-img is-top" src="assets/gallery/slide2/slide-1.png" alt="Slideshow image 2" draggable="false" oncontextmenu="return false">
+          <img class="slide-img" src="assets/gallery/slide2/slide-2.png" alt="" aria-hidden="true" draggable="false" oncontextmenu="return false">
+        </div>
+        <p class="gallery-caption">Emotes</p>
+      </div>
+
+      <!-- Box 3 : Slideshow #3 -->
+      <div class="gallery-box">
+        <div class="x-slideshow" id="ss-3" aria-label="Slideshow 3">
+          <img class="slide-img is-top" src="assets/gallery/slide3/slide-1.png" alt="Slideshow image 3" draggable="false" oncontextmenu="return false">
+          <img class="slide-img" src="assets/gallery/slide3/slide-2.png" alt="" aria-hidden="true" draggable="false" oncontextmenu="return false">
+        </div>
+        <p class="gallery-caption">Badges</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+        <!-- Autres images : ouvrent la lightbox classique -->
+        <!--  <img loading="lazy" src="assets/gallery/shot-02.png" alt="Setup streaming" class="gallery-item"/>
+        <img loading="lazy" src="assets/gallery/shot-03.png" alt="Moment fun en stream" class="gallery-item"/>
+        <img loading="lazy" src="assets/gallery/shot-04.png" alt="Communauté BlackBones" class="gallery-item"/>
+      </div>
+    </div> -->
+
+    <!-- ✅ PANNEAU (image 1) -->
+    <div id="featurePanel" class="feature-panel" aria-hidden="true">
+      <div class="fp-backdrop" id="fpBackdrop" aria-hidden="true"></div>
+      <div class="fp-card" role="dialog" aria-modal="true" aria-labelledby="fpTitle">
+        <button class="fp-close" id="fpClose" aria-label="Fermer le panneau">×</button>
+
+        <div class="fp-left">
+          <h3 id="fpTitle">Titre de l’extrait</h3>
+          <p id="fpDesc">La description apparaît ici (injectée depuis l’image #galleryFeature).</p>
+          <ul id="fpPoints" class="fp-points" hidden></ul>
+        </div>
+
+        <div class="fp-right">
+          <div class="fp-video-wrap">
+            <iframe
+              id="fpVideo"
+              title="Vidéo"
+              src=""
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lightbox (pour les autres images) -->
+    <div id="lightbox" aria-hidden="true">
+      <button class="lb-close" id="lbClose" aria-label="Fermer">×</button>
+      <img id="lbImg" alt="" />
+      <p id="lbCaption"></p>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ SONDAGE — StrawPoll pleine largeur                          ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <section id="poll" class="section">
+    <div class="container">
+      <h2>Sondage</h2>
+
+      <div class="poll-full">
+        <div class="poll-card">
+          <h3 class="poll-title">Vote ici</h3>
+          <div class="strawpoll-embed"
+               id="strawpoll_XOgOVbprbn3"
+               style="height: 520px; width: 100%; display: flex; flex-direction: column;">
+            <iframe
+              title="StrawPoll Embed"
+              id="strawpoll_iframe_XOgOVbprbn3"
+              src="https://strawpoll.com/embed/polls/XOgOVbprbn3"
+              style="width: 100%; flex-grow: 1;"
+              frameborder="0"
+              allowfullscreen
+              allowtransparency
+              loading="lazy">Loading…</iframe>
+            <script async src="https://cdn.strawpoll.com/dist/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ PLANNING — exemple statique                                 ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+<section id="schedule" class="section">
+  <div class="container">
+    <h2>Planning</h2>
+
+    <!-- Onglets / filtres d'état -->
+    <div class="sched-tabs" role="tablist" aria-label="Filtres événements">
+      <button class="sched-filter is-active" data-filter="all"      role="tab" aria-selected="true">Tous <span class="chip" id="count-all">0</span></button>
+      <button class="sched-filter"           data-filter="live"     role="tab" aria-selected="false">En cours <span class="chip" id="count-live">0</span></button>
+      <button class="sched-filter"           data-filter="upcoming" role="tab" aria-selected="false">À venir <span class="chip" id="count-upcoming">0</span></button>
+      <button class="sched-filter"           data-filter="past"     role="tab" aria-selected="false">Passés <span class="chip" id="count-past">0</span></button>
+    </div>
+
+    <!-- Outils : recherche + tags -->
+    <div class="sched-tools">
+      <input id="scheduleSearch" type="search" placeholder="Rechercher (titre, tag)…" aria-label="Rechercher dans le planning" />
+      <div id="scheduleTags" class="sched-tags" aria-label="Filtrer par tags">
+        <!-- tags générés dynamiquement -->
+      </div>
+    </div>
+
+    <!-- Liste des événements (rendue par JS) -->
+    <div id="scheduleList" class="schedule-list" aria-live="polite"></div>
+
+    <!-- Modale (détails) facultative -->
+    <dialog id="eventDialog" class="sched-dialog">
+      <article class="sched-dialog-card">
+        <button class="sched-dialog-close" aria-label="Fermer">×</button>
+        <h3 id="dlgTitle"></h3>
+        <p id="dlgWhen" class="sched-meta"></p>
+        <div id="dlgTags" class="sched-badges"></div>
+        <p id="dlgDesc"></p>
+        <p id="dlgLinkWrap"></p>
+      </article>
+    </dialog>
+  </div>
+</section>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ CONTACT — Form + 4 images (2×2)                             ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2>Contact</h2>
+
+      <div class="contact-grid">
+        <!-- Formspree : remplace TON_ENDPOINT -->
+        <form action="https://formspree.io/f/xrbavbky" method="POST" class="card contact-form">
+          <label style="display:block; margin-bottom:10px;">Ton email
+            <input type="email" name="email" required autocomplete="email"
+                   style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)">
+          </label>
+
+          <label style="display:block; margin-bottom:10px;">Message
+            <textarea name="message" rows="5" required
+                      style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)"></textarea>
+          </label>
+
+          <!-- Honeypot anti-spam -->
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+          <button class="btn-primary" type="submit">Envoyer</button>
+        </form>
+
+        <!-- Vignettes cliquables 2×2 (toutes .png) -->
+        <!-- <div class="contact-links">
+          <a class="contact-thumb" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">
+            <img src="assets/Twitch.png" alt="Aller sur Twitch">
+            <span>Aller sur Twitch</span>
+          </a>
+          <a class="contact-thumb" href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">
+            <img src="assets/Discord.png" alt="Rejoindre le Discord">
+            <span>Rejoindre le Discord</span>
+          </a>
+          <a class="contact-thumb" href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">
+            <img src="assets/Youtube.png" alt="Voir YouTube">
+            <span>Voir YouTube</span>
+          </a>
+          <a class="contact-thumb" href="https://streamlabs.com/blackbonesv2/tip" target="_blank" rel="noopener">
+            <img src="assets/Dons.png" alt="Soutenir la chaîne">
+            <span>Soutenir la chaîne</span>
+          </a>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║ FOOTER — centré + gras                                      ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="copyright"><strong>© BlackBones — Tous droits réservés</strong></p>
+    </div>
+  </footer>
+
+  <!-- JS principal -->
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,905 @@
+/* =======================================================================
+   THEME & VARIABLES
+   ======================================================================= */
+:root{
+  --bg:#0b0f14;
+  --bg-alt:#0f151c;
+  --text:#e9eef5;
+  --muted:#a6b3c2;
+  --accent:#7bd3ff;
+  --card:#121923;
+  --border:#1f2a37;
+  --tile:#162233;
+  --shadow:0 8px 24px rgba(0,0,0,.35);
+}
+body.theme-light{
+  --bg:#f6f8fb; --bg-alt:#fff; --text:#0e1320; --muted:#475569;
+  --accent:#0066ff; --card:#fff; --border:#e5e7eb; --tile:#eef2ff;
+  --shadow:0 8px 24px rgba(0,0,0,.08);
+}
+
+/* Base */
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.6;
+}
+
+/* =======================================================================
+   CONTAINER — collé à gauche
+   ======================================================================= */
+.container{
+  max-width: 1200px;      /* ou 1280px/1320px selon ton goût */
+  margin: 0 auto;         /* centre le bloc -->
+  padding: 0 24px;        /* padding gauche/droite identique */
+}
+/* Header en pleine largeur + menu collé à gauche */
+.site-header .container{
+  max-width: none;        /* ne pas limiter à 1200px */
+  margin-left: 0;         /* plus de centrage */
+  margin-right: 0;
+  padding-left: 24px;     /* marge intérieure côté gauche */
+  padding-right: 24px;    /* marge intérieure côté droit */
+}
+
+
+/* =======================================================================
+   HEADER & NAVIGATION
+   ======================================================================= */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0));
+  backdrop-filter:blur(8px);
+  animation:fadeDown .6s ease-out;
+}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+.header-inner{
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:20px; padding:12px 0;
+}
+.brand{display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800}
+
+.btn-icon{font-size:22px; background:transparent; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:10px}
+.only-mobile{display:none}
+
+/* Nav + sous-menu animé */
+.nav{display:block}
+.nav-list{display:flex; align-items:center; gap: 18px; justify-content: flex-start; list-style:none; margin:0; padding:0}
+.nav a,.submenu-trigger{
+  color:var(--text); text-decoration:none; padding:8px 12px; border-radius:10px; border:1px solid transparent;
+  position:relative; overflow:hidden;
+}
+.nav a:hover,.submenu-trigger:hover{background:var(--tile); border-color:var(--border)}
+.nav a::after,.submenu-trigger::after{
+  content:""; position:absolute; left:0; bottom:4px; height:2px; width:0; background:var(--accent); transition:width .3s ease;
+}
+.nav a:hover::after,.submenu-trigger:hover::after{width:100%}
+
+.submenu-trigger{
+  background:transparent; color:var(--text); border:1px solid var(--border);
+  border-radius:10px; cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.submenu-trigger:hover{background:var(--tile); border-color:var(--accent); color:var(--accent); transform:translateY(-2px)}
+
+.has-submenu{position:relative}
+.submenu{
+  position:absolute; top:100%; left:0; min-width:180px;
+  background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
+  padding:4px 0; opacity:0; transform:translateY(-6px) scaleY(.95);
+  transform-origin:top; transition:opacity .25s ease, transform .25s ease;
+  visibility:hidden; pointer-events:none;
+}
+.has-submenu.open .submenu{opacity:1; transform:translateY(0) scaleY(1); visibility:visible; pointer-events:auto}
+.submenu ul{margin:0; padding:0}
+.submenu li{list-style:none; position:relative; margin:0}
+.submenu li::before{
+  content:""; position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  width:6px; height:6px; border-radius:50%; background:var(--muted);
+  opacity:0; transition:opacity .25s ease, background .2s ease;
+}
+.has-submenu.open .submenu li::before{opacity:1}
+.submenu a{
+  display:block; padding:8px 12px 8px 28px;
+  color:var(--text); border-radius:6px; text-decoration:none;
+  opacity:0; transform:translateY(-4px);
+  transition:opacity .25s ease, transform .25s ease, background .2s ease;
+}
+.submenu a:hover{background:var(--tile)}
+.submenu li:hover::before{background:var(--accent)}
+.has-submenu.open .submenu li:nth-child(1) a{transition-delay:.05s}
+.has-submenu.open .submenu li:nth-child(2) a{transition-delay:.1s}
+.has-submenu.open .submenu li:nth-child(3) a{transition-delay:.15s}
+.has-submenu.open .submenu li:nth-child(4) a{transition-delay:.2s}
+.has-submenu.open .submenu li:nth-child(5) a{transition-delay:.25s}
+.has-submenu.open .submenu a{opacity:1; transform:translateY(0)}
+
+/* =======================================================================
+   HERO — À propos + Twitch
+   ======================================================================= */
+.hero{
+  padding:0 0 8px;
+  background:
+    radial-gradient(1000px 600px at 80% -30%, rgba(123,211,255,.18), transparent),
+    radial-gradient(800px 400px at 10% -20%, rgba(123,211,255,.12), transparent);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* 1 seule colonne */
+  gap: 2rem; /* espace vertical */
+  justify-items: center; /* centre horizontalement les contenus */
+}
+.hero-player {
+  width: 100%;
+  max-width: 9000px; /* limite pour garder le lecteur centré */
+}
+
+.hero-about {
+  width: 100%;
+  max-width: 900px; /* même largeur que le lecteur */
+}
+
+/* Colonne gauche (À propos) */
+.hero-left{
+  min-width: 260px;   /* empêche l’écrasement */
+  width: 280px;
+}
+/* Les cartes dans la colonne gauche s’étirent correctement */
+.hero-left .about-box{
+  width: 100%;
+}
+/* Alias pour coller au HTML actuel */
+.hero-about{ min-width:0; width:auto; }                     /* même que .hero-left */
+.hero-about .about-box{ width:100%; }                       /* s’étire bien dans la colonne */
+
+.about-title{
+  text-align:center; width:100%; font-size:1.8rem; font-weight:800; margin:6px 0 14px;
+}
+/* Empilement horizontal des boxs À propos */
+.about-stack{
+  display:flex;
+  flex-wrap:wrap;            /* passe à la ligne si l’espace manque */
+  gap:16px;                  /* espace entre les cartes */
+  justify-content:center;    /* centre la rangée */
+  padding-right:0;           /* plus de décalage à droite */
+}
+/* Largeur souple des cartes dans À propos */
+.about-stack .about-box{
+  flex: 1 1 260px;     /* largeur mini réduite un peu */
+  max-width: 320px;    /* largeur max plus contenue */
+  min-height: 180px;   /* limite la hauteur verticale */
+}
+.about-stack .about-box:first-child{
+  flex: 2 1 400px;     /* prend 2x plus de place que les autres */
+  max-width: 500px;    /* autorise plus de largeur */
+}
+/* Étendre un peu la box "Jeux du moment" (2ème enfant de .about-stack) */
+.about-stack .about-box:nth-child(2){
+  flex: 1.3 1 0;   /* prend ~30% de place en plus que les autres */
+}
+/* Étendre un peu la box "Horaire" (3ème enfant de .about-stack) */
+.about-stack .about-box:nth-child(3){
+  flex: 1.3 1 0;   /* prend ~30% de place en plus que les autres */
+}
+
+.about-box{
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:14px 16px; box-shadow:var(--shadow);
+}
+.about-box h3{margin:0 0 6px; font-size:1.05rem}
+
+.twitch-embed{margin-top:0}
+.hero-player iframe{width:100%; height:480px; border-radius:12px}
+.hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
+.btn-primary,.btn-outline{
+  display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; font-weight:600; text-decoration:none; border:1px solid var(--border);
+}
+.btn-primary{background:var(--accent); color:#081018; border-color:transparent}
+.btn-outline{background:transparent; color:var(--text)}
+/* ===== Hero : rangée 'À propos' sous le player ===== */
+.about-row{
+  display:flex;
+  gap:16px;
+  margin-top:16px;
+  flex-wrap:wrap;             /* passe à la ligne si pas assez de place */
+}
+
+.about-row .about-box{
+  flex: 1 1 280px;            /* largeur mini ~280px, puis s’étire */
+  width:auto;                 /* si tu avais mis 280px fixes avant */
+}
+
+/* === HERO : grille lecteur + chat ================================== */
+.hero-media{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr;  /* lecteur 2/3, chat 1/3 */
+  gap: 16px;
+  align-items: start;
+}
+
+/* S'assure que le lecteur garde sa taille */
+.hero-player iframe{ width:100%; height:480px; border-radius:12px; }
+
+/* Chat */
+.hero-chat .chat-wrap{
+  position: relative;
+  width: 100%;
+  height: 480px;                 /* même hauteur que le player pour l’alignement */
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+#twitchChat{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+
+/* Chat Twitch : rendre tout cliquable SAUF la zone d'écriture (masquée) */
+.chat-overlay{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 100px;                /* ajuste si besoin : 56–72px selon l'UI Twitch */
+  z-index: 2;                  /* au-dessus de l'iframe du chat */
+  pointer-events: auto;        /* bloque les clics uniquement sur cette bande */
+  /* Option A (masquer visuellement l'input) : */
+  background: linear-gradient(to bottom, rgba(11,15,20,0), rgba(11,15,20,0.95));
+  /* Option B (ne pas masquer visuellement, juste bloquer les clics) :
+     -> remplace la ligne ci-dessus par : background: transparent; */
+}
+
+/* L’iframe reste interactive partout ailleurs */
+#twitchChat{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0;
+  z-index: 1;   /* sous l’overlay */
+}
+
+/* (Facultatif) adapter la hauteur du masque sur petit écran */
+@media (max-width: 640px){
+  .chat-overlay{ height: 56px; }
+}
+
+/* Responsive : sous ~1100px, on empile (player au-dessus, chat dessous) */
+@media (max-width: 1100px){
+  .hero-media{ grid-template-columns: 1fr; }
+  .hero-chat .chat-wrap{ height: 420px; }     /* un peu moins haut sur tablette/tel */
+}
+@media (max-width: 640px){
+  .hero-chat .chat-wrap{ height: 360px; }
+}
+
+
+/* =======================================================================
+   SECTIONS communes
+   ======================================================================= */
+.section{padding:56px 0}
+.section.alt{background:var(--bg-alt)}
+h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
+
+/* Liens utiles */
+.links-grid{
+  display:grid;
+  gap:20px;
+  grid-template-columns: repeat(4, 1fr);  /* ex: 4 tuiles par rangée */
+}
+.link-tile{
+  background:var(--tile); border:1px solid var(--border); border-radius:14px; padding:16px; text-decoration:none; color:var(--text);
+  display:flex; flex-direction:column; gap:6px; transition:transform .25s ease, box-shadow .25s ease;
+}
+.link-tile:hover{transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(0,0,0,.4)}
+.link-tile small{color:var(--muted)}
+
+/* Galerie (grille) */
+.gallery-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px}
+.gallery-item{
+  width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s ease;
+}
+.gallery-item:hover{transform:scale(1.02)}
+
+/* Lightbox */
+#lightbox{position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px; z-index:100}
+#lightbox.open{display:flex}
+#lightbox img{max-width:92vw; max-height:72vh; border-radius:12px}
+.lb-close{position:absolute; top:20px; right:20px; font-size:28px; line-height:1; background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:4px 10px; cursor:pointer}
+#lbCaption{color:#cbd5e1; margin-top:10px}
+
+/* Planning */
+.table-wrap{overflow:auto; border-radius:12px; border:1px solid var(--border)}
+.table{width:100%; border-collapse:collapse; background:var(--card)}
+.table th,.table td{padding:12px 14px; border-bottom:1px solid var(--border)}
+.table thead th{background:var(--tile); text-align:left}
+
+/* =======================================================================
+   CONTACT — Form plus étroit + vignettes 2×2
+   ======================================================================= */
+#contact .container{ padding-left:16px; }
+.contact-grid{
+  display:block;
+  grid-template-columns: 0.7fr 1fr;
+  gap:20px; align-items:start;
+}
+.contact-form{ max-width:700px; width:100%; margin: 0 auto;}
+.contact-links{
+  display:grid; grid-template-columns:repeat(2, 1fr); grid-auto-rows:auto; gap:16px;
+}
+.contact-thumb{
+  display:block; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+  text-decoration:none; color:var(--text); transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.contact-thumb img{ width:100%; height:160px; object-fit:cover; display:block; }
+.contact-thumb span{ display:block; padding:10px 12px; font-weight:600; }
+.contact-thumb:hover{ transform:translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.4); border-color:var(--accent); }
+
+/* =======================================================================
+   SONDAGE (StrawPoll) — pleine largeur
+   ======================================================================= */
+.poll-full{ width:100%; }
+.poll-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  box-shadow:var(--shadow);
+  width:100%;
+}
+.poll-title{ margin:0 0 10px; font-size:1.05rem; font-weight:800; }
+
+/* =======================================================================
+   PANNEAU (ONGLET) image 1 de la galerie (feature panel)
+   ======================================================================= */
+.feature-panel{ position:fixed; inset:0; z-index:120; display:none; }
+.feature-panel.open{ display:block; }
+
+.fp-backdrop{
+  position:absolute; inset:0; background:rgba(0,0,0,.6); opacity:0; transition:opacity .25s ease;
+}
+.fp-card{
+  position:absolute; left:50%; top:50%; width:min(1100px, 96vw);
+  background:var(--card); border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,.55);
+  border-radius:16px; display:grid; grid-template-columns: 1fr 1.2fr; gap:16px; padding:18px; opacity:0;
+}
+.fp-close{
+  position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:10px;
+  border:1px solid var(--border); background:var(--bg-alt); color:var(--text); cursor:pointer; font-size:20px; line-height:1;
+}
+.fp-close:hover{ background:var(--tile) }
+.fp-close:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+.fp-left{ display:flex; flex-direction:column; gap:8px; }
+.fp-left h3{ margin:0; font-size:1.25rem; }
+.fp-left p{ margin:0; color:var(--muted); }
+
+/* Points cliquables */
+.fp-points{
+  list-style:none; padding:0; margin:12px 0 0 0;
+  display:flex; flex-direction:column; gap:8px;
+}
+.fp-points li{ position:relative; padding-left:22px; }
+.fp-points li::before{
+  content:""; position:absolute; left:6px; top:50%; transform:translateY(-50%);
+  width:6px; height:6px; border-radius:50%; background:var(--muted);
+  transition:background .2s ease;
+}
+.fp-points a{ color:var(--text); text-decoration:none; border-bottom:1px dashed transparent; transition:color .2s ease, border-color .2s ease, transform .15s ease; }
+.fp-points a:hover{ color:var(--accent); border-color:var(--accent); transform:translateX(2px); }
+.fp-points li:hover::before{ background:var(--accent); }
+
+.fp-video-wrap{ position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:#000; }
+.fp-video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+/* ANIMATIONS du panneau (fondu/blur + drop-in + stagger) */
+.fp-backdrop{ backdrop-filter: blur(0px); transition: opacity .25s ease, backdrop-filter .35s ease; }
+.feature-panel.open .fp-backdrop{ opacity: 1; backdrop-filter: blur(4px); }
+.fp-card{ transform: translate(-50%, calc(-50% - 6px)) scale(.96); transition: opacity .35s ease, transform .40s cubic-bezier(.2,.7,.2,1); will-change: transform, opacity; }
+.feature-panel.open .fp-card{ opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.fp-left > *,.fp-right{ opacity: 0; transform: translateY(8px); transition: opacity .35s ease, transform .35s ease; }
+.feature-panel.open .fp-left h3{ transition-delay: .06s; opacity:1; transform:none; }
+.feature-panel.open .fp-left p{ transition-delay: .12s; opacity:1; transform:none; }
+/* UL visible + animée */
+.feature-panel.open .fp-left .fp-points{ opacity:1; transform:none; transition-delay:.16s; }
+/* Stagger des <li> */
+.fp-points li{ opacity:0; transform: translateY(8px); transition: opacity .30s ease, transform .30s ease; }
+.feature-panel.open .fp-points li:nth-child(1){ transition-delay: .20s; opacity:1; transform:none; }
+.feature-panel.open .fp-points li:nth-child(2){ transition-delay: .25s; opacity:1; transform:none; }
+.feature-panel.open .fp-points li:nth-child(3){ transition-delay: .30s; opacity:1; transform:none; }
+.feature-panel.open .fp-points li:nth-child(4){ transition-delay: .35s; opacity:1; transform:none; }
+.feature-panel.open .fp-right{ transition-delay: .22s; opacity:1; transform:none; }
+
+@media (prefers-reduced-motion: reduce){
+  .fp-backdrop{ transition: none; backdrop-filter:none; }
+  .fp-card, .fp-left > *, .fp-points li, .fp-right{ transition: none; transform:none !important; }
+}
+
+/* ================== GALERIE ================== */
+
+/* Grille principale qui aligne les items */
+.gallery-grid{
+  display:grid;
+  gap:20px;
+  grid-template-columns: repeat(3, 1fr);  /* 3 colonnes pleines largeur */
+  align-items:start;
+}
+/* Quand l’écran fait 1024px ou moins (tablette) */
+@media (max-width: 1024px){
+  .gallery-grid{ grid-template-columns: repeat(2, 1fr); } /* 2 colonnes */
+}
+
+/* Quand l’écran fait 640px ou moins (téléphone) */
+@media (max-width: 640px){
+  .gallery-grid{ grid-template-columns: 1fr; } /* 1 colonne */
+}
+
+/* Chaque box (image ou slideshow + légende) */
+.gallery-box {
+  display: flex;
+  flex-direction: column; /* empile visuel + texte */
+  align-items: center;    /* centre horizontalement */
+  text-align: center;
+}
+
+/* Image simple dans la galerie */
+.gallery-item {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  pointer-events: auto;
+}
+
+/* Légende sous les images/slideshows */
+.gallery-caption {
+  margin-top: 8px;             /* espace au-dessus */
+  font-size: 0.92rem;          /* légèrement plus petit */
+  color: var(--text-light);    /* utilise la couleur claire du thème */
+  line-height: 1.35;
+  max-width: 90%;
+  word-break: break-word;
+}
+
+/* ================== SLIDESHOW ================== */
+
+/* Conteneur slideshow */
+.x-slideshow {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* ratio rectangulaire (modifie si besoin) */
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: transparent; /* transparent au lieu de noir */
+}
+
+/* Chaque image du slideshow */
+.x-slideshow .slide-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease; /* effet fondu */
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  pointer-events: none;
+}
+
+/* Image visible */
+.x-slideshow .slide-img.is-top {
+  opacity: 1;
+}
+
+/* Optionnel : petite ombre portée */
+.x-slideshow .slide-img {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =======================================================================
+   FOOTER
+   ======================================================================= */
+.site-footer{ padding:36px 0; border-top:1px solid var(--border); background:var(--bg-alt) }
+.site-footer .container{ text-align:center; }
+.site-footer .copyright{ margin:0; font-weight:800; }
+
+/* =======================================================================
+   LIVE badge
+   ======================================================================= */
+.live-badge{
+  margin-left:10px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.5px;
+  background:#ff2d55; color:#fff; box-shadow:0 0 0 0 rgba(255,45,85,.7); animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}
+  70%{box-shadow:0 0 0 10px rgba(255,45,85,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}
+}
+
+/* =======================================================================
+   RESPONSIVE
+   ======================================================================= */
+@media (max-width:960px){
+  .only-mobile{display:inline-flex}
+  .nav{display:none}
+  .nav.open{
+    display:block; position:absolute; top:64px; left:0; right:0; background:var(--card); padding:8px 0;
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  }
+  .nav-list{flex-direction:column; align-items:stretch}
+  .has-submenu .submenu{position:static; margin-top:6px; min-width:unset}
+
+  .hero-grid{grid-template-columns:1fr}
+  .hero-player iframe{height:360px}
+
+  .contact-grid{grid-template-columns:1fr}
+  .contact-links{grid-template-columns:1fr}
+
+  .fp-card{ grid-template-columns:1fr; width:min(720px, 96vw); }
+}
+/* Titres de sections centrés avec animation fade + slide */
+#poll h2,
+#links h2,
+#gallery h2,
+#schedule h2 {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeSlideIn 0.8s ease forwards;
+}
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.schedule-list{
+  display:grid;
+  gap:14px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.sched-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  background: var(--bg-elev); /* s’adapte à ton thème */
+}
+
+.sched-card h3{
+  margin:0 0 6px;
+  font-size:1.05rem;
+}
+
+.sched-meta{
+  font-size:.92rem;
+  color:var(--text-light);
+  margin-bottom:6px;
+}
+
+.sched-badges{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  font-size:.8rem;
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background: var(--bg-alt);
+}
+.badge-live{ background:#d7003a; color:white; border-color:#d7003a; }
+.badge-soon{ background:#0b5; color:white; border-color:#0b5; }
+/* === Planning interactif (onglets, outils, cartes, états) === */
+
+/* Onglets */
+.sched-tabs{
+  display:flex; gap:8px; justify-content:center; margin:10px 0 16px;
+  flex-wrap:wrap;
+}
+.sched-filter{
+  padding:8px 12px; border:1px solid var(--border); border-radius:12px;
+  background:var(--bg-alt); color:var(--text); cursor:pointer;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.sched-filter .chip{
+  display:inline-flex; min-width:22px; height:22px; padding:0 6px;
+  border-radius:999px; border:1px solid var(--border); background:var(--card);
+  font-size:.85rem; align-items:center; justify-content:center;
+}
+.sched-filter.is-active{ outline:2px solid var(--accent); }
+
+/* Outils */
+.sched-tools{
+  display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap;
+  margin:0 0 14px;
+}
+#scheduleSearch{
+  width:min(520px, 100%); padding:10px 12px; border-radius:10px;
+  border:1px solid var(--border); background:var(--bg-alt); color:var(--text);
+}
+.sched-tags{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.sched-tags .tag-check{
+  display:inline-flex; align-items:center; gap:8px; padding:6px 10px;
+  border:1px solid var(--border); border-radius:999px; background:var(--bg-alt);
+}
+.sched-tags input{ accent-color: var(--accent); }
+
+/* Grille des événements */
+.schedule-list{
+  display:grid; gap:14px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Carte */
+.sched-card{
+  position:relative;
+  border:1px solid var(--border); border-radius:12px; background:var(--card);
+  padding:12px; overflow:hidden;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.sched-card:hover{ transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,.24); border-color: rgba(255,255,255,.14); }
+
+.sched-card h3{ margin:0 0 6px; font-size:1.05rem; }
+.sched-meta{ font-size:.92rem; color:var(--text-light); margin:6px 0 8px; }
+
+/* Badges */
+.sched-badges{ display:flex; gap:6px; flex-wrap:wrap; }
+.badge{ font-size:.8rem; padding:2px 8px; border-radius:999px; border:1px solid var(--border); background:var(--bg-alt); }
+.badge-live{ background:#d7003a; color:#fff; border-color:#d7003a; }
+.badge-soon{ background:#0b5; color:#fff; border-color:#0b5; }
+.badge-past{ background:#5a6270; color:#fff; border-color:#5a6270; }
+
+/* Indicateurs d'état visuels */
+.sched-card.is-live{ box-shadow: 0 0 0 2px rgba(215,0,58,.25) inset; }
+.sched-card.is-upcoming{ box-shadow: 0 0 0 2px rgba(0,187,85,.20) inset; }
+.sched-card.is-past{ opacity:.7; }
+
+/* CTA */
+.sched-actions{ margin-top:8px; }
+.sched-actions a{ color:var(--accent); text-decoration:none; }
+
+/* Modale détail (optionnelle) */
+.sched-dialog{
+  border:0; padding:0; background: transparent;
+}
+.sched-dialog::backdrop{ background: rgba(0,0,0,.6); }
+.sched-dialog-card{
+  width:min(680px, 92vw);
+  border:1px solid var(--border); border-radius:14px; background:var(--card);
+  padding:16px; margin:auto; box-shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+.sched-dialog-close{
+  position:absolute; right:12px; top:6px; border:0; background:transparent; color:var(--text);
+  font-size:24px; cursor:pointer;
+}
+
+/* Responsive cohérent avec ta base */
+@media (max-width:640px){
+  #scheduleSearch{ width:100%; }
+}
+/* === Améliorations Planning : bouton, lisibilité, modale === */
+
+/* Bouton "Détails" */
+.sched-actions .btn-more{
+  appearance:none;
+  border:1px solid var(--border);
+  background:var(--bg-alt);
+  color:var(--text);
+  padding:6px 10px;
+  border-radius:10px;
+  cursor:pointer;
+  font: inherit;
+  transition: border-color .15s ease, background .15s ease, transform .12s ease;
+}
+.sched-actions .btn-more:hover{
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Lisibilité des cartes */
+.sched-card{ color: var(--text); }
+.sched-meta{ color: var(--muted); }
+
+/* Badges plus lisibles */
+.badge{ background: #121923; border-color: #273447; }
+.badge-live{ background:#e01a4f; border-color:#e01a4f; color:#fff; }
+.badge-soon{ background:#0bb37b; border-color:#0bb37b; color:#081018; }
+.badge-past{ background:#5f6b7a; border-color:#5f6b7a; color:#fff; }
+
+/* Modale : overlay + carte lisible */
+.sched-dialog{
+  z-index: 9999;      /* devant tout */
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.sched-dialog::backdrop{
+  background: rgba(6, 10, 16, .75); /* overlay plus sombre */
+}
+.sched-dialog-card{
+  position: relative;
+  width: min(720px, 94vw);
+  margin: auto;
+  background: #0f151c;           /* fond lisible */
+  color: var(--text);
+  border: 1px solid #273447;     /* bord visible */
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.55);
+  padding: 18px 18px 16px 18px;
+}
+.sched-dialog-card h3{ margin: 0 0 6px; }
+.sched-dialog-card .sched-meta{ margin: 0 0 10px; }
+.sched-dialog-card .sched-badges{ margin-bottom: 10px; }
+
+/* Croix de fermeture */
+.sched-dialog-close{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .15s ease, transform .12s ease, background .15s ease;
+}
+.sched-dialog-close:hover{
+  border-color: var(--accent);
+  background: rgba(123,211,255,.08);
+  transform: scale(1.03);
+}
+
+/* (Optionnel) rendre le lien "Plus d'infos" homogène au bouton */
+.sched-actions a{
+  display:inline-block;
+  padding:6px 10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  text-decoration:none;
+  color: var(--accent);
+  background: transparent;
+  transition: border-color .15s ease, transform .12s ease;
+  margin-right: 6px;
+}
+.sched-actions a:hover{
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+/* Forcer les 3 cartes À propos sur une seule ligne quand l'espace le permet */
+@media (min-width: 1100px){
+  .about-stack{
+    flex-wrap: nowrap;           /* plus de retour à la ligne */
+    justify-content: center;     /* la rangée reste centrée */
+    gap: 14px;                   /* léger ajustement pour aider à tenir */
+  }
+  .about-stack .about-box{
+    flex: 1 1 0;                 /* les 2e et 3e s'adaptent librement */
+    max-width: none;             /* pas de plafond qui ferait wrap */
+    min-width: 0;                /* autorise la contraction */
+  }
+  .about-stack .about-box:first-child{
+    flex: 3 1 0;              /* “Qui suis-je ?” un peu plus large */
+  }
+}
+/* === Liens utiles : cartes premium (icône, halo, flèche) === */
+
+/* Grille : on garde ta classe existante .link-grid (pas besoin de la renommer) */
+/* Assure la hauteur uniforme */
+.link-grid .link-tile{
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* icône | texte | flèche */
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  min-height: 100px;                     /* hauteur cohérente */
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--tile);
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  overflow: hidden;                      /* masque les halos */
+}
+
+/* Halo d’accent subtil (bord animé) */
+/* Surbrillance pleine au survol */
+.link-tile::before{
+  content: "";
+  position: absolute;
+  inset: 0;                      /* couvre toute la tuile */
+  border-radius: inherit;
+  background: rgba(123,211,255,.08); /* voile coloré doux */
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+.link-tile:hover::before{
+  opacity: 1;                     /* effet visible sur toute la surface */
+}
+
+/* Hover / Focus */
+.link-tile:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0,0,0,.35);
+  border-color: rgba(255,255,255,.12);
+}
+.link-tile:focus-visible{
+  outline: 2px solid var(--accent, #7bd3ff);
+  outline-offset: 2px;
+}
+
+/* Icône à gauche */
+.lt-icon{
+  display: grid;
+  place-items: center;
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: rgba(123,211,255,.10); /* fallback, surchargé par accent-* */
+  font-size: 20px;                   /* si emoji */
+  user-select: none;
+}
+
+/* Texte (titre + sous-texte) */
+.lt-text{ display: grid; gap: 4px; }
+.lt-title{ font-weight: 800; letter-spacing: .2px; }
+.lt-sub{ color: var(--muted); font-size: .92rem; }
+
+/* Flèche à droite qui glisse au hover */
+.lt-go{
+  transition: transform .18s ease, opacity .18s ease;
+  opacity: .85;
+}
+.link-tile:hover .lt-go{ transform: translateX(3px); opacity: 1; }
+
+/* Thèmes d’accent par service (couleurs douces, non agressives) */
+.accent-twitch{ --accent:#7b5cff; }
+.accent-twitch .lt-icon{ background: rgba(123,92,255,.12); }
+
+.accent-dons{ --accent:#ff8fcb; }
+.accent-dons .lt-icon{ background: rgba(255,143,203,.12); }
+
+.accent-discord{ --accent:#6aa9ff; }
+.accent-discord .lt-icon{ background: rgba(106,169,255,.12); }
+
+.accent-youtube{ --accent:#ff6b6b; }
+.accent-youtube .lt-icon{ background: rgba(255,107,107,.12); }
+
+/* Respect des préférences d’animations réduites */
+@media (prefers-reduced-motion: reduce){
+  .link-tile, .lt-go{ transition: none; }
+  .link-tile:hover{ transform:none; }
+  .link-tile::before{ transition: none; }
+}
+/* Grille des Liens utiles (4/2/1 colonnes responsive) */
+.link-grid{
+  display:grid;
+  gap:20px;
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width:1024px){
+  .link-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width:640px){
+  .link-grid{ grid-template-columns: 1fr; }
+}
