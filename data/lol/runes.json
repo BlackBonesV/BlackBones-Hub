@@ -11743,23 +11743,23 @@
             "tree": {
               "name": "SORCELLERIE",
               "desc": "",
-              "emblem": "/assets/lol/emblems/sorcery.png"
+              "emblem": "assets/lol/emblems/sorcery.png"
             },
             "keystone": {
-              "icon": "/assets/lol/keystones/Sorcery/arcane_comet.png",
+              "icon": "assets/lol/keystones/Sorcery/arcane_comet.png",
               "label": "Comète Arcanique"
             },
             "minors": [
               {
-                "icon": "/assets/lol/runes/Sorcery/manaflow.png",
+                "icon": "assets/lol/runes/Sorcery/manaflow.png",
                 "label": "Ruban de Mana"
               },
               {
-                "icon": "/assets/lol/runes/Sorcery/transcendence.png",
+                "icon": "assets/lol/runes/Sorcery/transcendence.png",
                 "label": "Transcendence"
               },
               {
-                "icon": "/assets/lol/runes/Sorcery/scorch.png",
+                "icon": "assets/lol/runes/Sorcery/scorch.png",
                 "label": "Brûlure"
               }
             ]
@@ -11768,30 +11768,30 @@
             "tree": {
               "name": "INSPIRATION",
               "desc": "",
-              "emblem": "/assets/lol/emblems/inspiration.png"
+              "emblem": "assets/lol/emblems/inspiration.png"
             },
             "minors": [
               {
-                "icon": "/assets/lol/runes/Inspiration/BiscuitDelivery.png",
+                "icon": "assets/lol/runes/Inspiration/BiscuitDelivery.png",
                 "label": "Livraison de Biscuit"
               },
               {
-                "icon": "/assets/lol/runes/Inspiration/CosmicInsight.png",
+                "icon": "assets/lol/runes/Inspiration/CosmicInsight.png",
                 "label": "Savoir Cosmique"
               }
             ]
           },
           "shards": [
             {
-              "icon": "/assets/lol/shards/AbilityHaste.png",
+              "icon": "assets/lol/shards/AbilityHaste.png",
               "label": "+8 accélération de compétence"
             },
             {
-              "icon": "/assets/lol/shards/AdaptativeForce.png",
+              "icon": "assets/lol/shards/AdaptativeForce.png",
               "label": "+9 force adaptative"
             },
             {
-              "icon": "/assets/lol/shards/Health.png",
+              "icon": "assets/lol/shards/Health.png",
               "label": "+65 PV"
             }
           ],
@@ -11842,12 +11842,12 @@
               "emblem": "assets/lol/emblems/sorcery.png"
             },
             "keystone": {
-              "icon": "/assets/lol/keystones/Sorcery/arcane_comet.png",
+              "icon": "assets/lol/keystones/Sorcery/arcane_comet.png",
               "label": "Comète Arcanique"
             },
             "minors": [
               {
-                "icon": "/assets/lol/runes/Sorcery/manaflow.png",
+                "icon": "assets/lol/runes/Sorcery/manaflow.png",
                 "label": "Ruban de mana"
               },
               {
@@ -11863,30 +11863,30 @@
           "secondary": {
             "tree": {
               "name": "INSPIRATION",
-              "emblem": "/assets/lol/emblems/inspiration.png"
+              "emblem": "assets/lol/emblems/inspiration.png"
             },
             "minors": [
               {
-                "icon": "/assets/lol/runes/Inspiration/BiscuitDelivery.png",
+                "icon": "assets/lol/runes/Inspiration/BiscuitDelivery.png",
                 "label": "Livraison de Biscuit"
               },
               {
-                "icon": "/assets/lol/runes/Inspiration/CosmicInsight.png",
+                "icon": "assets/lol/runes/Inspiration/CosmicInsight.png",
                 "label": "Savoir Cosmique"
               }
             ]
           },
           "shards": [
             {
-              "icon": "/assets/lol/shards/AdaptativeForce.png",
+              "icon": "assets/lol/shards/AdaptativeForce.png",
               "label": "+9 force adaptative"
             },
             {
-              "icon": "/assets/lol/shards/AdaptativeForce.png",
+              "icon": "assets/lol/shards/AdaptativeForce.png",
               "label": "+9 force adaptative"
             },
             {
-              "icon": "/assets/lol/shards/Health.png",
+              "icon": "assets/lol/shards/Health.png",
               "label": "+65 PV"
             }
           ],
@@ -11894,11 +11894,11 @@
             "starter": [
               {
                 "name": "Atlas",
-                "icon": "/assets/lol/items/atlas.png"
+                "icon": "assets/lol/items/atlas.png"
               },
               {
                 "name": "Potion de soin",
-                "icon": "/assets/lol/items/PotionSoin.png"
+                "icon": "assets/lol/items/PotionSoin.png"
               }
             ],  
             "early": [
@@ -11908,7 +11908,7 @@
               },
               {
                 "name": "Chapitre perdu",
-                "icon": "/assets/lol/items/LostChapter.png"
+                "icon": "assets/lol/items/LostChapter.png"
               }
             ],
             "core": [
@@ -11936,11 +11936,11 @@
               },
               {
                 "name":"Morellonomicon ou Mejai's",
-                "icon":"/assets/lol/items/Morellonomicon.png"
+                "icon":"assets/lol/items/Morellonomicon.png"
               },
               {
                 "name":"Mejai's ou Morellonomicon",
-                "icon":"/assets/lol/items/mejai.png"
+                "icon":"assets/lol/items/mejai.png"
               }
             ]
           }
