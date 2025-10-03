@@ -406,10 +406,10 @@ function initGamesCarousel(){
 }
 
 /* ============================================================================
-   LoL — Chargement JSON + 3 modales (adapté à /data/lol/)
+   LoL — Chargement JSON + 3 modales (adapté à data/lol/)
    ============================================================================ */
-const CHAMPIONS_URL = '/data/lol/champions.json';
-const RUNES_URL     = '/data/lol/runes.json';
+const CHAMPIONS_URL = 'data/lol/champions.json';
+const RUNES_URL     = 'data/lol/runes.json';
 // Dev: recharger les JSON à chaque ouverture (évite le cache)
 const DEV_FETCH_NO_CACHE = true;
 const withBust  = (url) => DEV_FETCH_NO_CACHE ? `${url}?v=${Date.now()}` : url;
@@ -465,7 +465,7 @@ function initLoLBuilds(){
       openModalById('gameModal');
     }catch(err){
       console.error(err);
-      alert('Impossible de charger les données LoL (/data/lol/*).');
+      alert('Impossible de charger les données LoL (data/lol/*).');
     }
   });
 }
