@@ -1,32 +1,96 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <!-- Favicon (logo de l’onglet du site) -->
-<link rel="icon" type="image/png" href="assets/favicon.png">
+  <!-- =======================================================================
+       MÉTA / HEAD
+       - Charset, viewport responsive, titre, description SEO simple
+       - Favicon (adapter le chemin si besoin)
+       - Google Fonts (Inter), feuille de styles globale
+     ======================================================================= -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ META                                                        ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
   <title>BlackBones — Hub Twitch</title>
-  <meta name="description" content="Liens, lecteur Twitch, sondage, galerie et contact de BlackBones.">
+  <meta name="description" content="Liens, lecteur Twitch, sondage, galerie, planning et contact de BlackBones.">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="theme-dark">
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ HEADER — Nav alignée à gauche + badge LIVE                  ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
+<!-- =========================================================================
+     BODY : thème sombre par défaut + ancre #top
+   ========================================================================= -->
+<body class="theme-dark" id="top">
+
+  <!-- =======================================================================
+       MODALES LoL (x3) — (1) Champions, (2) Presets/Configs, (3) Runes
+       - La logique est gérée dans script.js (ouverture/fermeture + rendu JSON)
+       - Classes importantes : .modal, .is-hidden, .is-open, .animate-in/out
+       - Accessibilité : role="dialog", aria-modal, aria-labelledby
+     ======================================================================= -->
+
+  <!-- Modale #1 : CHAMPIONS -->
+  <div id="gameModal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="gameModalTitle">
+    <!-- Backdrop cliquable (fermeture) -->
+    <div class="modal-backdrop" data-close="gameModal" aria-hidden="true"></div>
+
+    <!-- Fenêtre de dialogue -->
+    <div class="modal-dialog modal-lg" role="document">
+      <header class="modal-head">
+        <h3 id="gameModalTitle">League of Legends — Champions</h3>
+        <!-- Bouton de fermeture (géré par JS via [data-close]) -->
+        <button class="modal-close" data-close="gameModal" aria-label="Fermer">✕</button>
+      </header>
+
+      <!-- Corps de la modale : injecté dynamiquement (grille de champions) -->
+      <div class="modal-body" id="gameModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Modale #2 : PRESETS/CONFIGS -->
+  <div id="presetModal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="presetModalTitle">
+    <div class="modal-backdrop" data-close="presetModal" aria-hidden="true"></div>
+    <div class="modal-dialog modal-lg" role="document">
+      <header class="modal-head">
+        <h3 id="presetModalTitle">Configurations</h3>
+        <button class="modal-close" type="button" aria-label="Fermer" data-close="presetModal">×</button>
+      </header>
+      <!-- Corps injecté dynamiquement (boutons de presets) -->
+      <div id="presetModalBody" class="modal-body">
+        <p>Chargement des configurations…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale #3 : RUNES -->
+  <div id="runesModal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="runesModalTitle">
+    <div class="modal-backdrop" data-close="runesModal" aria-hidden="true"></div>
+    <div class="modal-dialog modal-xl" role="document">
+      <header class="modal-head">
+        <h3 id="runesModalTitle">Runes</h3>
+        <button class="modal-close" data-close="runesModal" aria-label="Fermer">✕</button>
+      </header>
+      <!-- Corps injecté dynamiquement (arbre 1 / arbre 2 / shards + items) -->
+      <div class="modal-body" id="runesModalBody"></div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       EN-TÊTE (HEADER)
+       - Logo/brand (placeholder) + badge LIVE (affiché/masqué en JS via DecAPI)
+       - Navigation principale + sous-menu Réseaux
+       - Bouton burger pour mobiles (ouvre/ferme .nav)
+     ======================================================================= -->
   <header class="site-header">
     <div class="container header-inner">
+      <!-- Marque + Badget LIVE (hidden par défaut, rendu visible si live) -->
       <a class="brand" href="#top" aria-label="Accueil">
         <span id="liveBadge" class="live-badge" hidden>LIVE</span>
       </a>
 
+      <!-- NAVIGATION PRINCIPALE -->
       <nav id="mainNav" class="nav" aria-label="Navigation principale">
         <ul class="nav-list">
+          <!-- Liens d’ancre vers sections -->
           <li><a href="#top">À propos</a></li>
           <li><a href="#poll">Sondage</a></li>
           <li><a href="#links">Liens utiles</a></li>
@@ -34,9 +98,11 @@
           <li><a href="#schedule">Planning</a></li>
           <li><a href="#contact">Contact</a></li>
 
-                    <!-- Sous-menu Réseaux -->
+          <!-- Sous-menu Réseaux (dropdown accessible) -->
           <li class="has-submenu">
+            <!-- Bouton qui toggle le sous-menu (JS met aria-expanded) -->
             <button class="submenu-trigger" aria-haspopup="true" aria-expanded="false">Réseaux</button>
+            <!-- Menu déroulant -->
             <ul class="submenu">
               <li><a href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">Twitch</a></li>
               <li><a href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">YouTube</a></li>
@@ -46,208 +112,266 @@
         </ul>
       </nav>
 
+      <!-- BOUTON BURGER (mobile) : ouvre/ferme la nav (#mainNav) -->
       <button class="btn-icon only-mobile" id="btnMenu" aria-expanded="false" aria-controls="mainNav" aria-label="Ouvrir le menu">☰</button>
     </div>
   </header>
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ HERO — À propos (gauche) + Twitch (droite + CTA)            ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
-  <section class="hero" id="top" aria-label="Présentation">
+  <!-- =======================================================================
+       HERO (SECTION D’INTRO)
+       - Grille : Spotify (gauche), Lecteur Twitch (centre), Chat (droite)
+       - Colonne « À propos » sous la grille
+       - Le src du lecteur/chat est injecté en JS (parent=hostname pour Twitch)
+     ======================================================================= -->
+  <section class="hero" aria-label="Présentation">
     <div class="container hero-inner hero-grid">
-<!-- Grille 2 colonnes : lecteur + chat -->
-<div class="hero-media">
-    <!-- Spotify -->
-  <aside class="hero-spotify">
-    <iframe
-      style="border-radius:12px"
-      src="https://open.spotify.com/embed/playlist/0kYWpjImVT8LBf5iPMmY4Q?utm_source=generator"
-      width="100%"
-      height="352"
-      frameborder="0"
-      loading="lazy"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-    </iframe>
-  </aside>
-  <!-- Lecteur -->
-  <div class="hero-player">
-    <div class="twitch-embed">
-      <iframe id="twitchPlayer" title="Twitch Player" allowfullscreen frameborder="0"></iframe>
-    </div>
-    <div class="hero-cta">
-      <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
-      <a class="btn-outline" href="#links">Parcourir les liens</a>
-    </div>
-  </div>
 
-  <!-- Chat (lecture seule via overlay transparent) -->
-  <aside class="hero-chat" aria-label="Chat Twitch (lecture seule)">
-    <div class="chat-wrap">
-      <iframe id="twitchChat" title="Twitch Chat" frameborder="0" scrolling="no"></iframe>
-      <div class="chat-overlay" aria-hidden="true" title="Lecture seule"></div>
-    </div>
-  </aside>
-</div>
+      <!-- === Bandeau média 3 colonnes : Spotify / Player / Chat === -->
+      <div class="hero-media">
+        <!-- Spotify (iframe simple) -->
+        <aside class="hero-spotify">
+          <iframe
+            style="border-radius:12px"
+            src="https://open.spotify.com/embed/playlist/0kYWpjImVT8LBf5iPMmY4Q?utm_source=generator"
+            width="100%" height="352" frameborder="0" loading="lazy"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+          </iframe>
+        </aside>
 
-      <!-- Colonne gauche : pile de boxs -->
+        <!-- Lecteur Twitch (src défini en JS pour ajouter ?parent=hostname) -->
+        <div class="hero-player">
+          <div class="twitch-embed">
+            <!-- ⚠️ NE PAS mettre d’URL ici : script.js s’en charge -->
+            <iframe id="twitchPlayer" title="Twitch Player" allowfullscreen frameborder="0"></iframe>
+          </div>
+          <!-- Call-to-actions sous le lecteur -->
+          <div class="hero-cta">
+            <a class="btn-primary" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">▶ Rejoindre le live</a>
+            <a class="btn-outline" href="#links">Parcourir les liens</a>
+          </div>
+        </div>
+
+        <!-- Chat Twitch (lecture seule : overlay bloque l’input) -->
+        <aside class="hero-chat" aria-label="Chat Twitch (lecture seule)">
+          <div class="chat-wrap">
+            <!-- ⚠️ NE PAS mettre d’URL ici : script.js s’en charge -->
+            <iframe id="twitchChat" title="Twitch Chat" frameborder="0" scrolling="no"></iframe>
+            <div class="chat-overlay" aria-hidden="true" title="Lecture seule"></div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- === Colonne « À propos » : Bio / Jeux du moment / Horaires === -->
       <aside class="hero-about">
         <h1 class="about-title">À propos</h1>
 
         <div class="about-stack">
+          <!-- (1) Bloc Bio -->
           <div class="about-box">
             <h3>Qui suis-je ?</h3>
             <p>Je me présente, j'ai 22 ans et en plus du stream je suis vendeur dans le prêt à porter.
-Je suis un grand fan de Ghibli comme tu peux le voir ici (San et Calcifer les goat) !
-Par rapport aux streams je fais un peu de tout, FPS, Battle Royal, tout en passant par les jeux à histoire.</p>
+              Grand fan de Ghibli (San & Calcifer 💜). Je stream un peu de tout : FPS, Battle Royale, jeux à histoire…</p>
           </div>
 
+          <!-- (2) Bloc Jeux du moment
+               - [LEGACY] = ancienne liste statique (gardée commentée pour rollback)
+               - [PATCH]  = carrousel images (slides cliquables si data-link présent)
+          -->
           <div class="about-box">
-            <h3>Jeux du moment</h3>
-            <ul class="clean">
-              <li>League Of Legends</li>
-              <li>Apex Legends</li>
-              <li>GTA 5</li>
+            <h3>Jeux du moment
+                <li>Certains jeux sont cliquables !
+                <li>Vous pouvez voir mes builds Lol avec un petit bouton sur l'image!
+            </h3>
+
+            <!-- [LEGACY-BEGIN] Jeux du moment (liste texte) — décommenter pour rollback
+            <ul class="gm-list">
+              <li class="gm-item game-trigger" data-game="lol">League of Legends</li>
+              <li class="gm-item is-static">Apex Legends</li>
+              <li class="gm-item is-static">GTA 5</li>
             </ul>
+            [LEGACY-END] -->
+
+            <!-- [PATCH-BEGIN] Carrousel jeux (images) -->
+            <div class="games-carousel" id="gamesCarousel" aria-label="Carrousel des jeux du moment">
+              <!-- Bouton précédent -->
+              <button class="gc-nav gc-prev" aria-label="Jeu précédent">‹</button>
+
+              <!-- Viewport du carrousel (masque le débordement) -->
+              <div class="gc-viewport">
+                <!-- Track qui coulisse -->
+                <div class="gc-track">
+                  <!-- Slide 1 — cliquable (data-link) -->
+                <figure class="gc-slide"
+                        data-link="https://tracker.gg/lol/profile/riot/BlackBones%23BBT/overview"
+                        data-label="League of Legends">
+                  <img src="assets/games/lol.webp" alt="League of Legends" loading="lazy">
+
+                  <!-- Bouton overlay : ouvre la modale LoL -->
+                  <button type="button"
+                          class="gc-builds-btn"
+                          aria-label="Ouvrir mes builds League of Legends">
+                    ⚔️ Mes builds
+                  </button>
+
+                  <figcaption>League of Legends</figcaption>
+                </figure>
+
+
+                  <!-- Slide 3 — cliquable -->
+                  <figure class="gc-slide" data-link="https://apex.tracker.gg/apex/profile/origin/EDAJSKK/overview" data-label="Apex Legends">
+                    <img src="assets/games/Apex.webp" alt="Apex Legends" loading="lazy">
+                    <figcaption>Apex Legends</figcaption>
+                  </figure>
+
+                  <!-- Slide 2 — non cliquable (pas de data-link) -->
+                  <figure class="gc-slide" data-label="GTA V">
+                    <img src="assets/games/gta5.png" alt="GTA V" loading="lazy">
+                    <figcaption>GTA V</figcaption>
+                  </figure>
+
+                  <!-- ➕ Dupliquer <figure.gc-slide> pour ajouter d’autres jeux -->
+                </div>
+              </div>
+
+              <!-- Bouton suivant -->
+              <button class="gc-nav gc-next" aria-label="Jeu suivant">›</button>
+
+              <!-- Dots (remplis/activés par le JS) -->
+              <div class="gc-dots" aria-label="Navigation carrousel"></div>
+            </div>
+            <!-- [PATCH-END] -->
           </div>
 
+          <!-- (3) Bloc Horaires — largeur personnalisée mémorisée dans le CSS -->
           <div class="about-box">
             <h3>Horaires</h3>
-            <p>🗓️ Variable, en fonction de mon envie </p>
+            <p>🗓️ Variable, en fonction de mon envie</p>
           </div>
         </div>
       </aside>
-
     </div>
   </section>
 
+  <!-- =======================================================================
+       LIENS UTILES — 4 tuiles (Twitch / Dons / Discord / YouTube)
+       - Simple grille responsive
+       - Chaque tuile est un lien externe
+     ======================================================================= -->
+  <section id="links" class="section">
+    <div class="container">
+      <h2>Liens utiles</h2>
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ LIENS UTILES — tuiles cliquables                            ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
-<section id="links" class="section">
-  <div class="container">
-    <h2>Liens utiles</h2>
+      <div class="link-grid">
+        <a class="link-tile accent-twitch" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">
+          <span class="lt-icon">🎮</span>
+          <span class="lt-text">
+            <span class="lt-title">Twitch</span>
+            <span class="lt-sub">Suivre + s’abonner</span>
+          </span>
+          <span class="lt-go" aria-hidden="true">↗</span>
+        </a>
 
-    <!-- WRAPPER de grille manquant jusqu’ici -->
-    <div class="link-grid">
-      <!-- TWITCH -->
-      <a class="link-tile accent-twitch" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">
-        <span class="lt-icon">🎮</span>
-        <span class="lt-text">
-          <span class="lt-title">Twitch</span>
-          <span class="lt-sub">Suivre + s’abonner</span>
-        </span>
-        <span class="lt-go" aria-hidden="true">↗</span>
-      </a>
+        <a class="link-tile accent-dons" href="https://streamlabs.com/blackbonesv2/tip" target="_blank" rel="noopener">
+          <span class="lt-icon">💜</span>
+          <span class="lt-text">
+            <span class="lt-title">Dons</span>
+            <span class="lt-sub">Soutenir la chaîne</span>
+          </span>
+          <span class="lt-go" aria-hidden="true">↗</span>
+        </a>
 
-      <!-- DONS -->
-      <a class="link-tile accent-dons" href="https://streamlabs.com/blackbonesv2/tip" target="_blank" rel="noopener">
-        <span class="lt-icon">💜</span>
-        <span class="lt-text">
-          <span class="lt-title">Dons</span>
-          <span class="lt-sub">Soutenir la chaîne</span>
-        </span>
-        <span class="lt-go" aria-hidden="true">↗</span>
-      </a>
+        <a class="link-tile accent-discord" href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">
+          <span class="lt-icon">💬</span>
+          <span class="lt-text">
+            <span class="lt-title">Discord</span>
+            <span class="lt-sub">Rejoins la commu</span>
+          </span>
+          <span class="lt-go" aria-hidden="true">↗</span>
+        </a>
 
-      <!-- DISCORD -->
-      <a class="link-tile accent-discord" href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">
-        <span class="lt-icon">💬</span>
-        <span class="lt-text">
-          <span class="lt-title">Discord</span>
-          <span class="lt-sub">Rejoins la commu</span>
-        </span>
-        <span class="lt-go" aria-hidden="true">↗</span>
-      </a>
-
-      <!-- YOUTUBE -->
-      <a class="link-tile accent-youtube" href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">
-        <span class="lt-icon">▶️</span>
-        <span class="lt-text">
-          <span class="lt-title">YouTube</span>
-          <span class="lt-sub">VOD & vidéos</span>
-        </span>
-        <span class="lt-go" aria-hidden="true">↗</span>
-      </a>
+        <a class="link-tile accent-youtube" href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">
+          <span class="lt-icon">▶️</span>
+          <span class="lt-text">
+            <span class="lt-title">YouTube</span>
+            <span class="lt-sub">VOD & vidéos</span>
+          </span>
+          <span class="lt-go" aria-hidden="true">↗</span>
+        </a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║                            GALERIE                           ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
+  <!-- =======================================================================
+       GALERIE — (1) Image « Feature » (panneau détaillé) + (2) Slideshows
+       - L’image #galleryFeature ouvre un panneau d’infos (featurePanel)
+       - Les deux carrousels #ss-2 et #ss-3 sont des crossfades simples
+       - Lightbox pour les autres images .gallery-item
+     ======================================================================= -->
   <section id="gallery" class="section">
     <div class="container">
       <h2>Galerie</h2>
+
       <div class="gallery-grid">
-
-      <!-- Box 1 : Image fixe avec panneau infos -->
-      <div class="gallery-box">
-        <img
-          id="galleryFeature"
-          class="gallery-item"
-          src="assets/gallery/PC.png"
-          alt="Mon PC"
-          data-title="Ma compo PC"
-          data-desc=""
-          data-video="https://www.youtube.com/embed/ElDZj5oV4v4"
-          data-points='[
-            {"label":"Boitier : O11 DYNAMIQUE EVO XL BLANC","url":"https://lian-li.com/fr/product/o11-dynamic-evo-xl/?fbclid=IwZXh0bgNhZW0CMTEAAR2xAvin_B7_CbQud035s6DKpEPTiA39RQtEHXc3y9GH7LLDuvfqIEE_tSo_aem_8DHEX7RI5rbMYby-pEKXHw"},
-            {"label":"PROC : AMD Ryzen™ 7 7700X","url":"https://www.amd.com/fr/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7700x.html"},
-            {"label":"CM : B650 AORUS ELITE AX ICE","url":"https://www.gigabyte.com/fr/Motherboard/B650-AORUS-ELITE-AX-ICE"},
-            {"label":"RAM : CORSAIR VENGEANCE RGB 32 Go DDR5 5 600 MHz","url":"https://www.corsair.com/fr/fr/p/memory/cmh32gx5m2b5600c36wk/vengeance-rgb-32gb-2x16gb-ddr5-dram-5600mhz-c36-memory-kit-white-cmh32gx5m2b5600c36wk"},
-            {"label":"CG : GeForce RTX™ 3070 GAMING OC","url":"https://www.gigabyte.com/fr/Graphics-Card/GV-N3070GAMING-OC-8GD-rev-10"},
-            {"label":"Ecran : G-MASTER GB3466WQSU-B1 (x2)","url":"https://iiyama.com/fr_fr/produits/g-master-gb3466wqsu-b1"},
-            {"label":"Clavier : LOGITECH G715","url":"https://www.logitechg.com/fr-fr/shop/p/g715-tkl-mechanical-wireless-keyboard.920-010459"},
-            {"label":"Souris : LOGITECH G PRO","url":"https://www.logitechg.com/fr-be/products/gaming-mice/pro-wireless-mouse.910-005273.html"}
-          ]'
-        />
+        <!-- (1) Image “feature” → ouvre un panneau à droite avec points + vidéo -->
+        <div class="gallery-box">
+          <img
+            id="galleryFeature"
+            class="gallery-item"
+            src="assets/gallery/PC.png"
+            alt="Mon PC"
+            data-title="Ma compo PC"
+            data-desc=""
+            data-video="https://www.youtube.com/embed/ElDZj5oV4v4"
+            data-points='[
+              {"label":"Boitier : O11 DYNAMIC EVO XL BLANC","url":"https://lian-li.com/fr/product/o11-dynamic-evo-xl/"},
+              {"label":"CPU : AMD Ryzen™ 7 7700X","url":"https://www.amd.com/fr/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7700x.html"},
+              {"label":"CM : B650 AORUS ELITE AX ICE","url":"https://www.gigabyte.com/fr/Motherboard/B650-AORUS-ELITE-AX-ICE"},
+              {"label":"RAM : VENGEANCE RGB 32 Go DDR5 5600","url":"https://www.corsair.com/fr/fr/p/memory/cmh32gx5m2b5600c36wk"},
+              {"label":"GPU : GeForce RTX™ 3070 GAMING OC","url":"https://www.gigabyte.com/fr/Graphics-Card/GV-N3070GAMING-OC-8GD-rev-10"}
+            ]'
+          />
           <p class="gallery-caption">Setup</p>
-      </div>
-
-      <!-- Box 2 : Slideshow #2 -->
-      <div class="gallery-box">
-        <div class="x-slideshow" id="ss-2" aria-label="Slideshow 2">
-          <img class="slide-img is-top" src="assets/gallery/slide2/slide-1.png" alt="Slideshow image 2" draggable="false" oncontextmenu="return false">
-          <img class="slide-img" src="assets/gallery/slide2/slide-2.png" alt="" aria-hidden="true" draggable="false" oncontextmenu="return false">
         </div>
-        <p class="gallery-caption">Emotes</p>
-      </div>
 
-      <!-- Box 3 : Slideshow #3 -->
-      <div class="gallery-box">
-        <div class="x-slideshow" id="ss-3" aria-label="Slideshow 3">
-          <img class="slide-img is-top" src="assets/gallery/slide3/slide-1.png" alt="Slideshow image 3" draggable="false" oncontextmenu="return false">
-          <img class="slide-img" src="assets/gallery/slide3/slide-2.png" alt="" aria-hidden="true" draggable="false" oncontextmenu="return false">
+        <!-- (2) Slideshow #2 (images définies dans script.js → makeCrossfade) -->
+        <div class="gallery-box">
+          <div class="x-slideshow" id="ss-2" aria-label="Slideshow 2">
+            <img class="slide-img is-top" src="assets/gallery/slide2/slide-1.png" alt="Slideshow image 2" draggable="false" oncontextmenu="return false">
+            <img class="slide-img" src="assets/gallery/slide2/slide-2.png" alt="" aria-hidden="true" draggable="false" oncontextmenu="return false">
+          </div>
+          <p class="gallery-caption">Emotes</p>
         </div>
-        <p class="gallery-caption">Badges</p>
-      </div>
 
+        <!-- (3) Slideshow #3 -->
+        <div class="gallery-box">
+          <div class="x-slideshow" id="ss-3" aria-label="Slideshow 3">
+            <img class="slide-img is-top" src="assets/gallery/slide3/slide-1.png" alt="Slideshow image 3" draggable="false" oncontextmenu="return false">
+            <img class="slide-img" src="assets/gallery/slide3/slide-2.png" alt="" aria-hidden="true" draggable="false" oncontextmenu="return false">
+          </div>
+          <p class="gallery-caption">Badges</p>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
 
-        <!-- Autres images : ouvrent la lightbox classique -->
-        <!--  <img loading="lazy" src="assets/gallery/shot-02.png" alt="Setup streaming" class="gallery-item"/>
-        <img loading="lazy" src="assets/gallery/shot-03.png" alt="Moment fun en stream" class="gallery-item"/>
-        <img loading="lazy" src="assets/gallery/shot-04.png" alt="Communauté BlackBones" class="gallery-item"/>
-      </div>
-    </div> -->
-
-    <!-- ✅ PANNEAU (image 1) -->
+    <!-- Panneau “feature” affiché quand on clique l’image #galleryFeature -->
     <div id="featurePanel" class="feature-panel" aria-hidden="true">
+      <!-- Backdrop cliquable pour fermer -->
       <div class="fp-backdrop" id="fpBackdrop" aria-hidden="true"></div>
+
+      <!-- Carte avec 2 colonnes : (gauche) infos & liens, (droite) vidéo -->
       <div class="fp-card" role="dialog" aria-modal="true" aria-labelledby="fpTitle">
         <button class="fp-close" id="fpClose" aria-label="Fermer le panneau">×</button>
 
         <div class="fp-left">
-          <h3 id="fpTitle">Titre de l’extrait</h3>
-          <p id="fpDesc">La description apparaît ici (injectée depuis l’image #galleryFeature).</p>
+          <h3 id="fpTitle">Titre</h3>
+          <p id="fpDesc">Description…</p>
+          <!-- Liste de points cliquables (liens), masquée si vide -->
           <ul id="fpPoints" class="fp-points" hidden></ul>
         </div>
 
         <div class="fp-right">
           <div class="fp-video-wrap">
+            <!-- La SRC de la vidéo est injectée en JS (data-video) -->
             <iframe
               id="fpVideo"
               title="Vidéo"
@@ -262,7 +386,7 @@ Par rapport aux streams je fais un peu de tout, FPS, Battle Royal, tout en passa
       </div>
     </div>
 
-    <!-- Lightbox (pour les autres images) -->
+    <!-- Lightbox (pour images .gallery-item non-feature) -->
     <div id="lightbox" aria-hidden="true">
       <button class="lb-close" id="lbClose" aria-label="Fermer">×</button>
       <img id="lbImg" alt="" />
@@ -270,19 +394,17 @@ Par rapport aux streams je fais un peu de tout, FPS, Battle Royal, tout en passa
     </div>
   </section>
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ SONDAGE — StrawPoll pleine largeur                          ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
+  <!-- =======================================================================
+       SONDAGE — StrawPoll
+       - Iframe + script widget; l’ID du sondage est dans l’URL d’embed
+     ======================================================================= -->
   <section id="poll" class="section">
     <div class="container">
       <h2>Sondage</h2>
-
       <div class="poll-full">
         <div class="poll-card">
           <h3 class="poll-title">Vote ici</h3>
-          <div class="strawpoll-embed"
-               id="strawpoll_XOgOVbprbn3"
-               style="height: 520px; width: 100%; display: flex; flex-direction: column;">
+          <div class="strawpoll-embed" id="strawpoll_XOgOVbprbn3" style="height: 520px; width: 100%; display: flex; flex-direction: column;">
             <iframe
               title="StrawPoll Embed"
               id="strawpoll_iframe_XOgOVbprbn3"
@@ -296,109 +418,151 @@ Par rapport aux streams je fais un peu de tout, FPS, Battle Royal, tout en passa
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ PLANNING — exemple statique                                 ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
-<section id="schedule" class="section">
-  <div class="container">
-    <h2>Planning</h2>
+  <!-- =======================================================================
+       PLANNING — Automatisé (classes is-upcoming/is-live/is-past en JS)
+       - Ajouter les événements dans #scheduleList
+       - Chaque .sched-card doit avoir data-start + (data-end ou data-duration)
+       - Les filtres (onglets) + recherche sont gérés dans script.js
+     ======================================================================= -->
+  <section id="schedule" class="section">
+    <div class="container">
+      <h2>Planning</h2>
 
-    <!-- Onglets / filtres d'état -->
-    <div class="sched-tabs" role="tablist" aria-label="Filtres événements">
-      <button class="sched-filter is-active" data-filter="all"      role="tab" aria-selected="true">Tous <span class="chip" id="count-all">0</span></button>
-      <button class="sched-filter"           data-filter="live"     role="tab" aria-selected="false">En cours <span class="chip" id="count-live">0</span></button>
-      <button class="sched-filter"           data-filter="upcoming" role="tab" aria-selected="false">À venir <span class="chip" id="count-upcoming">0</span></button>
-      <button class="sched-filter"           data-filter="past"     role="tab" aria-selected="false">Passés <span class="chip" id="count-past">0</span></button>
-    </div>
-
-    <!-- Outils : recherche + tags -->
-    <div class="sched-tools">
-      <input id="scheduleSearch" type="search" placeholder="Rechercher (titre, tag)…" aria-label="Rechercher dans le planning" />
-      <div id="scheduleTags" class="sched-tags" aria-label="Filtrer par tags">
-        <!-- tags générés dynamiquement -->
+      <!-- ONGLETS (filtres) — Les compteurs (chips) sont mis à jour par JS -->
+      <div class="sched-tabs" role="tablist" aria-label="Filtres événements">
+        <button class="sched-filter is-active" data-filter="all" role="tab" aria-selected="true">
+          Tous <span class="chip" id="count-all">0</span>
+        </button>
+        <button class="sched-filter" data-filter="live" role="tab" aria-selected="false">
+          En cours <span class="chip" id="count-live">0</span>
+        </button>
+        <button class="sched-filter" data-filter="upcoming" role="tab" aria-selected="false">
+          À venir <span class="chip" id="count-upcoming">0</span>
+        </button>
+        <button class="sched-filter" data-filter="past" role="tab" aria-selected="false">
+          Passés <span class="chip" id="count-past">0</span>
+        </button>
       </div>
+
+      <!-- OUTILS : recherche (texte + tags si besoin plus tard) -->
+      <div class="sched-tools">
+        <input id="scheduleSearch" type="search" placeholder="Rechercher (titre, tag)…" aria-label="Rechercher dans le planning" />
+        <div id="scheduleTags" class="sched-tags" aria-label="Filtrer par tags"></div>
+      </div>
+
+      <!-- LISTE D’ÉVÉNEMENTS
+           - Exemple 1 : start + end
+           - Exemple 2 : start + duration (minutes)
+           - Exemple 3 : passé
+           - Le contenu visuel (badge) est mis à jour automatiquement en JS
+      -->
+      <div id="scheduleList" class="schedule-list" aria-live="polite">
+        <!-- Event 1 — start + end précis -->
+        <div class="sched-card"
+             data-tags="lol tournoi ranked"
+             data-start="2025-10-05T18:00"
+             data-end="2025-10-05T20:00">
+          <h3>Tournoi League of Legends</h3>
+          <div class="sched-meta">Dimanche 5 octobre — 18h</div>
+          <div class="sched-badges"><span class="badge">Calcul en cours…</span></div>
+          <p>Stream spécial compétition classée !</p>
+          <div class="sched-actions">
+            <button class="btn-more" data-dialog="eventDialog">Détails</button>
+          </div>
+        </div>
+
+        <!-- Event 2 — start + duration (120 min = 2h) -->
+        <div class="sched-card"
+             data-tags="just chatting chill"
+             data-start="2025-10-04T19:30"
+             data-duration="120">
+          <h3>Discussion Chill</h3>
+          <div class="sched-meta">Samedi 4 octobre — 19h30</div>
+          <div class="sched-badges"><span class="badge">Calcul en cours…</span></div>
+          <p>On papote actu gaming avec la commu.</p>
+        </div>
+
+        <!-- Event 3 — un exemple passé -->
+        <div class="sched-card"
+             data-tags="retro zelda"
+             data-start="2025-10-02T20:00"
+             data-duration="150">
+          <h3>Retro Zelda Ocarina</h3>
+          <div class="sched-meta">Jeudi 2 octobre — 20h</div>
+          <div class="sched-badges"><span class="badge">Calcul en cours…</span></div>
+          <p>Redécouverte de la saga.</p>
+        </div>
+      </div>
+
+      <!-- MODALE DE DÉTAIL (facultative) — s’ouvre si tu gères le onClick en JS -->
+      <dialog id="eventDialog" class="sched-dialog">
+        <article class="sched-dialog-card">
+          <button class="sched-dialog-close" aria-label="Fermer">×</button>
+          <h3 id="dlgTitle">Détail de l’événement</h3>
+          <p id="dlgWhen" class="sched-meta">Date / Heure</p>
+          <div id="dlgTags" class="sched-badges"></div>
+          <p id="dlgDesc">Description…</p>
+          <p id="dlgLinkWrap"></p>
+        </article>
+      </dialog>
     </div>
+  </section>
 
-    <!-- Liste des événements (rendue par JS) -->
-    <div id="scheduleList" class="schedule-list" aria-live="polite"></div>
-
-    <!-- Modale (détails) facultative -->
-    <dialog id="eventDialog" class="sched-dialog">
-      <article class="sched-dialog-card">
-        <button class="sched-dialog-close" aria-label="Fermer">×</button>
-        <h3 id="dlgTitle"></h3>
-        <p id="dlgWhen" class="sched-meta"></p>
-        <div id="dlgTags" class="sched-badges"></div>
-        <p id="dlgDesc"></p>
-        <p id="dlgLinkWrap"></p>
-      </article>
-    </dialog>
-  </div>
-</section>
-
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ CONTACT — Form + 4 images (2×2)                             ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
+  <!-- =======================================================================
+       CONTACT — Formulaire Formspree (simple, sans JS)
+       - Honeypot _gotcha pour filtrer certains bots
+     ======================================================================= -->
   <section id="contact" class="section">
     <div class="container">
       <h2>Contact</h2>
-
       <div class="contact-grid">
-        <!-- Formspree : remplace TON_ENDPOINT -->
         <form action="https://formspree.io/f/xrbavbky" method="POST" class="card contact-form">
-          <label style="display:block; margin-bottom:10px;">Ton email
+          <!-- Champ email -->
+          <label style="display:block; margin-bottom:10px;">
+            Ton email
             <input type="email" name="email" required autocomplete="email"
                    style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)">
           </label>
 
-          <label style="display:block; margin-bottom:10px;">Message
+          <!-- Champ message -->
+          <label style="display:block; margin-bottom:10px;">
+            Message
             <textarea name="message" rows="5" required
                       style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text)"></textarea>
           </label>
 
-          <!-- Honeypot anti-spam -->
+          <!-- Honeypot anti-spam (doit rester caché) -->
           <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
+          <!-- CTA -->
           <button class="btn-primary" type="submit">Envoyer</button>
         </form>
-
-        <!-- Vignettes cliquables 2×2 (toutes .png) -->
-        <!-- <div class="contact-links">
-          <a class="contact-thumb" href="https://www.twitch.tv/blackbonesv2" target="_blank" rel="noopener">
-            <img src="assets/Twitch.png" alt="Aller sur Twitch">
-            <span>Aller sur Twitch</span>
-          </a>
-          <a class="contact-thumb" href="https://discord.gg/HVdTDEqfX9" target="_blank" rel="noopener">
-            <img src="assets/Discord.png" alt="Rejoindre le Discord">
-            <span>Rejoindre le Discord</span>
-          </a>
-          <a class="contact-thumb" href="https://www.youtube.com/@BlackBonesV2" target="_blank" rel="noopener">
-            <img src="assets/Youtube.png" alt="Voir YouTube">
-            <span>Voir YouTube</span>
-          </a>
-          <a class="contact-thumb" href="https://streamlabs.com/blackbonesv2/tip" target="_blank" rel="noopener">
-            <img src="assets/Dons.png" alt="Soutenir la chaîne">
-            <span>Soutenir la chaîne</span>
-          </a>
-        </div> -->
       </div>
     </div>
   </section>
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║ FOOTER — centré + gras                                      ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
+  <!-- =======================================================================
+       PIED DE PAGE (FOOTER)
+     ======================================================================= -->
   <footer class="site-footer">
     <div class="container">
-      <p class="copyright"><strong>© BlackBones — Tous droits réservés</strong></p>
+      <p class="copyright">
+        <strong>© BlackBones — Tous droits réservés</strong>
+        <!-- Option : ajouter <span id="year"></span> si tu veux l’année dynamique -->
+      </p>
     </div>
   </footer>
 
-  <!-- JS principal -->
+  <!-- =======================================================================
+       SCRIPT PRINCIPAL
+       - Contient tous les modules JS (Twitch player/chat, LIVE badge, menu,
+         sous-menu, lightbox, featurePanel, slideshows, planning auto, LoL modales,
+         carrousel jeux, etc.)
+       - Chargé en defer pour ne pas bloquer le rendu
+     ======================================================================= -->
   <script src="script.js" defer></script>
 </body>
 </html>

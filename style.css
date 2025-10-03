@@ -1,6 +1,6 @@
-/* =======================================================================
-   THEME & VARIABLES
-   ======================================================================= */
+/* ==========================================================================
+   Thème & base
+   ========================================================================== */
 :root{
   --bg:#0b0f14;
   --bg-alt:#0f151c;
@@ -12,910 +12,615 @@
   --tile:#162233;
   --shadow:0 8px 24px rgba(0,0,0,.35);
 }
-body.theme-light{
-  --bg:#f6f8fb; --bg-alt:#fff; --text:#0e1320; --muted:#475569;
-  --accent:#0066ff; --card:#fff; --border:#e5e7eb; --tile:#eef2ff;
-  --shadow:0 8px 24px rgba(0,0,0,.08);
-}
-
-/* Base */
-*{box-sizing:border-box}
-html,body{margin:0}
+*{ box-sizing:border-box; }
+html,body{ margin:0; }
 body{
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:var(--bg); color:var(--text); line-height:1.6;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
 }
 
-/* =======================================================================
-   CONTAINER — collé à gauche
-   ======================================================================= */
-.container{
-  max-width: 1200px;      /* ou 1280px/1320px selon ton goût */
-  margin: 0 auto;         /* centre le bloc -->
-  padding: 0 24px;        /* padding gauche/droite identique */
-}
-/* Header en pleine largeur + menu collé à gauche */
-.site-header .container{
-  max-width: none;        /* ne pas limiter à 1200px */
-  margin-left: 0;         /* plus de centrage */
-  margin-right: 0;
-  padding-left: 24px;     /* marge intérieure côté gauche */
-  padding-right: 24px;    /* marge intérieure côté droit */
-}
+/* ==========================================================================
+   Containers
+   ========================================================================== */
+.container{ max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.site-header .container{ max-width:none; margin-left:0; margin-right:0; padding-left:24px; padding-right:24px; }
 
-
-/* =======================================================================
-   HEADER & NAVIGATION
-   ======================================================================= */
+/* ==========================================================================
+   Header / Nav
+   ========================================================================== */
 .site-header{
   position:sticky; top:0; z-index:50;
   background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0));
   backdrop-filter:blur(8px);
   animation:fadeDown .6s ease-out;
 }
-@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{ from{opacity:0; transform:translateY(-20px);} to{opacity:1; transform:translateY(0);} }
 
-.header-inner{
-  display:flex; align-items:center; justify-content:flex-start;
-  gap:20px; padding:12px 0;
-}
-.brand{display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800}
+.header-inner{ display:flex; align-items:center; justify-content:flex-start; gap:20px; padding:12px 0; }
+.brand{ display:flex; gap:10px; align-items:center; color:var(--text); text-decoration:none; font-weight:800; }
 
-.btn-icon{font-size:22px; background:transparent; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:10px}
-.only-mobile{display:none}
+.btn-icon{ font-size:22px; background:transparent; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:10px; }
+.only-mobile{ display:none; }
 
-/* Nav + sous-menu animé */
-.nav{display:block}
-.nav-list{display:flex; align-items:center; gap: 18px; justify-content: flex-start; list-style:none; margin:0; padding:0}
+.nav{ display:block; }
+.nav-list{ display:flex; align-items:center; gap:18px; justify-content:flex-start; list-style:none; margin:0; padding:0; }
 .nav a,.submenu-trigger{
-  color:var(--text); text-decoration:none; padding:8px 12px; border-radius:10px; border:1px solid transparent;
-  position:relative; overflow:hidden;
+  color:var(--text); text-decoration:none; padding:8px 12px; border-radius:10px; border:1px solid transparent; position:relative; overflow:hidden;
 }
-.nav a:hover,.submenu-trigger:hover{background:var(--tile); border-color:var(--border)}
+.nav a:hover,.submenu-trigger:hover{ background:var(--tile); border-color:var(--border); }
 .nav a::after,.submenu-trigger::after{
   content:""; position:absolute; left:0; bottom:4px; height:2px; width:0; background:var(--accent); transition:width .3s ease;
 }
-.nav a:hover::after,.submenu-trigger:hover::after{width:100%}
+.nav a:hover::after,.submenu-trigger:hover::after{ width:100%; }
 
-.submenu-trigger{
-  background:transparent; color:var(--text); border:1px solid var(--border);
-  border-radius:10px; cursor:pointer;
-  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
-}
-.submenu-trigger:hover{background:var(--tile); border-color:var(--accent); color:var(--accent); transform:translateY(-2px)}
-
-.has-submenu{position:relative}
+.submenu-trigger{ background:transparent; color:var(--text); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:background .2s,border-color .2s,color .2s,transform .2s; }
+.submenu-trigger:hover{ background:var(--tile); border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
+.has-submenu{ position:relative; }
 .submenu{
-  position:absolute; top:100%; left:0; min-width:180px;
-  background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
-  padding:4px 0; opacity:0; transform:translateY(-6px) scaleY(.95);
-  transform-origin:top; transition:opacity .25s ease, transform .25s ease;
-  visibility:hidden; pointer-events:none;
+  position:absolute; top:100%; left:0; min-width:180px; background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); padding:4px 0;
+  opacity:0; transform:translateY(-6px) scaleY(.95); transform-origin:top; transition:opacity .25s, transform .25s; visibility:hidden; pointer-events:none;
 }
-.has-submenu.open .submenu{opacity:1; transform:translateY(0) scaleY(1); visibility:visible; pointer-events:auto}
-.submenu ul{margin:0; padding:0}
-.submenu li{list-style:none; position:relative; margin:0}
+.has-submenu.open .submenu{ opacity:1; transform:translateY(0) scaleY(1); visibility:visible; pointer-events:auto; }
+.submenu ul{ margin:0; padding:0; }
+.submenu li{ list-style:none; position:relative; margin:0; }
 .submenu li::before{
-  content:""; position:absolute; left:12px; top:50%; transform:translateY(-50%);
-  width:6px; height:6px; border-radius:50%; background:var(--muted);
-  opacity:0; transition:opacity .25s ease, background .2s ease;
+  content:""; position:absolute; left:12px; top:50%; transform:translateY(-50%); width:6px; height:6px; border-radius:50%; background:var(--muted);
+  opacity:0; transition:opacity .25s, background .2s;
 }
-.has-submenu.open .submenu li::before{opacity:1}
+.has-submenu.open .submenu li::before{ opacity:1; }
 .submenu a{
-  display:block; padding:8px 12px 8px 28px;
-  color:var(--text); border-radius:6px; text-decoration:none;
-  opacity:0; transform:translateY(-4px);
-  transition:opacity .25s ease, transform .25s ease, background .2s ease;
+  display:block; padding:8px 12px 8px 28px; color:var(--text); border-radius:6px; text-decoration:none;
+  opacity:0; transform:translateY(-4px); transition:opacity .25s, transform .25s, background .2s;
 }
-.submenu a:hover{background:var(--tile)}
-.submenu li:hover::before{background:var(--accent)}
-.has-submenu.open .submenu li:nth-child(1) a{transition-delay:.05s}
-.has-submenu.open .submenu li:nth-child(2) a{transition-delay:.1s}
-.has-submenu.open .submenu li:nth-child(3) a{transition-delay:.15s}
-.has-submenu.open .submenu li:nth-child(4) a{transition-delay:.2s}
-.has-submenu.open .submenu li:nth-child(5) a{transition-delay:.25s}
-.has-submenu.open .submenu a{opacity:1; transform:translateY(0)}
+.submenu a:hover{ background:var(--tile); }
+.submenu li:hover::before{ background:var(--accent); }
+.has-submenu.open .submenu a{ opacity:1; transform:translateY(0); }
 
-/* =======================================================================
-   HERO — À propos + Twitch
-   ======================================================================= */
+/* ==========================================================================
+   Hero
+   ========================================================================== */
 .hero{
   padding:0 0 8px;
   background:
     radial-gradient(1000px 600px at 80% -30%, rgba(123,211,255,.18), transparent),
     radial-gradient(800px 400px at 10% -20%, rgba(123,211,255,.12), transparent);
 }
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* 1 seule colonne */
-  gap: 2rem; /* espace vertical */
-  justify-items: center; /* centre horizontalement les contenus */
-}
-.hero-player {
-  width: 100%;
-  max-width: 9000px; /* limite pour garder le lecteur centré */
-}
-
-.hero-about {
-  width: 100%;
-  max-width: 900px; /* même largeur que le lecteur */
-}
-
-/* Colonne gauche (À propos) */
-.hero-left{
-  min-width: 260px;   /* empêche l’écrasement */
-  width: 280px;
-}
-/* Les cartes dans la colonne gauche s’étirent correctement */
-.hero-left .about-box{
-  width: 100%;
-}
-/* Alias pour coller au HTML actuel */
-.hero-about{ min-width:0; width:auto; }                     /* même que .hero-left */
-.hero-about .about-box{ width:100%; }                       /* s’étire bien dans la colonne */
-
-.about-title{
-  text-align:center; width:100%; font-size:1.8rem; font-weight:800; margin:6px 0 14px;
-}
-/* Empilement horizontal des boxs À propos */
-.about-stack{
-  display:flex;
-  flex-wrap:wrap;            /* passe à la ligne si l’espace manque */
-  gap:16px;                  /* espace entre les cartes */
-  justify-content:center;    /* centre la rangée */
-  padding-right:0;           /* plus de décalage à droite */
-}
-/* Largeur souple des cartes dans À propos */
-.about-stack .about-box{
-  flex: 1 1 260px;     /* largeur mini réduite un peu */
-  max-width: 320px;    /* largeur max plus contenue */
-  min-height: 180px;   /* limite la hauteur verticale */
-}
-.about-stack .about-box:first-child{
-  flex: 2 1 400px;     /* prend 2x plus de place que les autres */
-  max-width: 500px;    /* autorise plus de largeur */
-}
-/* Étendre un peu la box "Jeux du moment" (2ème enfant de .about-stack) */
-.about-stack .about-box:nth-child(2){
-  flex: 1.7 1 0;   /* prend ~30% de place en plus que les autres */
-}
-/* Étendre un peu la box "Horaire" (3ème enfant de .about-stack) */
-.about-stack .about-box:nth-child(3){
-  flex: 1.3 1 0;   /* prend ~30% de place en plus que les autres */
-}
-
-.about-box{
-  background:var(--card); border:1px solid var(--border); border-radius:14px;
-  padding:14px 16px; box-shadow:var(--shadow);
-}
-.about-box h3{margin:0 0 6px; font-size:1.05rem}
-
-.twitch-embed{margin-top:0}
-.hero-player iframe{width:100%; height:480px; border-radius:12px}
-.hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
-.btn-primary,.btn-outline{
-  display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; font-weight:600; text-decoration:none; border:1px solid var(--border);
-}
-.btn-primary{background:var(--accent); color:#081018; border-color:transparent}
-.btn-outline{background:transparent; color:var(--text)}
-/* ===== Hero : rangée 'À propos' sous le player ===== */
-.about-row{
-  display:flex;
-  gap:16px;
-  margin-top:16px;
-  flex-wrap:wrap;             /* passe à la ligne si pas assez de place */
-}
-
-.about-row .about-box{
-  flex: 1 1 280px;            /* largeur mini ~280px, puis s’étire */
-  width:auto;                 /* si tu avais mis 280px fixes avant */
-}
-
-/* === HERO : grille lecteur + chat ================================== */
+.hero-grid{ display:grid; grid-template-columns:1fr; gap:2rem; justify-items:center; }
 .hero-media{
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;  /* Spotify = 1, Player = 2, Chat = 1 */
-  gap: 18px;
-  align-items: start;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;  /* lecteur Twitch élargi */
+  gap:18px; align-items:start;
 }
+.hero-player{ width:100%; max-width:9000px; }
+.hero-about{ width:100%; max-width:900px; }
 
-/* Colonnes gauche/droite */
-.hero-spotify, .hero-chat{
-  width: 100%;
-}
+.about-title{ text-align:center; width:100%; font-size:1.8rem; font-weight:800; margin:6px 0 14px; }
+.about-stack{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; padding-right:0; }
+.about-stack .about-box{ flex:1 1 260px; max-width:320px; min-height:180px; }
+.about-stack .about-box:first-child{ flex:2 1 400px; max-width:500px; }
+/* Jeux du moment (2e box) */
+.about-stack .about-box:nth-child(2){ flex:1.7 1 350px; max-width:600px; }
+/* Horaires (3e box) — réglage mémorisé */
+.about-stack .about-box:nth-child(3){ flex: 1.8 1 200px; max-width: 300px; }
 
-/* S'assure que le lecteur garde sa taille */
+.about-box{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; box-shadow:var(--shadow); }
+.about-box h3{ margin:0 0 6px; font-size:1.05rem; }
+
+.twitch-embed{ margin-top:0; }
 .hero-player iframe{ width:100%; height:480px; border-radius:12px; }
 
-/* Harmoniser les iframes */
-.hero-spotify iframe,
-.hero-chat iframe{
-  width: 100%;
-  height: 520px;          /* même hauteur que le player pour l’alignement */
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  background: #0b1118;    /* fond sombre par défaut */
-}
+.hero-cta{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+.btn-primary,.btn-outline{ display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; font-weight:600; text-decoration:none; border:1px solid var(--border); }
+.btn-primary{ background:var(--accent); color:#081018; border-color:transparent; }
+.btn-outline{ background:transparent; color:var(--text); }
 
-/* Chat */
-.hero-chat .chat-wrap{
-  position: relative;
-  width: 100%;
-  height: 480px;                 /* même hauteur que le player pour l’alignement */
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--card);
-  box-shadow: var(--shadow);
-}
-#twitchChat{
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  border: 0;
-}
+.hero-spotify, .hero-chat{ width:100%; }
+.hero-spotify iframe, .hero-chat iframe{ width:100%; height:520px; border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); background:#0b1118; }
+.hero-chat .chat-wrap{ position:relative; width:100%; height:480px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--card); box-shadow:var(--shadow); }
+#twitchChat{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.chat-overlay{ position:absolute; left:0; right:0; bottom:0; height:100px; z-index:2; pointer-events:auto; background: linear-gradient(to bottom, rgba(11,15,20,0), rgba(11,15,20,0.95)); }
 
-/* Chat Twitch : rendre tout cliquable SAUF la zone d'écriture (masquée) */
-.chat-overlay{
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 100px;                /* ajuste si besoin : 56–72px selon l'UI Twitch */
-  z-index: 2;                  /* au-dessus de l'iframe du chat */
-  pointer-events: auto;        /* bloque les clics uniquement sur cette bande */
-  /* Option A (masquer visuellement l'input) : */
-  background: linear-gradient(to bottom, rgba(11,15,20,0), rgba(11,15,20,0.95));
-  /* Option B (ne pas masquer visuellement, juste bloquer les clics) :
-     -> remplace la ligne ci-dessus par : background: transparent; */
+@media (max-width:640px){ .chat-overlay{ height:56px; } }
+@media (max-width:1100px){
+  .hero-media{ grid-template-columns:1fr; }
+  .hero-chat .chat-wrap{ height:420px; }
 }
+@media (max-width:640px){ .hero-chat .chat-wrap{ height:360px; } }
 
-/* L’iframe reste interactive partout ailleurs */
-#twitchChat{
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  border: 0;
-  z-index: 1;   /* sous l’overlay */
-}
+/* ==========================================================================
+   Sections communes
+   ========================================================================== */
+.section{ padding:56px 0; }
+.section.alt{ background:var(--bg-alt); }
+h2{ font-size:clamp(22px,3vw,32px); margin:0 0 16px; }
 
-/* (Facultatif) adapter la hauteur du masque sur petit écran */
-@media (max-width: 640px){
-  .chat-overlay{ height: 56px; }
-}
-
-/* Responsive : sous ~1100px, on empile (player au-dessus, chat dessous) */
-@media (max-width: 1100px){
-  .hero-media{ grid-template-columns: 1fr; }
-  .hero-media{ grid-template-columns: 1fr; }
-  .hero-chat .chat-wrap{ height: 420px; }     /* un peu moins haut sur tablette/tel */
-}
-@media (max-width: 640px){
-  .hero-chat .chat-wrap{ height: 360px; }
-}
-
-
-/* =======================================================================
-   SECTIONS communes
-   ======================================================================= */
-.section{padding:56px 0}
-.section.alt{background:var(--bg-alt)}
-h2{font-size:clamp(22px,3vw,32px); margin:0 0 16px}
-
-/* Liens utiles */
-.links-grid{
-  display:grid;
-  gap:20px;
-  grid-template-columns: repeat(4, 1fr);  /* ex: 4 tuiles par rangée */
-}
+/* ==========================================================================
+   Liens utiles
+   ========================================================================== */
+.link-grid{ display:grid; gap:20px; grid-template-columns:repeat(4,1fr); }
 .link-tile{
   background:var(--tile); border:1px solid var(--border); border-radius:14px; padding:16px; text-decoration:none; color:var(--text);
-  display:flex; flex-direction:column; gap:6px; transition:transform .25s ease, box-shadow .25s ease;
+  display:flex; flex-direction:column; gap:6px; transition:transform .25s, box-shadow .25s;
 }
-.link-tile:hover{transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(0,0,0,.4)}
-.link-tile small{color:var(--muted)}
+.link-tile:hover{ transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(0,0,0,.4); }
+.link-tile small{ color:var(--muted); }
 
-/* Galerie (grille) */
-.gallery-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px}
-.gallery-item{
-  width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s ease;
+/* ==========================================================================
+   Galerie + Lightbox + Panneau “feature”
+   ========================================================================== */
+.gallery-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; }
+.gallery-item{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:14px; border:1px solid var(--border); cursor:zoom-in; transition:transform .12s; }
+.gallery-item:hover{ transform:scale(1.02); }
+
+#lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px; z-index:100; }
+#lightbox.open{ display:flex; }
+#lightbox img{ max-width:92vw; max-height:72vh; border-radius:12px; }
+.lb-close{ position:absolute; top:20px; right:20px; font-size:28px; line-height:1; background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:4px 10px; cursor:pointer; }
+#lbCaption{ color:#cbd5e1; margin-top:10px; }
+
+.gallery-grid{ display:grid; gap:20px; grid-template-columns:repeat(3,1fr); align-items:start; }
+@media (max-width:1024px){ .gallery-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px){ .gallery-grid{ grid-template-columns:1fr; } }
+.gallery-box{ display:flex; flex-direction:column; align-items:center; text-align:center; }
+.gallery-item{ width:100%; border-radius:12px; border:1px solid var(--border); object-fit:cover; user-select:none; -webkit-user-drag:none; -webkit-touch-callout:none; pointer-events:auto; }
+.gallery-caption{ margin-top:8px; font-size:.92rem; color:#cdd6e3; line-height:1.35; max-width:90%; word-break:break-word; }
+
+.x-slideshow{ position:relative; width:100%; aspect-ratio:1/1; border-radius:12px; border:1px solid var(--border); overflow:hidden; background:transparent; }
+.x-slideshow .slide-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .6s ease; user-select:none; -webkit-user-drag:none; -webkit-touch-callout:none; pointer-events:none; }
+.x-slideshow .slide-img.is-top{ opacity:1; }
+.x-slideshow .slide-img{ box-shadow:0 4px 12px rgba(0,0,0,.25); }
+
+/* ==========================================================================
+   Poll
+   ========================================================================== */
+.poll-full{ width:100%; }
+.poll-card{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--shadow); width:100%; }
+.poll-title{ margin:0 0 10px; font-size:1.05rem; font-weight:800; }
+
+/* ==========================================================================
+   Panneau “feature”
+   ========================================================================== */
+.feature-panel{ position:fixed; inset:0; z-index:120; display:none; }
+.feature-panel.open{ display:block; }
+.fp-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.6); opacity:0; transition:opacity .25s ease, backdrop-filter .35s ease; backdrop-filter:blur(0px); }
+.fp-card{
+  position:absolute; left:50%; top:50%; width:min(1100px,96vw);
+  background:var(--card); border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,.55);
+  border-radius:16px; display:grid; grid-template-columns:1fr 1.2fr; gap:16px; padding:18px; opacity:0;
+  transform:translate(-50%, calc(-50% - 6px)) scale(.96); transition:opacity .35s, transform .40s cubic-bezier(.2,.7,.2,1);
 }
-.gallery-item:hover{transform:scale(1.02)}
+.fp-close{ position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--bg-alt); color:var(--text); cursor:pointer; font-size:20px; line-height:1; }
+.fp-close:hover{ background:var(--tile); }
+.fp-left{ display:flex; flex-direction:column; gap:8px; }
+.fp-left h3{ margin:0; font-size:1.25rem; }
+.fp-left p{ margin:0; color:var(--muted); }
+.fp-points{ list-style:none; padding:0; margin:12px 0 0 0; display:flex; flex-direction:column; gap:8px; }
+.fp-points li{ position:relative; padding-left:22px; }
+.fp-points li::before{ content:""; position:absolute; left:6px; top:50%; transform:translateY(-50%); width:6px; height:6px; border-radius:50%; background:var(--muted); transition:background .2s; }
+.fp-points a{ color:var(--text); text-decoration:none; border-bottom:1px dashed transparent; transition:color .2s, border-color .2s, transform .15s; }
+.fp-points a:hover{ color:var(--accent); border-color:var(--accent); transform:translateX(2px); }
+.fp-video-wrap{ position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:#000; }
+.fp-video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.feature-panel.open .fp-backdrop{ opacity:1; backdrop-filter:blur(4px); }
+.feature-panel.open .fp-card{ opacity:1; transform:translate(-50%,-50%) scale(1); }
 
-/* Lightbox */
-#lightbox{position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px; z-index:100}
-#lightbox.open{display:flex}
-#lightbox img{max-width:92vw; max-height:72vh; border-radius:12px}
-.lb-close{position:absolute; top:20px; right:20px; font-size:28px; line-height:1; background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:4px 10px; cursor:pointer}
-#lbCaption{color:#cbd5e1; margin-top:10px}
-
-/* Planning */
-.table-wrap{overflow:auto; border-radius:12px; border:1px solid var(--border)}
-.table{width:100%; border-collapse:collapse; background:var(--card)}
-.table th,.table td{padding:12px 14px; border-bottom:1px solid var(--border)}
-.table thead th{background:var(--tile); text-align:left}
-
-/* =======================================================================
-   CONTACT — Form plus étroit + vignettes 2×2
-   ======================================================================= */
+/* ==========================================================================
+   Contact
+   ========================================================================== */
 #contact .container{ padding-left:16px; }
-.contact-grid{
-  display:block;
-  grid-template-columns: 0.7fr 1fr;
-  gap:20px; align-items:start;
-}
-.contact-form{ max-width:700px; width:100%; margin: 0 auto;}
-.contact-links{
-  display:grid; grid-template-columns:repeat(2, 1fr); grid-auto-rows:auto; gap:16px;
-}
-.contact-thumb{
-  display:block; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
-  text-decoration:none; color:var(--text); transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
+.contact-grid{ display:block; grid-template-columns:0.7fr 1fr; gap:20px; align-items:start; }
+.contact-form{ max-width:700px; width:100%; margin:0 auto; }
+.contact-links{ display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:auto; gap:16px; }
+.contact-thumb{ display:block; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; text-decoration:none; color:var(--text); transition:transform .2s, box-shadow .2s, border-color .2s; }
 .contact-thumb img{ width:100%; height:160px; object-fit:cover; display:block; }
 .contact-thumb span{ display:block; padding:10px 12px; font-weight:600; }
 .contact-thumb:hover{ transform:translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.4); border-color:var(--accent); }
 
-/* =======================================================================
-   SONDAGE (StrawPoll) — pleine largeur
-   ======================================================================= */
-.poll-full{ width:100%; }
-.poll-card{
-  background:var(--card);
+/* ==========================================================================
+   Grille liens
+   ========================================================================== */
+.link-grid{ display:grid; gap:20px; grid-template-columns:repeat(4,1fr); }
+@media (max-width:1024px){ .link-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px){ .link-grid{ grid-template-columns:1fr; } }
+.link-grid .link-tile{
+  position:relative; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px;
+  padding:18px 20px; min-height:100px; border-radius:14px; border:1px solid var(--border); background:var(--tile);
+  text-decoration:none; color:var(--text); box-shadow:var(--shadow);
+  transition:transform .18s, box-shadow .18s, border-color .18s; overflow:hidden;
+}
+.link-tile::before{ content:""; position:absolute; inset:0; border-radius:inherit; background:rgba(123,211,255,.08); opacity:0; transition:opacity .25s; pointer-events:none; }
+.link-tile:hover::before{ opacity:1; }
+.link-tile:hover{ transform:translateY(-2px); box-shadow:0 14px 36px rgba(0,0,0,.35); border-color:rgba(255,255,255,.12); }
+.link-tile:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.lt-icon{ display:grid; place-items:center; width:42px; height:42px; border-radius:12px; background:rgba(123,211,255,.10); font-size:20px; user-select:none; }
+.lt-text{ display:grid; gap:4px; }
+.lt-title{ font-weight:800; letter-spacing:.2px; }
+.lt-sub{ color:var(--muted); font-size:.92rem; }
+.lt-go{ transition:transform .18s, opacity .18s; opacity:.85; }
+.link-tile:hover .lt-go{ transform:translateX(3px); opacity:1; }
+
+/* ==========================================================================
+   Modales génériques
+   ========================================================================== */
+.modal{
+  position:fixed; inset:0; display:grid; place-items:center;
+  background:rgba(0,0,0,.55);
+  opacity:0; pointer-events:none; transition:opacity .2s;
+  z-index: 200;
+}
+.modal.is-open{ opacity:1; pointer-events:auto; }
+.modal.is-hidden{ opacity:0; pointer-events:none; }
+.modal .modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(2px); }
+
+.modal-dialog{
+  position:relative; width:min(960px,92vw); max-height:88vh;
+  background:var(--bg-alt);
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  box-shadow:var(--shadow);
-  width:100%;
+  border-radius:14px; box-shadow:0 10px 40px rgba(0,0,0,.5);
+  overflow:hidden; display:flex; flex-direction:column; z-index:1;
 }
-.poll-title{ margin:0 0 10px; font-size:1.05rem; font-weight:800; }
+.modal-lg{ width:min(1100px,95vw); }
+.modal-xl{ width:min(1200px,96vw); }
 
-/* =======================================================================
-   PANNEAU (ONGLET) image 1 de la galerie (feature panel)
-   ======================================================================= */
-.feature-panel{ position:fixed; inset:0; z-index:120; display:none; }
-.feature-panel.open{ display:block; }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); background:linear-gradient(to bottom, rgba(255,255,255,.03), transparent); }
+.modal-head h3{ margin:0; font-size:1.05rem; }
+.modal-close{ background:transparent; border:0; color:var(--text); font-size:1rem; cursor:pointer; opacity:.85; }
+.modal-close:hover{ opacity:1; }
+.modal-body{ padding:16px; overflow:auto; }
 
-.fp-backdrop{
-  position:absolute; inset:0; background:rgba(0,0,0,.6); opacity:0; transition:opacity .25s ease;
+@keyframes modalFadeIn{ from{opacity:0} to{opacity:1} }
+@keyframes modalFadeOut{ from{opacity:1} to{opacity:0} }
+@keyframes modalZoomIn{ from{transform:translateY(6px) scale(.98)} to{transform:translateY(0) scale(1)} }
+@keyframes modalZoomOut{ from{transform:translateY(0) scale(1)} to{transform:translateY(6px) scale(.98)} }
+.modal.animate-in  .modal-backdrop{ animation:modalFadeIn .22s ease both; }
+.modal.animate-in  .modal-dialog  { animation:modalZoomIn .22s ease both; }
+.modal.animate-out .modal-backdrop{ animation:modalFadeOut .18s ease both; }
+.modal.animate-out .modal-dialog  { animation:modalZoomOut .18s ease both; }
+
+/* ==========================================================================
+   Composants LoL
+   ========================================================================== */
+.champ-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:12px; }
+
+/* >>> PATCH: texte des champions en blanc */
+.champ-card,
+.champ-card .champ-name{ color:#fff; }
+
+.champ-card{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; text-align:center; padding:10px 8px; cursor:pointer; user-select:none;
+  transition:transform .12s, border-color .12s, box-shadow .12s;
 }
-.fp-card{
-  position:absolute; left:50%; top:50%; width:min(1100px, 96vw);
-  background:var(--card); border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,.55);
-  border-radius:16px; display:grid; grid-template-columns: 1fr 1.2fr; gap:16px; padding:18px; opacity:0;
+.champ-card:hover{ transform:translateY(-2px); border-color:rgba(255,0,0,.22); box-shadow:0 6px 16px rgba(0,0,0,.35); }
+.champ-card img{ width:72px; height:72px; object-fit:cover; border-radius:50%; display:block; margin:0 auto 8px; }
+.champ-name{ font-size:.86rem; opacity:.95; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.runes-board{ display:grid; grid-template-columns:1.2fr 1.2fr 0.9fr; gap:18px; }
+.runes-col{
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--shadow);
 }
-.fp-close{
-  position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:10px;
-  border:1px solid var(--border); background:var(--bg-alt); color:var(--text); cursor:pointer; font-size:20px; line-height:1;
+.runes-col h4{ display:flex; align-items:center; gap:10px; font-size:.95rem; margin:0 0 10px; }
+.runes-emblem{ width:36px; height:36px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 1px rgba(255,255,255,.15); }
+.rune-line{ display:flex; align-items:center; gap:10px; padding:7px 0; }
+.rune-icon{ width:36px; height:36px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 1px rgba(255,255,255,.18); }
+.rune-label{ font-size:.9rem; opacity:.9; }
+.runes-col .keystone .rune-icon{ width:44px; height:44px; box-shadow:0 0 0 2px rgba(255,255,255,.25); }
+.runes-title{ margin:8px 0 16px; opacity:.9; font-weight:600; text-align:center; border-bottom:1px dashed var(--border); padding-bottom:8px; }
+.runes-head{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.runes-head img{ width:48px; height:48px; border-radius:10px; object-fit:cover; }
+
+/* >>> PATCH: rangée des shards sous les 2 colonnes de runes */
+.runes-row{
+  grid-column:1 / 3;
 }
-.fp-close:hover{ background:var(--tile) }
-.fp-close:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.runes-row h4{ margin:0 0 8px; }
 
-.fp-left{ display:flex; flex-direction:column; gap:8px; }
-.fp-left h3{ margin:0; font-size:1.25rem; }
-.fp-left p{ margin:0; color:var(--muted); }
+/* Grilles de vignettes (shards/items) */
+.shards, .items{ display:grid; grid-template-columns:1fr; gap:8px; }
+.shards__item, .items__item{ display:flex; align-items:center; gap:10px; }
+.shards__item img, .items__item img{ width:44px; height:44px; border-radius:8px; object-fit:cover; border:1px solid var(--border); }
 
-/* Points cliquables */
-.fp-points{
-  list-style:none; padding:0; margin:12px 0 0 0;
-  display:flex; flex-direction:column; gap:8px;
+/* Recherche champions */
+.modal-search{ padding:10px 16px; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.2); }
+#championSearch{ width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:#fff; }
+#championSearch:focus{ outline:1px solid #4da3ff; }
+
+/* Boutons de sélection presets */
+.game-trigger[data-game="lol"]{
+  display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background: radial-gradient(120% 120% at 0% 0%, rgba(0, 198, 255, .18), transparent 60%), linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  color:#eaf2ff; font-weight:600; letter-spacing:.2px; cursor:pointer;
+  transition:transform .12s, box-shadow .12s, border-color .12s, background .12s; box-shadow:0 6px 16px rgba(0,0,0,.25);
 }
-.fp-points li{ position:relative; padding-left:22px; }
-.fp-points li::before{
-  content:""; position:absolute; left:6px; top:50%; transform:translateY(-50%);
-  width:6px; height:6px; border-radius:50%; background:var(--muted);
-  transition:background .2s ease;
-}
-.fp-points a{ color:var(--text); text-decoration:none; border-bottom:1px dashed transparent; transition:color .2s ease, border-color .2s ease, transform .15s ease; }
-.fp-points a:hover{ color:var(--accent); border-color:var(--accent); transform:translateX(2px); }
-.fp-points li:hover::before{ background:var(--accent); }
-
-.fp-video-wrap{ position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:#000; }
-.fp-video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
-
-/* ANIMATIONS du panneau (fondu/blur + drop-in + stagger) */
-.fp-backdrop{ backdrop-filter: blur(0px); transition: opacity .25s ease, backdrop-filter .35s ease; }
-.feature-panel.open .fp-backdrop{ opacity: 1; backdrop-filter: blur(4px); }
-.fp-card{ transform: translate(-50%, calc(-50% - 6px)) scale(.96); transition: opacity .35s ease, transform .40s cubic-bezier(.2,.7,.2,1); will-change: transform, opacity; }
-.feature-panel.open .fp-card{ opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.fp-left > *,.fp-right{ opacity: 0; transform: translateY(8px); transition: opacity .35s ease, transform .35s ease; }
-.feature-panel.open .fp-left h3{ transition-delay: .06s; opacity:1; transform:none; }
-.feature-panel.open .fp-left p{ transition-delay: .12s; opacity:1; transform:none; }
-/* UL visible + animée */
-.feature-panel.open .fp-left .fp-points{ opacity:1; transform:none; transition-delay:.16s; }
-/* Stagger des <li> */
-.fp-points li{ opacity:0; transform: translateY(8px); transition: opacity .30s ease, transform .30s ease; }
-.feature-panel.open .fp-points li:nth-child(1){ transition-delay: .20s; opacity:1; transform:none; }
-.feature-panel.open .fp-points li:nth-child(2){ transition-delay: .25s; opacity:1; transform:none; }
-.feature-panel.open .fp-points li:nth-child(3){ transition-delay: .30s; opacity:1; transform:none; }
-.feature-panel.open .fp-points li:nth-child(4){ transition-delay: .35s; opacity:1; transform:none; }
-.feature-panel.open .fp-right{ transition-delay: .22s; opacity:1; transform:none; }
-
-@media (prefers-reduced-motion: reduce){
-  .fp-backdrop{ transition: none; backdrop-filter:none; }
-  .fp-card, .fp-left > *, .fp-points li, .fp-right{ transition: none; transform:none !important; }
-}
-
-/* ================== GALERIE ================== */
-
-/* Grille principale qui aligne les items */
-.gallery-grid{
-  display:grid;
-  gap:20px;
-  grid-template-columns: repeat(3, 1fr);  /* 3 colonnes pleines largeur */
-  align-items:start;
-}
-/* Quand l’écran fait 1024px ou moins (tablette) */
-@media (max-width: 1024px){
-  .gallery-grid{ grid-template-columns: repeat(2, 1fr); } /* 2 colonnes */
+.game-trigger[data-game="lol"]:hover{
+  transform:translateY(-1px); border-color:rgba(77,163,255,.55);
+  box-shadow:0 10px 22px rgba(0,0,0,.35);
+  background: radial-gradient(120% 120% at 0% 0%, rgba(0, 198, 255, .26), transparent 60%), linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
 }
 
-/* Quand l’écran fait 640px ou moins (téléphone) */
-@media (max-width: 640px){
-  .gallery-grid{ grid-template-columns: 1fr; } /* 1 colonne */
-}
+/* ==========================================================================
+   PLANNING (compact)
+   ========================================================================== */
+.sched-tabs{ display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin:10px 0 14px; }
+.sched-filter{ appearance:none; border:1px solid var(--border); background:var(--tile); color:var(--text); padding:6px 10px; border-radius:10px; font:inherit; font-weight:700; cursor:pointer; transition:border-color .2s, transform .12s, background .2s, box-shadow .2s; }
+.sched-filter:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,.18); box-shadow:0 8px 20px rgba(0,0,0,.25); }
+.sched-filter.is-active{ border-color:var(--accent); box-shadow:0 0 0 2px rgba(123,211,255,.18); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); }
+.chip{ display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; background:var(--bg-alt); color:var(--text); border:1px solid var(--border); line-height:1.2; }
+.sched-tools{ display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap; margin:0 0 18px; }
+#scheduleSearch{ width:min(420px, 92vw); padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--bg-alt); color:var(--text); }
+#scheduleSearch::placeholder{ color:var(--muted); }
+#scheduleSearch:focus{ outline:2px solid var(--accent); outline-offset:2px; border-color:transparent; }
+.sched-tags{ display:flex; gap:8px; flex-wrap:wrap; }
+.sched-tags .tag{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background:var(--tile); color:var(--text); font-size:.9rem; }
+.sched-tags .tag button{ appearance:none; border:0; background:transparent; color:var(--muted); cursor:pointer; }
+.schedule-list{ display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin-top:6px; }
+.sched-card{ position:relative; border:1px solid var(--border); border-radius:12px; background:var(--card); padding:12px; overflow:hidden; transition:transform .12s, box-shadow .12s, border-color .12s; }
+.sched-card:hover{ transform:translateY(-1px); box-shadow:0 8px 24px rgba(0,0,0,.24); border-color:rgba(255,255,255,.14); }
+.sched-card h3{ margin:0 0 6px; font-size:1.05rem; }
+.sched-meta{ font-size:.92rem; color:var(--muted); margin:6px 0 8px; }
+.sched-badges{ display:flex; gap:6px; flex-wrap:wrap; }
+.badge{ font-size:.8rem; padding:2px 8px; border-radius:999px; border:1px solid #273447; background:#121923; }
+.badge-live{ background:#e01a4f; border-color:#e01a4f; color:#fff; }
+.badge-soon{ background:#0bb37b; border-color:#0bb37b; color:#081018; }
+.badge-past{ background:#5f6b7a; border-color:#5f6b7a; color:#fff; }
+.sched-card.is-live{ box-shadow:0 0 0 2px rgba(215,0,58,.25) inset; }
+.sched-card.is-upcoming{ box-shadow:0 0 0 2px rgba(0,187,85,.20) inset; }
+.sched-card.is-past{ opacity:.7; }
+.sched-actions{ margin-top:8px; }
+.sched-actions .btn-more{ appearance:none; border:1px solid var(--border); background:var(--bg-alt); color:var(--text); padding:6px 10px; border-radius:10px; cursor:pointer; font:inherit; transition:border-color .15s, background .15s, transform .12s; }
+.sched-actions .btn-more:hover{ border-color:var(--accent); transform:translateY(-1px); }
+.sched-actions a{ display:inline-block; padding:6px 10px; border:1px solid var(--border); border-radius:10px; text-decoration:none; color:var(--accent); background:transparent; transition:border-color .15s, transform .12s; margin-right:6px; }
+.sched-actions a:hover{ border-color:var(--accent); transform:translateY(-1px); }
+.sched-dialog{ z-index:9999; border:0; padding:0; background:transparent; }
+.sched-dialog::backdrop{ background:rgba(6,10,16,.75); }
+.sched-dialog-card{ position:relative; width:min(720px,94vw); margin:auto; background:#0f151c; color:var(--text); border:1px solid #273447; border-radius:16px; box-shadow:0 24px 80px rgba(0,0,0,.55); padding:18px 18px 16px; }
+.sched-dialog-close{ position:absolute; top:8px; right:10px; width:36px; height:36px; display:grid; place-items:center; font-size:22px; line-height:1; color:var(--text); background:transparent; border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .15s, transform .12s, background .15s; }
+.sched-dialog-close:hover{ border-color:var(--accent); background:rgba(123,211,255,.08); transform:scale(1.03); }
+@media (max-width:640px){ #scheduleSearch{ width:100%; } }
 
-/* Chaque box (image ou slideshow + légende) */
-.gallery-box {
-  display: flex;
-  flex-direction: column; /* empile visuel + texte */
-  align-items: center;    /* centre horizontalement */
-  text-align: center;
-}
-
-/* Image simple dans la galerie */
-.gallery-item {
-  width: 100%;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  object-fit: cover;
-  user-select: none;
-  -webkit-user-drag: none;
-  -webkit-touch-callout: none;
-  pointer-events: auto;
-}
-
-/* Légende sous les images/slideshows */
-.gallery-caption {
-  margin-top: 8px;             /* espace au-dessus */
-  font-size: 0.92rem;          /* légèrement plus petit */
-  color: var(--text-light);    /* utilise la couleur claire du thème */
-  line-height: 1.35;
-  max-width: 90%;
-  word-break: break-word;
-}
-
-/* ================== SLIDESHOW ================== */
-
-/* Conteneur slideshow */
-.x-slideshow {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1; /* ratio rectangulaire (modifie si besoin) */
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  background: transparent; /* transparent au lieu de noir */
-}
-
-/* Chaque image du slideshow */
-.x-slideshow .slide-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.6s ease; /* effet fondu */
-  user-select: none;
-  -webkit-user-drag: none;
-  -webkit-touch-callout: none;
-  pointer-events: none;
-}
-
-/* Image visible */
-.x-slideshow .slide-img.is-top {
-  opacity: 1;
-}
-
-/* Optionnel : petite ombre portée */
-.x-slideshow .slide-img {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-
-/* =======================================================================
-   FOOTER
-   ======================================================================= */
-.site-footer{ padding:36px 0; border-top:1px solid var(--border); background:var(--bg-alt) }
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.site-footer{ padding:36px 0; border-top:1px solid var(--border); background:var(--bg-alt); }
 .site-footer .container{ text-align:center; }
 .site-footer .copyright{ margin:0; font-weight:800; }
 
-/* =======================================================================
-   LIVE badge
-   ======================================================================= */
-.live-badge{
-  margin-left:10px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.5px;
-  background:#ff2d55; color:#fff; box-shadow:0 0 0 0 rgba(255,45,85,.7); animation:pulse 1.6s infinite;
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}
-  70%{box-shadow:0 0 0 10px rgba(255,45,85,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}
-}
+.live-badge{ margin-left:10px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.5px; background:#ff2d55; color:#fff; box-shadow:0 0 0 0 rgba(255,45,85,.7); animation:pulse 1.6s infinite; }
+@keyframes pulse{ 0%{ box-shadow:0 0 0 0 rgba(255,45,85,.6); } 70%{ box-shadow:0 0 0 10px rgba(255,45,85,0); } 100%{ box-shadow:0 0 0 0 rgba(255,45,85,0); } }
 
-/* =======================================================================
-   RESPONSIVE
-   ======================================================================= */
+/* ==========================================================================
+   Responsive header/menu
+   ========================================================================== */
 @media (max-width:960px){
-  .only-mobile{display:inline-flex}
-  .nav{display:none}
+  .only-mobile{ display:inline-flex; }
+  .nav{ display:none; }
   .nav.open{
     display:block; position:absolute; top:64px; left:0; right:0; background:var(--card); padding:8px 0;
     border-top:1px solid var(--border); border-bottom:1px solid var(--border);
   }
-  .nav-list{flex-direction:column; align-items:stretch}
-  .has-submenu .submenu{position:static; margin-top:6px; min-width:unset}
+  .nav-list{ flex-direction:column; align-items:stretch; }
+  .has-submenu .submenu{ position:static; margin-top:6px; min-width:unset; }
 
-  .hero-grid{grid-template-columns:1fr}
-  .hero-player iframe{height:360px}
+  .hero-grid{ grid-template-columns:1fr; }
+  .hero-player iframe{ height:360px; }
 
-  .contact-grid{grid-template-columns:1fr}
-  .contact-links{grid-template-columns:1fr}
+  .contact-grid{ grid-template-columns:1fr; }
+  .contact-links{ grid-template-columns:1fr; }
 
   .fp-card{ grid-template-columns:1fr; width:min(720px, 96vw); }
 }
-/* Titres de sections centrés avec animation fade + slide */
-#poll h2,
-#links h2,
-#gallery h2,
-#schedule h2 {
-  text-align: center;
-  opacity: 0;
-  transform: translateY(15px);
-  animation: fadeSlideIn 0.8s ease forwards;
+
+/* Anim titre sections */
+#poll h2, #links h2, #gallery h2, #schedule h2{
+  text-align:center; opacity:0; transform:translateY(15px); animation:fadeSlideIn .8s ease forwards;
+}
+@keyframes fadeSlideIn{ to{ opacity:1; transform:translateY(0); } }
+
+/* ==========================================================================
+   [PATCH] CARROUSEL — cartes centrées
+   ========================================================================== */
+.games-carousel{ position:relative; width:100%; user-select:none; }
+.gc-viewport{ overflow:hidden; border:0; border-radius:0; background:transparent; box-shadow:none; }
+.gc-track{
+  display:flex; gap:24px; will-change:transform; transform:translate3d(0,0,0);
+  transition:transform .35s cubic-bezier(.2,.7,.2,1); padding:4px 12px;
+}
+.gc-slide{
+  flex:0 0 auto; width:min(72vw, 560px); aspect-ratio:16/9; position:relative;
+  border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); overflow:hidden; background:#0b1118;
+}
+.gc-slide img{ width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.05) contrast(1.02); transition:transform .35s ease; }
+.gc-slide:hover img{ transform:scale(1.02); }
+.gc-slide figcaption{
+  position:absolute; left:12px; bottom:12px; padding:6px 10px; border-radius:10px;
+  background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.18);
+  color:#fff; font-weight:700; font-size:.92rem; backdrop-filter:blur(2px);
+}
+.gc-nav{
+  position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; display:grid; place-items:center; border-radius:999px; border:1px solid var(--border);
+  background:rgba(10,14,20,.6); color:var(--text); cursor:pointer; z-index:2; transition:transform .12s, background .2s, border-color .2s, opacity .2s; backdrop-filter:blur(2px);
+}
+.gc-nav:hover{ transform:translateY(-50%) scale(1.06); border-color:var(--accent); background:rgba(10,14,20,.75); }
+.gc-prev{ left:8px; } .gc-next{ right:8px; }
+.gc-dots{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:10px; }
+.gc-dot{ width:8px; height:8px; border-radius:999px; background:rgba(255,255,255,.35); transition:transform .18s, background .18s; }
+.gc-dot.is-active{ transform:scale(1.35); background:var(--accent); }
+.gc-slide[data-link]{ cursor:pointer; }
+@media (max-width:480px){
+  .gc-track{ gap:16px; padding:4px 8px; }
+  .gc-slide{ width:90vw; aspect-ratio:4/3; }
 }
 
-@keyframes fadeSlideIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* === Bouton overlay "Mes builds" */
+.gc-builds-btn{
+  position:absolute; right:12px; bottom:12px; z-index:3;
+  padding:8px 12px; font-weight:800; border-radius:10px;
+  border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.45); color:#fff;
+  backdrop-filter:blur(2px); cursor:pointer; transition:transform .18s, background .18s, border-color .18s;
 }
-.schedule-list{
-  display:grid;
-  gap:14px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
+.gc-builds-btn:hover{ transform:translateY(-1px); background:rgba(0,0,0,.6); border-color:rgba(255,255,255,.28); }
 
-.sched-card{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  background: var(--bg-elev); /* s’adapte à ton thème */
-}
 
-.sched-card h3{
-  margin:0 0 6px;
-  font-size:1.05rem;
-}
+/* ==========================================================================
+   [PATCH] Réorganisation des box À propos (classes d'ordre)
+   ========================================================================== */
+.about-stack { display:flex; gap:16px; flex-wrap:wrap; }
+.about-box--qui      { order: 1; }
+.about-box--horaires { order: 2; }
+.about-box--jeux     { order: 3; }
+/* Largeur spécifique Horaires (remplace l'ancien nth-child(3)) */
+.about-stack .about-box--horaires { flex: 1.8 1 200px; max-width: 300px; }
+/* On laisse la règle du 2e box (jeux) en place, l'ordre est désormais piloté par classes */
 
-.sched-meta{
-  font-size:.92rem;
-  color:var(--text-light);
-  margin-bottom:6px;
-}
-
-.sched-badges{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-
-.badge{
-  font-size:.8rem;
-  padding:2px 8px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background: var(--bg-alt);
-}
-.badge-live{ background:#d7003a; color:white; border-color:#d7003a; }
-.badge-soon{ background:#0b5; color:white; border-color:#0b5; }
-/* === Planning interactif (onglets, outils, cartes, états) === */
-
-/* Onglets */
-.sched-tabs{
-  display:flex; gap:8px; justify-content:center; margin:10px 0 16px;
-  flex-wrap:wrap;
-}
-.sched-filter{
-  padding:8px 12px; border:1px solid var(--border); border-radius:12px;
-  background:var(--bg-alt); color:var(--text); cursor:pointer;
-  display:inline-flex; align-items:center; gap:8px;
-}
-.sched-filter .chip{
-  display:inline-flex; min-width:22px; height:22px; padding:0 6px;
-  border-radius:999px; border:1px solid var(--border); background:var(--card);
-  font-size:.85rem; align-items:center; justify-content:center;
-}
-.sched-filter.is-active{ outline:2px solid var(--accent); }
-
-/* Outils */
-.sched-tools{
-  display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap;
-  margin:0 0 14px;
-}
-#scheduleSearch{
-  width:min(520px, 100%); padding:10px 12px; border-radius:10px;
-  border:1px solid var(--border); background:var(--bg-alt); color:var(--text);
-}
-.sched-tags{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-.sched-tags .tag-check{
-  display:inline-flex; align-items:center; gap:8px; padding:6px 10px;
-  border:1px solid var(--border); border-radius:999px; background:var(--bg-alt);
-}
-.sched-tags input{ accent-color: var(--accent); }
-
-/* Grille des événements */
-.schedule-list{
-  display:grid; gap:14px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-
-/* Carte */
-.sched-card{
-  position:relative;
-  border:1px solid var(--border); border-radius:12px; background:var(--card);
-  padding:12px; overflow:hidden;
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-}
-.sched-card:hover{ transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,.24); border-color: rgba(255,255,255,.14); }
-
-.sched-card h3{ margin:0 0 6px; font-size:1.05rem; }
-.sched-meta{ font-size:.92rem; color:var(--text-light); margin:6px 0 8px; }
-
-/* Badges */
-.sched-badges{ display:flex; gap:6px; flex-wrap:wrap; }
-.badge{ font-size:.8rem; padding:2px 8px; border-radius:999px; border:1px solid var(--border); background:var(--bg-alt); }
-.badge-live{ background:#d7003a; color:#fff; border-color:#d7003a; }
-.badge-soon{ background:#0b5; color:#fff; border-color:#0b5; }
-.badge-past{ background:#5a6270; color:#fff; border-color:#5a6270; }
-
-/* Indicateurs d'état visuels */
-.sched-card.is-live{ box-shadow: 0 0 0 2px rgba(215,0,58,.25) inset; }
-.sched-card.is-upcoming{ box-shadow: 0 0 0 2px rgba(0,187,85,.20) inset; }
-.sched-card.is-past{ opacity:.7; }
-
-/* CTA */
-.sched-actions{ margin-top:8px; }
-.sched-actions a{ color:var(--accent); text-decoration:none; }
-
-/* Modale détail (optionnelle) */
-.sched-dialog{
-  border:0; padding:0; background: transparent;
-}
-.sched-dialog::backdrop{ background: rgba(0,0,0,.6); }
-.sched-dialog-card{
-  width:min(680px, 92vw);
-  border:1px solid var(--border); border-radius:14px; background:var(--card);
-  padding:16px; margin:auto; box-shadow: 0 18px 60px rgba(0,0,0,.45);
-}
-.sched-dialog-close{
-  position:absolute; right:12px; top:6px; border:0; background:transparent; color:var(--text);
-  font-size:24px; cursor:pointer;
-}
-
-/* Responsive cohérent avec ta base */
-@media (max-width:640px){
-  #scheduleSearch{ width:100%; }
-}
-/* === Améliorations Planning : bouton, lisibilité, modale === */
-
-/* Bouton "Détails" */
-.sched-actions .btn-more{
-  appearance:none;
-  border:1px solid var(--border);
-  background:var(--bg-alt);
-  color:var(--text);
-  padding:6px 10px;
-  border-radius:10px;
-  cursor:pointer;
-  font: inherit;
-  transition: border-color .15s ease, background .15s ease, transform .12s ease;
-}
-.sched-actions .btn-more:hover{
-  border-color: var(--accent);
-  transform: translateY(-1px);
-}
-
-/* Lisibilité des cartes */
-.sched-card{ color: var(--text); }
-.sched-meta{ color: var(--muted); }
-
-/* Badges plus lisibles */
-.badge{ background: #121923; border-color: #273447; }
-.badge-live{ background:#e01a4f; border-color:#e01a4f; color:#fff; }
-.badge-soon{ background:#0bb37b; border-color:#0bb37b; color:#081018; }
-.badge-past{ background:#5f6b7a; border-color:#5f6b7a; color:#fff; }
-
-/* Modale : overlay + carte lisible */
-.sched-dialog{
-  z-index: 9999;      /* devant tout */
-  border: 0;
-  padding: 0;
-  background: transparent;
-}
-.sched-dialog::backdrop{
-  background: rgba(6, 10, 16, .75); /* overlay plus sombre */
-}
-.sched-dialog-card{
-  position: relative;
-  width: min(720px, 94vw);
-  margin: auto;
-  background: #0f151c;           /* fond lisible */
-  color: var(--text);
-  border: 1px solid #273447;     /* bord visible */
-  border-radius: 16px;
-  box-shadow: 0 24px 80px rgba(0,0,0,.55);
-  padding: 18px 18px 16px 18px;
-}
-.sched-dialog-card h3{ margin: 0 0 6px; }
-.sched-dialog-card .sched-meta{ margin: 0 0 10px; }
-.sched-dialog-card .sched-badges{ margin-bottom: 10px; }
-
-/* Croix de fermeture */
-.sched-dialog-close{
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  width: 36px;
-  height: 36px;
+/* ==========================================================================
+   RUNES MODAL v3 (shards à côté, items dessous en 4 sections)
+   ========================================================================== */
+.runes-modal__grid {
   display: grid;
-  place-items: center;
-  font-size: 22px;
-  line-height: 1;
-  color: var(--text);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: border-color .15s ease, transform .12s ease, background .15s ease;
+  grid-template-columns: 1.1fr 1.1fr .9fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "prim sec shards"
+    "items items items";
+  gap: 16px;
 }
-.sched-dialog-close:hover{
-  border-color: var(--accent);
-  background: rgba(123,211,255,.08);
-  transform: scale(1.03);
-}
-
-/* (Optionnel) rendre le lien "Plus d'infos" homogène au bouton */
-.sched-actions a{
-  display:inline-block;
-  padding:6px 10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  text-decoration:none;
-  color: var(--accent);
-  background: transparent;
-  transition: border-color .15s ease, transform .12s ease;
-  margin-right: 6px;
-}
-.sched-actions a:hover{
-  border-color: var(--accent);
-  transform: translateY(-1px);
-}
-/* Forcer les 3 cartes À propos sur une seule ligne quand l'espace le permet */
-@media (min-width: 1100px){
-  .about-stack{
-    flex-wrap: nowrap;           /* plus de retour à la ligne */
-    justify-content: center;     /* la rangée reste centrée */
-    gap: 14px;                   /* léger ajustement pour aider à tenir */
-  }
-  .about-stack .about-box{
-    flex: 1 1 0;                 /* les 2e et 3e s'adaptent librement */
-    max-width: none;             /* pas de plafond qui ferait wrap */
-    min-width: 0;                /* autorise la contraction */
-  }
-  .about-stack .about-box:first-child{
-    flex: 3 1 0;              /* “Qui suis-je ?” un peu plus large */
-  }
-}
-/* === Liens utiles : cartes premium (icône, halo, flèche) === */
-
-/* Grille : on garde ta classe existante .link-grid (pas besoin de la renommer) */
-/* Assure la hauteur uniforme */
-.link-grid .link-tile{
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto; /* icône | texte | flèche */
-  align-items: center;
-  gap: 12px;
-  padding: 18px 20px;
-  min-height: 100px;                     /* hauteur cohérente */
+.rm-panel {
+  background: #131923;
+  border: 1px solid rgba(255,255,255,.06);
   border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--tile);
-  text-decoration: none;
-  color: var(--text);
-  box-shadow: var(--shadow);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  overflow: hidden;                      /* masque les halos */
+  padding: 14px;
 }
+.runes-primary { grid-area: prim; }
+.runes-secondary { grid-area: sec; }
+.runes-shards { grid-area: shards; }
+.items-section { grid-area: items; padding: 0; }
 
-/* Halo d’accent subtil (bord animé) */
-/* Surbrillance pleine au survol */
-.link-tile::before{
-  content: "";
-  position: absolute;
-  inset: 0;                      /* couvre toute la tuile */
-  border-radius: inherit;
-  background: rgba(123,211,255,.08); /* voile coloré doux */
-  opacity: 0;
-  transition: opacity .25s ease;
-  pointer-events: none;
-}
-.link-tile:hover::before{
-  opacity: 1;                     /* effet visible sur toute la surface */
-}
+.rm-panel h3 { font-size:12px; text-transform:uppercase; letter-spacing:.6px; color:#cfe0ff; margin:0 0 10px; opacity:.9; }
 
-/* Hover / Focus */
-.link-tile:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(0,0,0,.35);
-  border-color: rgba(255,255,255,.12);
-}
-.link-tile:focus-visible{
-  outline: 2px solid var(--accent, #7bd3ff);
-  outline-offset: 2px;
-}
+.rune-row { display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:10px; }
+.rune-icon { width:28px; height:28px; border-radius:8px; background:#0b0f15; display:inline-flex; align-items:center; justify-content:center; }
+.rune-name { color:#fff; font-weight:600; font-size:14px; letter-spacing:.2px; }
 
-/* Icône à gauche */
-.lt-icon{
-  display: grid;
-  place-items: center;
-  width: 42px; height: 42px;
-  border-radius: 12px;
-  background: rgba(123,211,255,.10); /* fallback, surchargé par accent-* */
-  font-size: 20px;                   /* si emoji */
-  user-select: none;
-}
+.shard-row { display:flex; align-items:center; gap:10px; padding:6px; border-radius:10px; }
+.shard-icon { width:26px; height:26px; border-radius:6px; background:#0b0f15; }
+.shard-label { font-size:13px; opacity:.95; }
 
-/* Texte (titre + sous-texte) */
-.lt-text{ display: grid; gap: 4px; }
-.lt-title{ font-weight: 800; letter-spacing: .2px; }
-.lt-sub{ color: var(--muted); font-size: .92rem; }
+.items-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; }
+.item-card { background:#131923; border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:12px; }
+.item-card h4 { margin:0 0 10px; font-size:12px; letter-spacing:.6px; text-transform:uppercase; color:#a9c7ff; }
+.item-list { display:flex; flex-direction:column; gap:10px; }
+.item-row { display:grid; grid-template-columns:36px 1fr; align-items:center; gap:10px; }
+.item-icon { width:36px; height:36px; border-radius:8px; background:#0b0f15; display:inline-flex; align-items:center; justify-content:center; }
+.item-name { font-weight:600; font-size:14px; color:#e9eef6; }
 
-/* Flèche à droite qui glisse au hover */
-.lt-go{
-  transition: transform .18s ease, opacity .18s ease;
-  opacity: .85;
-}
-.link-tile:hover .lt-go{ transform: translateX(3px); opacity: 1; }
-
-/* Thèmes d’accent par service (couleurs douces, non agressives) */
-.accent-twitch{ --accent:#7b5cff; }
-.accent-twitch .lt-icon{ background: rgba(123,92,255,.12); }
-
-.accent-dons{ --accent:#ff8fcb; }
-.accent-dons .lt-icon{ background: rgba(255,143,203,.12); }
-
-.accent-discord{ --accent:#6aa9ff; }
-.accent-discord .lt-icon{ background: rgba(106,169,255,.12); }
-
-.accent-youtube{ --accent:#ff6b6b; }
-.accent-youtube .lt-icon{ background: rgba(255,107,107,.12); }
-
-/* Respect des préférences d’animations réduites */
-@media (prefers-reduced-motion: reduce){
-  .link-tile, .lt-go{ transition: none; }
-  .link-tile:hover{ transform:none; }
-  .link-tile::before{ transition: none; }
-}
-/* Grille des Liens utiles (4/2/1 colonnes responsive) */
-.link-grid{
-  display:grid;
-  gap:20px;
-  grid-template-columns: repeat(4, 1fr);
-}
-@media (max-width:1024px){
-  .link-grid{ grid-template-columns: repeat(2, 1fr); }
+@media (max-width:1100px){
+  .runes-modal__grid{
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:
+      "prim sec"
+      "shards shards"
+      "items items";
+  }
+  .items-grid{ grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:640px){
-  .link-grid{ grid-template-columns: 1fr; }
+  .runes-modal__grid{
+    grid-template-columns:1fr;
+    grid-template-areas:
+      "prim"
+      "sec"
+      "shards"
+      "items";
+  }
+  .items-grid{ grid-template-columns:1fr; }
+}
+/* === LoL Search Animations (gameModal) === */
+#gameModal .modal-dialog { position: relative; }
+
+/* Effet "chargement" pendant le filtrage */
+#gameModal.is-loading .champ-grid { filter: blur(2px); pointer-events: none; }
+#gameModal .loading-overlay {
+  position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+  background: rgba(10, 12, 16, 0.35); backdrop-filter: blur(2px); z-index: 10;
+}
+#gameModal.is-loading .loading-overlay { display: flex; }
+
+#gameModal .spinner {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 3px solid rgba(255,255,255,.2); border-top-color: #fff;
+  animation: spin .7s linear infinite;
+}
+
+/* Apparition des cartes (stagger) */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin   { to   { transform: rotate(360deg); } }
+
+#gameModal .champ-card { opacity: 0; transform: translateY(6px); }
+#gameModal .champ-card.anim-in {
+  animation: fadeUp .28s ease-out both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Message "aucun résultat" (optionnel) */
+#gameModal .no-results {
+  margin: 12px 0; padding: 12px; border-radius: 12px;
+  background: rgba(255,255,255,.06); color: #cfe0ff; text-align: center;
+  animation: fadeUp .25s ease-out both;
+}
+/* ======= Boost largeur lecteur Twitch (héros) ======= */
+
+/* 1) Conteneur un peu plus large et bords rapprochés */
+.section-hero .container,
+.hero .container,
+.hero-container {
+  max-width: 1480px;          /* ↑ augmente la largeur dispo (ajuste si besoin) */
+  padding-left: 12px;          /* rapproche des bords */
+  padding-right: 12px;
+}
+
+/* 2) Grille médias : Spotify | Twitch (très large) | Chat  */
+.hero-media {
+  display: grid;
+  /* gardons ~1.1fr pour Spotify/Chat, on gonfle fort la colonne centrale */
+  grid-template-columns: 1.5fr 3.6fr 2fr;  /* ← clé : centre beaucoup plus large */
+  gap: .8rem;                                /* un peu moins d’espace entre colonnes */
+  align-items: start;
+}
+
+/* S’assurer que l’embed prend bien 100% de sa colonne */
+.hero-media .twitch-player,
+.hero-media .twitch-embed,
+.hero-media iframe {
+  width: 100% !important;
+  max-width: 100%;
+  display: block;
+}
+
+/* Optionnel : pour garder un ratio visuel confortable */
+.hero-media .twitch-player,
+.hero-media iframe[data-a-target="player"] {
+  aspect-ratio: 16 / 9;        /* le player s’adapte proprement en hauteur */
+}
+
+/* Responsive : on revient à une grille plus douce si l’espace se resserre */
+@media (max-width: 1280px) {
+  .hero-media {
+    grid-template-columns: 1.05fr 2.8fr 1.05fr;
+  }
+}
+@media (max-width: 1024px) {
+  .hero-media {
+    grid-template-columns: 1fr;
+  }
+  .section-hero .container,
+  .hero .container,
+  .hero-container {
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }

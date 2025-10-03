@@ -1,556 +1,756 @@
-/* ===========================================================================
-   script.js — BlackBones Hub
-   Modules :
-   1) Twitch Player (parent auto)
-   2) Badge LIVE (DecAPI)
-   3) Menu mobile (burger)
-   4) Sous-menu "Réseaux"
-   5) Lightbox Galerie (exclut la 1ʳᵉ image)
-   6) Année du footer (optionnel si <span id="year"> existe)
-   7) Feature Panel (image 1) — titre/desc/points/vidéo
-   8) (réservé)
-   9) Galerie — Slideshow (image 2) auto + flèches + fondu + anti-copie
-   =========================================================================== */
+/* ============================================================================
+   Boot
+   ============================================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  initMenu();
+  initSubmenu();
+  initTwitchEmbeds();
+  initLightbox();
+  initFeaturePanel();
+  initCrossfades();
+  initSchedule();          // planning auto (live / upcoming / past)
+  reorderAboutBoxes();      // place Horaires à côté de Qui suis-je
+  initModalsGeneric();     // fermeture via [data-close], etc.
+  initGamesCarousel();     // carrousel jeux (centrage carte active)
+  initLoLBuilds();         // bouton "Mes builds" -> flux 3 modales
+});
 
 /* Utils */
-const $  = (sel, root=document) => root.querySelector(sel);
-const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+// Debounce util (évite de filtrer à chaque caractère)
+const debounce = (fn, d = 180) => {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), d); };
+};
 
-/* 1) Twitch Player : ajoute le "parent" automatiquement (local/dev/production) */
-(function initTwitchPlayer(){
-  const iframe = $("#twitchPlayer");
-  if (!iframe) return;
-  const channel = "blackbonesv2"; // ← Ton channel
-  let parentHost = location.hostname || "localhost"; // pour file://
-  const params = new URLSearchParams({ channel, parent: parentHost });
-  iframe.src = `https://player.twitch.tv/?${params.toString()}`;
-})();
 
-/* 2) Badge LIVE : simple check via DecAPI */
-(function initLiveBadge(){
-  const badge = $("#liveBadge");
-  if (!badge) return;
-  const channel = "blackbonesv2";
-  async function check(){
-    try{
-      const res = await fetch(`https://decapi.me/twitch/status/${encodeURIComponent(channel)}`, {cache:"no-store"});
-      const txt = (await res.text()).toLowerCase();
-      badge.hidden = !(txt.includes("live") && !txt.includes("offline"));
-    }catch{ badge.hidden = true; }
-  }
-  check();
-  // Optionnel : re-check toutes les minutes
-  // setInterval(check, 60000);
-})();
-
-/* 3) Menu mobile */
-(function initMobileMenu(){
-  const btn = $("#btnMenu"), nav = $("#mainNav");
-  if (!btn || !nav) return;
-  btn.addEventListener("click", ()=>{
+/* ============================================================================
+   Navigation (burger)
+   ============================================================================ */
+function initMenu(){
+  const btn = document.getElementById("btnMenu");
+  const nav = document.getElementById("mainNav");
+  if(!btn || !nav) return;
+  btn.addEventListener("click", () => {
     const open = nav.classList.toggle("open");
-    btn.setAttribute("aria-expanded", String(open));
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
   });
-  nav.addEventListener("click", e=>{
-    if (e.target.closest("a") && nav.classList.contains("open")) {
-      nav.classList.remove("open");
-      btn.setAttribute("aria-expanded","false");
+}
+
+/* Sous-menu “Réseaux” */
+function initSubmenu(){
+  const wrap = document.querySelector(".has-submenu");
+  if(!wrap) return;
+  const trigger = wrap.querySelector(".submenu-trigger");
+  trigger.addEventListener("click", () => {
+    const open = wrap.classList.toggle("open");
+    trigger.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  document.addEventListener("click", (e)=>{
+    if(!wrap.contains(e.target)) {
+      wrap.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
     }
   });
-  document.addEventListener("keydown", e=>{
-    if (e.key==="Escape" && nav.classList.contains("open")) {
-      nav.classList.remove("open"); btn.setAttribute("aria-expanded","false"); btn.focus();
-    }
-  });
-})();
+}
 
-/* 4) Sous-menu "Réseaux" */
-(function initSubmenu(){
-  const wrap = $(".has-submenu"); if (!wrap) return;
-  const trigger = $(".submenu-trigger", wrap), menu = $(".submenu", wrap);
-  if (!trigger || !menu) return;
-  const open  = ()=>{ wrap.classList.add("open"); trigger.setAttribute("aria-expanded","true"); };
-  const close = ()=>{ wrap.classList.remove("open"); trigger.setAttribute("aria-expanded","false"); };
-  trigger.addEventListener("click", (e)=>{ e.stopPropagation(); wrap.classList.contains("open")?close():open(); });
-  document.addEventListener("click", (e)=>{ if (!wrap.contains(e.target)) close(); });
-  trigger.addEventListener("keydown", (e)=>{
-    if (e.key==="ArrowDown"){ e.preventDefault(); open(); $("a", menu)?.focus(); }
-    if (e.key==="Escape"){ close(); }
-  });
-  menu.addEventListener("keydown", (e)=>{ if (e.key==="Escape"){ close(); trigger.focus(); } });
-})();
-
-/* 5) Lightbox (sauf image 1) */
-(function initLightbox(){
-  const items = $$(".gallery-item:not(#galleryFeature)"); // exclut #galleryFeature
-  const lightbox = $("#lightbox"), img = $("#lbImg"), caption=$("#lbCaption"), btnClose=$("#lbClose");
-  if (!items.length || !lightbox || !img || !btnClose) return;
-
-  const open = (src, alt="")=>{
-    img.src = src; img.alt = alt; if (caption) caption.textContent = alt || "";
-    lightbox.classList.add("open");
-  };
-  const close = ()=>{
-    lightbox.classList.remove("open"); img.src=""; img.alt=""; if (caption) caption.textContent="";
-  };
-
-  items.forEach(el => el.addEventListener("click", ()=> open(el.src, el.alt)));
-  btnClose.addEventListener("click", close);
-  lightbox.addEventListener("click", e=>{ if (e.target===lightbox) close(); });
-  document.addEventListener("keydown", e=>{ if (e.key==="Escape" && lightbox.classList.contains("open")) close(); });
-})();
-
-/* 6) Année footer (optionnel) */
-(function setYear(){
-  const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
-})();
-
-/* 7) Feature Panel (image 1) */
-(function initFeaturePanel(){
-  const trigger  = $("#galleryFeature"),
-        panel    = $("#featurePanel"),
-        backdrop = $("#fpBackdrop"),
-        btnClose = $("#fpClose"),
-        titleEl  = $("#fpTitle"),
-        descEl   = $("#fpDesc"),
-        videoEl  = $("#fpVideo"),
-        pointsUl = $("#fpPoints");
-  if (!trigger || !panel || !titleEl || !descEl || !videoEl || !pointsUl) return;
-
-  function safeParseJSON(str){
-    try{ return JSON.parse(str || "[]"); } catch{ return []; }
+/* ============================================================================
+   Twitch embeds
+   ============================================================================ */
+function initTwitchEmbeds(){
+  const host = location.hostname;
+  const player = document.getElementById("twitchPlayer");
+  const chat   = document.getElementById("twitchChat");
+  if(player){
+    player.src = `https://player.twitch.tv/?channel=blackbonesv2&parent=${host}&muted=true`;
   }
-  function renderPoints(points){
-    pointsUl.innerHTML = "";
-    pointsUl.hidden = true;
-    if (!Array.isArray(points) || points.length === 0) return;
-    const frag = document.createDocumentFragment();
-    points.forEach(({label, url})=>{
-      if (!label || !url) return;
-      const li = document.createElement("li");
-      const a  = document.createElement("a");
-      a.href = url; a.target = "_blank"; a.rel = "noopener";
-      a.textContent = label;
-      li.appendChild(a);
-      frag.appendChild(li);
+  if(chat){
+    chat.src = `https://www.twitch.tv/embed/blackbonesv2/chat?parent=${host}`;
+  }
+}
+
+/* ============================================================================
+   Lightbox
+   ============================================================================ */
+function initLightbox(){
+  const lb = document.getElementById("lightbox");
+  if(!lb) return;
+  const lbImg = document.getElementById("lbImg");
+  const lbCaption = document.getElementById("lbCaption");
+  const lbClose = document.getElementById("lbClose");
+  const items = document.querySelectorAll(".gallery-item:not(#galleryFeature)");
+
+  items.forEach(el => {
+    el.addEventListener("click", () => {
+      lbImg.src = el.src;
+      lbCaption.textContent = el.alt || "";
+      lb.classList.add("open");
     });
-    pointsUl.appendChild(frag);
-    pointsUl.hidden = false;
-  }
+  });
+  lbClose.addEventListener("click", () => lb.classList.remove("open"));
+  lb.addEventListener("click", (e) => {
+    if(e.target === lb) lb.classList.remove("open");
+  });
+}
 
-  function openPanel(){
-    const title = trigger.dataset.title || "Détail";
-    const desc  = trigger.dataset.desc  || "";
-    const video = trigger.dataset.video || ""; // ⚠️ URL embed
-    titleEl.textContent = title;
-    descEl.textContent  = desc;
-    videoEl.src         = video;
-    renderPoints( safeParseJSON(trigger.dataset.points) );
+/* ============================================================================
+   Panneau “feature”
+   ============================================================================ */
+function initFeaturePanel(){
+  const trigger = document.getElementById("galleryFeature");
+  const panel   = document.getElementById("featurePanel");
+  if(!trigger || !panel) return;
 
+  const fpTitle  = document.getElementById("fpTitle");
+  const fpDesc   = document.getElementById("fpDesc");
+  const fpPoints = document.getElementById("fpPoints");
+  const fpVideo  = document.getElementById("fpVideo");
+  const fpClose  = document.getElementById("fpClose");
+  const fpBack   = document.getElementById("fpBackdrop");
+
+  trigger.addEventListener("click", () => {
+    fpTitle.textContent = trigger.dataset.title || "Détail";
+    fpDesc.textContent  = trigger.dataset.desc || "";
+    fpPoints.innerHTML = "";
+    const pts = safeParseJSON(trigger.dataset.points) || [];
+    if(pts.length){
+      fpPoints.hidden = false;
+      pts.forEach(p => {
+        const li = document.createElement("li");
+        const a  = document.createElement("a");
+        a.href = p.url; a.target = "_blank"; a.rel = "noopener";
+        a.textContent = p.label;
+        li.appendChild(a);
+        fpPoints.appendChild(li);
+      });
+    }else{
+      fpPoints.hidden = true;
+    }
+    fpVideo.src = trigger.dataset.video || "";
     panel.classList.add("open");
-    panel.setAttribute("aria-hidden","false");
-    // reset transition si spam :
-    // eslint-disable-next-line no-unused-expressions
-    panel.offsetHeight;
-  }
-  function closePanel(){
+  });
+
+  const close = () => {
     panel.classList.remove("open");
-    panel.setAttribute("aria-hidden","true");
-    videoEl.src = "";  // stop vidéo
-    // eslint-disable-next-line no-unused-expressions
-    panel.offsetHeight;
-    trigger.focus();
-  }
+    fpVideo.src = "";
+  };
+  fpClose.addEventListener("click", close);
+  fpBack .addEventListener("click", close);
+}
+function safeParseJSON(str){ try{ return JSON.parse(str); } catch{ return null; } }
 
-  trigger.addEventListener("click", (e)=>{ e.preventDefault(); openPanel(); });
-  btnClose?.addEventListener("click", closePanel);
-  backdrop?.addEventListener("click", closePanel);
-  document.addEventListener("keydown", (e)=>{ if (e.key==="Escape" && panel.classList.contains("open")) closePanel(); });
-})();
-
-/* ===========================================================
-   Crossfade Slideshow (2 <img> superposées, auto, anti-copie)
-   =========================================================== */
-function makeCrossfade(containerSelector, images, interval = 6000){
-  const root = document.querySelector(containerSelector);
-  if (!root || !Array.isArray(images) || images.length < 2) return;
-
-  const imgs = root.querySelectorAll('.slide-img');
-  if (imgs.length < 2) return;
-
-  const topImg    = () => root.querySelector('.slide-img.is-top');
-  const bottomImg = () => [...root.querySelectorAll('.slide-img')].find(i => !i.classList.contains('is-top'));
-
-  // Anti-copie sur les deux <img>
-  imgs.forEach(img => ['contextmenu','dragstart','selectstart'].forEach(ev => {
-    img.addEventListener(ev, e => e.preventDefault());
-  }));
-
-  // IMPORTANT : ton HTML affiche déjà images[0] en haut et images[1] en bas
-  let idx = 1; // on démarre la rotation à partir du 3e visuel (index 2)
-
-  function next(){
-    const top = topImg();
-    const bottom = bottomImg();
-
-    idx = (idx + 1) % images.length;
-    const nextSrc = images[idx];
-
-    const loader = new Image();
-    loader.onload = () => {
-      bottom.src = nextSrc;
-      void bottom.offsetWidth;       // reflow
-      bottom.classList.add('is-top'); // crossfade
-      top.classList.remove('is-top');
-    };
-    loader.onerror = () => {
-      bottom.src = nextSrc;
-      bottom.classList.add('is-top');
-      top.classList.remove('is-top');
-    };
-    loader.src = nextSrc;
-  }
-
-  let timer = setInterval(next, interval);
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden){ clearInterval(timer); timer = null; }
-    else if (!timer){ timer = setInterval(next, interval); }
+/* ============================================================================
+   Crossfades (galerie)
+   ============================================================================ */
+function initCrossfades(){
+  document.querySelectorAll(".x-slideshow").forEach(el=>{
+    const imgs = Array.from(el.querySelectorAll(".slide-img"));
+    if(imgs.length < 2) return;
+    let idx = 0;
+    setInterval(()=>{
+      imgs[idx].classList.remove("is-top");
+      idx = (idx + 1) % imgs.length;
+      imgs[idx].classList.add("is-top");
+    }, 3000);
   });
 }
 
-// Lance APRES que le DOM existe
-document.addEventListener('DOMContentLoaded', () => {
-  /* 🎞️ Slideshow #2 — 8 images */
-  makeCrossfade('#ss-2', [
-    'assets/gallery/slide2/slide-1.png',
-    'assets/gallery/slide2/slide-2.png',
-    'assets/gallery/slide2/slide-3.png',
-    'assets/gallery/slide2/slide-4.png',
-    'assets/gallery/slide2/slide-5.png',
-    'assets/gallery/slide2/slide-6.png',
-    'assets/gallery/slide2/slide-7.png',
-    'assets/gallery/slide2/slide-8.png'
-  ], 4000);   /* Ajustement de la vitesse de transition*/
+/* ============================================================================
+   Planning (live / upcoming / past + recherche)
+   ============================================================================ */
+function initSchedule(){
+  const list = document.getElementById("scheduleList");
+  if(!list) return;
 
-  /* 🎞️ Slideshow #3 — 10 images */
-  makeCrossfade('#ss-3', [
-    'assets/gallery/slide3/slide-1.png',
-    'assets/gallery/slide3/slide-2.png',
-    'assets/gallery/slide3/slide-3.png',
-    'assets/gallery/slide3/slide-4.png',
-    'assets/gallery/slide3/slide-5.png',
-    'assets/gallery/slide3/slide-6.png',
-    'assets/gallery/slide3/slide-7.png',
-    'assets/gallery/slide3/slide-8.png',
-    'assets/gallery/slide3/slide-9.png',
-    'assets/gallery/slide3/slide-10.png'
-  ], 4000);  /* Ajustement de la vitesse de transition*/
-});
-/* ===========================================================
-   Planning interactif (événements en cours + à venir)
-   =========================================================== */
+  const now = () => new Date();
+  const cards = Array.from(list.querySelectorAll(".sched-card"));
 
-const EVENTS = [
-  // ⚠️ Mets tes vraies dates ISO (incluant le fuseau si tu veux être précis)
-  // Exemple : "2025-11-03T20:30:00+01:00"
-  {
-    title: "Soir découverte indés",
-    start: "2025-11-10T20:30:00+01:00",
-    end:   "2025-11-10T23:00:00+01:00",
-    url:   "https://www.twitch.tv/blackbonesv2",
-    tags:  ["Découverte"]
-  },
-  {
-    title: "Collab surprise",
-    start: "2025-11-12T21:00:00+01:00",
-    end:   "2025-11-12T23:30:00+01:00",
-    url:   "https://discord.gg/…",
-    tags:  ["Collab"]
-  },
-  {
-    title: "Late stream cosy",
-    start: "2025-11-03T22:00:00+01:00",
-    end:   "2025-11-04T00:30:00+01:00",
-    url:   "https://www.twitch.tv/blackbonesv2",
-    tags:  ["Cosy"]
-  }
-];
-
-// Utilitaires
-const toDate = s => new Date(s);
-const fmt = d => d.toLocaleString("fr-FR", { dateStyle:"medium", timeStyle:"short" });
-
-function getStatus(ev, now = new Date()){
-  const s = toDate(ev.start), e = toDate(ev.end);
-  if (now >= s && now < e) return "live";           // en cours
-  if (now < s) return "upcoming";                   // à venir
-  return "past";                                    // terminé
-}
-
-function relTime(target, now = new Date()){
-  const diff = toDate(target) - now;
-  const rtf = new Intl.RelativeTimeFormat("fr", { numeric:"auto" });
-  const mins = Math.round(diff / 60000);
-  const hours = Math.round(mins/60);
-  const days = Math.round(hours/24);
-  if (Math.abs(mins) < 60) return rtf.format(mins, "minute");
-  if (Math.abs(hours) < 24) return rtf.format(hours, "hour");
-  return rtf.format(days, "day");
-}
-
-/*function renderSchedule(filter = "all"){
-  const now = new Date();
-  // garder uniquement en cours + à venir
-  const filtered = EVENTS
-    .map(ev => ({...ev, __status: getStatus(ev, now)}))
-    .filter(ev => ev.__status !== "past");
-
-  // filtre bouton
-  const filtered2 = filtered.filter(ev => {
-    if (filter === "all") return true;
-    return ev.__status === filter;
-  });
-
-  // tri : en cours d'abord, puis par date de début
-  filtered2.sort((a, b) => {
-    if (a.__status === "live" && b.__status !== "live") return -1;
-    if (b.__status === "live" && a.__status !== "live") return 1;
-    return toDate(a.start) - toDate(b.start);
-  });
-
-  const root = document.getElementById("scheduleList");
-  root.innerHTML = filtered2.map(ev => {
-    const start = toDate(ev.start), end = toDate(ev.end);
-    const status = ev.__status;
-    const when = status === "live" ? "En cours" : `Dans ${relTime(ev.start, now)}`;
-    const badgeClass = status === "live" ? "badge badge-live" : "badge badge-soon";
-    const tags = (ev.tags || []).map(t => `<span class="badge">${t}</span>`).join("");
-
-    return `
-      <article class="sched-card">
-        <h3>${ev.title}</h3>
-        <div class="sched-meta">${fmt(start)} → ${fmt(end)}</div>
-        <div class="sched-badges">
-          <span class="${badgeClass}">${when}</span>
-          ${tags}
-        </div>
-        ${ev.url ? `<p style="margin-top:8px"><a href="${ev.url}" target="_blank" rel="noopener">Plus d'infos</a></p>` : ""}
-      </article>
-    `;
-  }).join("");
-
-  // état visuel des boutons
-  document.querySelectorAll(".sched-filter").forEach(btn => {
-    btn.classList.toggle("is-active", btn.dataset.filter === filter);
-  });
-}
-
-// boutons
-document.addEventListener("click", (e)=>{
-  const b = e.target.closest(".sched-filter");
-  if (!b) return;
-  renderSchedule(b.dataset.filter);
-});
-
-// 1er rendu
-renderSchedule("all");*/
-/* ===========================================================
-   Planning interactif (LIVE / UPCOMING / PAST)
-   - Tri auto selon l'état + dates
-   - Recherche texte (titre/tags)
-   - Filtres par tags (générés dynamiquement)
-   - Compteurs par état
-   - Modale détail (optionnelle)
-=========================================================== */
-(function scheduleInteractive(){
-  const listEl   = document.getElementById('scheduleList');
-  if (!listEl) return;
-
-  // Réutilise ton tableau EVENTS s'il existe, sinon exemples
-  const DATA = typeof window.EVENTS !== 'undefined' ? window.EVENTS : [
-//    { title:'Soir chill',     start:'2025-10-10T20:30:00+02:00', end:'2025-10-10T23:00:00+02:00', url:'https://www.twitch.tv/blackbonesv2', tags:['Cosy'] },
-//    { title:'Découverte indé',start:'2025-10-12T21:00:00+02:00', end:'2025-10-12T23:30:00+02:00', url:'',                                  tags:['Indé'] },
-    { title:'Dernier Stream avant la pause',    start:'2025-09-12T22:30:00+02:00', end:'2025-09-13T00:30:00+02:00', url:'https://discord.gg/HVdTDEqfX9',    tags:['Late'] }
-  ];
-
-  const toDate = s => new Date(s);
-  const fmt    = d => d.toLocaleString('fr-FR', { dateStyle:'medium', timeStyle:'short' });
-  const now    = () => new Date();
-
-  function getStatus(ev, ref = now()){
-    const s = toDate(ev.start), e = toDate(ev.end);
-    if (ref >= s && ref < e) return 'live';
-    if (ref < s)             return 'upcoming';
-    return 'past';
-  }
-  function relTime(target, ref = now()){
-    const diff = toDate(target) - ref;
-    const rtf  = new Intl.RelativeTimeFormat('fr', { numeric:'auto' });
-    const mins = Math.round(diff/60000), hours = Math.round(mins/60), days = Math.round(hours/24);
-    if (Math.abs(mins) < 60) return rtf.format(mins, 'minute');
-    if (Math.abs(hours) < 24) return rtf.format(hours, 'hour');
-    return rtf.format(days, 'day');
-  }
-
-  let state = { tab:'all', q:'', tags:new Set() };
-
-  const tabs        = document.querySelectorAll('.sched-filter');
-  const inputSearch = document.getElementById('scheduleSearch');
-  const tagWrap     = document.getElementById('scheduleTags');
-  const dlg         = document.getElementById('eventDialog');
-  const dlgClose    = dlg?.querySelector('.sched-dialog-close');
-
-  
-// Helpers robustes pour ouvrir/fermer la modale (avec fallback)
-function openDialogSafe() {
-  if (!dlg) return;
-  try { dlg.showModal(); }
-  catch { dlg.setAttribute('open', ''); } // fallback si <dialog> non supporté
-  // focus accessible sur la croix
-  dlgClose?.focus();
-}
-function closeDialogSafe() {
-  if (!dlg) return;
-  try { dlg.close(); }
-  catch { dlg.removeAttribute('open'); }
-}
-// Fermer via la croix
-dlgClose?.addEventListener('click', (e)=> { 
-  e.preventDefault(); 
-  closeDialogSafe(); 
-});
-
-// Fermer en cliquant sur l'overlay (zone du <dialog> hors carte)
-dlg?.addEventListener('click', (e)=> { 
-  if (e.target === dlg) closeDialogSafe(); 
-});
-
-// Fermer avec la touche Échap
-document.addEventListener('keydown', (e)=>{
-  if (e.key === 'Escape' && dlg?.hasAttribute('open')) closeDialogSafe();
-});
-
-  const allTags = [...new Set(DATA.flatMap(ev => ev.tags || []))].sort();
-
-  if (tagWrap){
-    tagWrap.innerHTML = allTags.map(t => `
-      <label class="tag-check"><input type="checkbox" value="${t}"> ${t}</label>
-    `).join('');
-    tagWrap.addEventListener('change', e=>{
-      const cb = e.target.closest('input[type="checkbox"]');
-      if (!cb) return;
-      if (cb.checked) state.tags.add(cb.value); else state.tags.delete(cb.value);
-      render();
-    });
-  }
-  inputSearch?.addEventListener('input', e=>{ state.q = e.target.value.trim().toLowerCase(); render(); });
-  tabs.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      tabs.forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      state.tab = btn.dataset.filter;
-      tabs.forEach(b => b.setAttribute('aria-selected', String(b===btn)));
-      render();
-    });
-  });
-
-  function filterAndSort(){
-    const ref = now();
-    let items = DATA.map(ev => ({...ev, __status: getStatus(ev, ref)}));
-    if (state.tab !== 'all') items = items.filter(ev => ev.__status === state.tab);
-    if (state.q){
-      items = items.filter(ev => {
-        const hay = (ev.title || '') + ' ' + (ev.tags || []).join(' ');
-        return hay.toLowerCase().includes(state.q);
-      });
+  cards.forEach(card=>{
+    const start = new Date(card.dataset.start);
+    let end;
+    if(card.dataset.end) end = new Date(card.dataset.end);
+    else if(card.dataset.duration){
+      end = new Date(start.getTime() + parseInt(card.dataset.duration,10)*60000);
     }
-    if (state.tags.size){
-      items = items.filter(ev => (ev.tags || []).some(t => state.tags.has(t)));
-    }
-    items.sort((a,b)=>{
-      if (a.__status !== b.__status){
-        const order = {live:0, upcoming:1, past:2};
-        return order[a.__status] - order[b.__status];
+    card.dataset._startTs = start.getTime();
+    card.dataset._endTs   = end ? end.getTime() : start.getTime();
+  });
+
+  function refreshBadges(){
+    const t = now().getTime();
+    let cAll=0, cLive=0, cUp=0, cPast=0;
+    cards.forEach(card=>{
+      cAll++;
+      const s = +card.dataset._startTs;
+      const e = +card.dataset._endTs;
+      card.classList.remove("is-live","is-upcoming","is-past");
+      const badgeWrap = card.querySelector(".sched-badges");
+      badgeWrap.innerHTML = "";
+      if(t >= s && t <= e){
+        cLive++; card.classList.add("is-live");
+        addBadge(badgeWrap, "En cours", "badge-live");
+      }else if(t < s){
+        cUp++; card.classList.add("is-upcoming");
+        addBadge(badgeWrap, "À venir", "badge-soon");
+      }else{
+        cPast++; card.classList.add("is-past");
+        addBadge(badgeWrap, "Terminé", "badge-past");
       }
-      if (a.__status === 'past') return toDate(b.start) - toDate(a.start);
-      return toDate(a.start) - toDate(b.start);
     });
-    return items;
+    setCount("count-all", cAll);
+    setCount("count-live", cLive);
+    setCount("count-upcoming", cUp);
+    setCount("count-past", cPast);
   }
+  const addBadge = (wrap, txt, cls) => {
+    const b = document.createElement("span");
+    b.className = `badge ${cls||""}`; b.textContent = txt;
+    wrap.appendChild(b);
+  };
+  const setCount = (id, n) => {
+    const el = document.getElementById(id); if(el) el.textContent = n;
+  };
 
-  function updateCounts(){
-    const ref = now(); let live=0, upcoming=0, past=0;
-    DATA.forEach(ev=>{ const s = getStatus(ev,ref); if (s==='live') live++; else if (s==='upcoming') upcoming++; else past++; });
-    const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
-    set('count-all', live+upcoming+past); set('count-live', live); set('count-upcoming', upcoming); set('count-past', past);
-  }
-
-  function escapeHTML(str){ return (str||'').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
-
-  function render(){
-    updateCounts();
-    const items = filterAndSort();
-    listEl.innerHTML = items.map(ev=>{
-      const s = toDate(ev.start), e = toDate(ev.end);
-      const status = ev.__status;
-      const badge =
-        status==='live'     ? `<span class="badge badge-live">En cours</span>` :
-        status==='upcoming' ? `<span class="badge badge-soon">Dans ${relTime(ev.start)}</span>` :
-                               `<span class="badge badge-past">Terminé</span>`;
-      const tags = (ev.tags||[]).map(t=>`<span class="badge">${t}</span>`).join('');
-      return `
-        <article class="sched-card is-${status}">
-          <h3>${ev.title}</h3>
-          <div class="sched-meta">${fmt(s)} → ${fmt(e)}</div>
-          <div class="sched-badges">${badge}${tags? ' ' + tags : ''}</div>
-          <div class="sched-actions">
-            ${ev.url ? `<a href="${ev.url}" target="_blank" rel="noopener">Plus d'infos</a>` : ''}
-            <button class="btn-more" data-title="${escapeHTML(ev.title||'')}"
-                                   data-start="${ev.start}" data-end="${ev.end}"
-                                   data-url="${ev.url||''}" data-tags="${(ev.tags||[]).join(', ')}"
-                                   data-desc="${escapeHTML(ev.desc||'')}">Détails</button>
-          </div>
-        </article>
-      `;
-    }).join('');
-
-    listEl.querySelectorAll('.btn-more').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        if (!dlg) return;
-        const title = btn.dataset.title || '';
-        const start = btn.dataset.start, end = btn.dataset.end;
-        const url   = btn.dataset.url;
-        const tags  = (btn.dataset.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
-        const desc  = btn.dataset.desc || '';
-
-        dlg.querySelector('#dlgTitle').textContent = title;
-        dlg.querySelector('#dlgWhen').textContent  = `${fmt(toDate(start))} → ${fmt(toDate(end))}`;
-        dlg.querySelector('#dlgTags').innerHTML    = tags.map(t=>`<span class="badge">${t}</span>`).join('') || '';
-        dlg.querySelector('#dlgDesc').textContent  = desc;
-        const wrap = dlg.querySelector('#dlgLinkWrap');
-        wrap.innerHTML = url ? `<a href="${url}" target="_blank" rel="noopener">Lien / Détails</a>` : '';
-
-        openDialogSafe();
-      });
+  const tabs = document.querySelectorAll(".sched-filter");
+  tabs.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      tabs.forEach(b=>b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const f = btn.dataset.filter;
+      filterCards(f, searchInput.value.trim().toLowerCase());
     });
-  }
-
-  const tick = setInterval(render, 60_000); // refresh auto
-  window.addEventListener('beforeunload', ()=> clearInterval(tick));
-  render();
-})();
-/* Chat Twitch : ajoute le parent automatiquement (lecture seule via overlay CSS) */
-(function initTwitchChat(){
-  const iframe = document.getElementById("twitchChat");
-  if (!iframe) return;
-  const channel = "blackbonesv2";
-  const parentHost = location.hostname || "localhost";  // GH Pages = blackbonesv.github.io
-  const params = new URLSearchParams({
-    parent: parentHost,
-    // Pour un thème sombre du chat avec badges/emotes
-    darkpopout: "true"
   });
-  // URL embed chat + channel
-  iframe.src = `https://www.twitch.tv/embed/${channel}/chat?${params.toString()}`;
-})();
+
+  const searchInput = document.getElementById("scheduleSearch");
+  if(searchInput){
+    searchInput.addEventListener("input", ()=>{
+      const active = document.querySelector(".sched-filter.is-active")?.dataset.filter || "all";
+      filterCards(active, searchInput.value.trim().toLowerCase());
+    });
+  }
+
+  function filterCards(filter, q){
+    cards.forEach(card=>{
+      const isLive = card.classList.contains("is-live");
+      const isUp   = card.classList.contains("is-upcoming");
+      const isPast = card.classList.contains("is-past");
+      let ok = (filter==="all")
+            || (filter==="live" && isLive)
+            || (filter==="upcoming" && isUp)
+            || (filter==="past" && isPast);
+      if(ok && q){
+        const title = (card.querySelector("h3")?.textContent || "").toLowerCase();
+        const tags  = (card.dataset.tags || "").toLowerCase();
+        ok = title.includes(q) || tags.includes(q);
+      }
+      card.style.display = ok ? "" : "none";
+    });
+  }
+
+  refreshBadges();
+  setInterval(refreshBadges, 60000);
+}
+
+
+/* ============================================================================
+   Réorganisation des box "À propos" (placer Horaires à côté de "Qui suis-je ?")
+   ============================================================================ */
+function reorderAboutBoxes(){
+  const stack = document.querySelector('.about-stack');
+  if(!stack) return;
+  const boxes = Array.from(stack.querySelectorAll('.about-box'));
+  const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+
+  boxes.forEach(box => {
+    const titleEl = box.querySelector('h3, .about-title, .box-title, h2');
+    const t = norm(titleEl?.textContent);
+    if (t.includes('qui suis-je') || t.includes('qui suis je')) {
+      box.classList.add('about-box--qui');
+    } else if (t.includes('horaire') || t.includes('horaires')) {
+      box.classList.add('about-box--horaires');
+    } else if (t.includes('jeux du moment') || t.includes('jeux')) {
+      box.classList.add('about-box--jeux');
+    }
+  });
+}
+
+/* ============================================================================
+   Modales génériques — fermeture (x / backdrop)
+   ============================================================================ */
+function initModalsGeneric(){
+  document.querySelectorAll(".modal .modal-close,[data-close]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.close || btn.closest(".modal")?.id;
+      if(!id) return;
+      const m = document.getElementById(id);
+      m.classList.remove("animate-in");
+      m.classList.add("animate-out");
+      setTimeout(()=>{ m.classList.add("is-hidden"); m.classList.remove("is-open","animate-out"); }, 180);
+    });
+  });
+}
+
+/* Helpers modales pour la partie LoL */
+function openModalById(id){
+  const m = document.getElementById(id);
+  if(!m) return;
+  m.classList.remove("is-hidden");
+  m.classList.add("is-open","animate-in");
+  setTimeout(()=>m.classList.remove("animate-in"), 220);
+}
+function closeModal(id){
+  const m = document.getElementById(id);
+  if(!m) return;
+  m.classList.remove("animate-in");
+  m.classList.add("animate-out");
+  setTimeout(()=>{ m.classList.add("is-hidden"); m.classList.remove("is-open","animate-out"); }, 180);
+}
+/* ============================================================================
+   Carrousel — cartes centrées
+   ============================================================================ */
+function initGamesCarousel(){
+  const root = document.getElementById("gamesCarousel");
+  if (!root) return;
+
+  const viewport = root.querySelector(".gc-viewport");
+  const track    = root.querySelector(".gc-track");
+  const slides   = Array.from(root.querySelectorAll(".gc-slide"));
+  const btnPrev  = root.querySelector(".gc-prev");
+  const btnNext  = root.querySelector(".gc-next");
+  const dotsWrap = root.querySelector(".gc-dots");
+  if (!viewport || !track || slides.length === 0) return;
+
+  const centerOffsetFor = (i) => {
+    const vpW   = viewport.clientWidth;
+    const slide = slides[i];
+    const left  = slide.offsetLeft;
+    const w     = slide.offsetWidth;
+    const center= left + w/2;
+    return center - vpW/2;
+  };
+
+  let index = 0;
+
+  const goTo = (i) => {
+    index = clamp(i, 0, slides.length - 1);
+    const x = centerOffsetFor(index);
+    track.style.transform = `translate3d(${-x}px,0,0)`;
+    updateDots();
+  };
+  const next = () => goTo(index + 1);
+  const prev = () => goTo(index - 1);
+
+  const dots = slides.map((_, i) => {
+    const d = document.createElement("button");
+    d.type = "button";
+    d.className = "gc-dot";
+    d.setAttribute("aria-label", `Aller au slide ${i+1}`);
+    d.addEventListener("click", () => goTo(i));
+    dotsWrap.appendChild(d);
+    return d;
+  });
+  function updateDots(){ dots.forEach((d,i)=>d.classList.toggle("is-active", i===index)); }
+
+  let dragging = false, startX = 0, startTx = 0, dx = 0;
+  const currentTranslateX = () => {
+    const s = getComputedStyle(track).transform;
+    const m = /matrix\(1, 0, 0, 1, (-?\d+(?:\.\d+)?),/.exec(s) ||
+              /translate3d\((-?\d+(?:\.\d+)?)px,/.exec(s);
+    return m ? parseFloat(m[1]) : 0;
+  };
+
+  const onDown = (clientX) => {
+    dragging = true; dx = 0; startX = clientX; startTx = currentTranslateX();
+    track.style.transition = "none";
+  };
+  const onMove = (clientX) => {
+    if (!dragging) return;
+    dx = clientX - startX;
+    track.style.transform = `translate3d(${startTx + dx}px,0,0)`;
+  };
+  const onUp = () => {
+    if (!dragging) return;
+    dragging = false; track.style.transition = "";
+    const threshold = Math.min(140, viewport.clientWidth * 0.2);
+    if (dx >  threshold) prev();
+    else if (dx < -threshold) next();
+    else goTo(index);
+  };
+
+  viewport.addEventListener("mousedown", e => onDown(e.clientX));
+  window.addEventListener("mousemove", e => onMove(e.clientX));
+  window.addEventListener("mouseup", onUp);
+  viewport.addEventListener("touchstart", e => onDown(e.touches[0].clientX), {passive:true});
+  window.addEventListener("touchmove",  e => onMove(e.touches[0].clientX),  {passive:true});
+  window.addEventListener("touchend", onUp);
+
+  slides.forEach(slide => {
+    slide.addEventListener("click", () => {
+      if (Math.abs(dx) > 6) return;
+      const url = slide.dataset.link;
+      if (url) window.open(url, "_blank", "noopener");
+    });
+  });
+
+  if(btnNext) btnNext.addEventListener("click", next);
+  if(btnPrev) btnPrev.addEventListener("click", prev);
+
+  root.setAttribute("tabindex","0");
+  root.addEventListener("keydown", e=>{
+    if (e.key === "ArrowLeft")  { e.preventDefault(); prev(); }
+    if (e.key === "ArrowRight") { e.preventDefault(); next(); }
+  });
+
+  window.addEventListener("resize", () => goTo(index));
+  goTo(0);
+}
+
+/* ============================================================================
+   LoL — Chargement JSON + 3 modales (adapté à /data/lol/)
+   ============================================================================ */
+const CHAMPIONS_URL = '/data/lol/champions.json';
+const RUNES_URL     = '/data/lol/runes.json';
+// Dev: recharger les JSON à chaque ouverture (évite le cache)
+const DEV_FETCH_NO_CACHE = true;
+const withBust  = (url) => DEV_FETCH_NO_CACHE ? `${url}?v=${Date.now()}` : url;
+const FETCH_OPTS = DEV_FETCH_NO_CACHE ? { cache: 'no-store' } : { cache: 'force-cache' };
+
+const state = {
+  championsIndex: new Map(), // slug -> {slug,name,icon}
+  runesByChampion: new Map(),// slug -> {slug,name,portrait,configs:[...] }
+  selectedChampionSlug: null,
+  selectedChampionName: null,
+  selectedConfig: null,
+};
+
+async function loadAllData(){
+  const [chRes, ruRes] = await Promise.all([
+    fetch(withBust(CHAMPIONS_URL), FETCH_OPTS),
+    fetch(withBust(RUNES_URL),     FETCH_OPTS),
+  ]);
+  if(!chRes.ok) throw new Error('champions.json introuvable');
+  if(!ruRes.ok) throw new Error('runes.json introuvable');
+
+  const championsList = await chRes.json(); // [{slug,name,icon}]
+  const runesData     = await ruRes.json(); // { champions:[...] }
+
+  championsList.forEach(c=>{
+    if(!c?.slug) return;
+    state.championsIndex.set(String(c.slug).toLowerCase(), c);
+  });
+
+  if(Array.isArray(runesData.champions)){
+    runesData.champions.forEach(entry=>{
+      const slug = String(entry.slug||'').toLowerCase();
+      if(!slug) return;
+      state.runesByChampion.set(slug, entry);
+    });
+  }
+}
+
+/* Bouton overlay "Mes builds" dans le slide LoL */
+function initLoLBuilds(){
+  const btn =
+    document.querySelector('#gamesCarousel .gc-slide[data-label="League of Legends"] .gc-builds-btn')
+    || document.querySelector('.gc-builds-btn');
+  if(!btn) return;
+
+  btn.addEventListener('click', async (e)=>{
+    e.stopPropagation();
+    try{
+      if(!state.championsIndex.size || !state.runesByChampion.size){
+        await loadAllData();
+      }
+      renderChampionSelect();
+      openModalById('gameModal');
+    }catch(err){
+      console.error(err);
+      alert('Impossible de charger les données LoL (/data/lol/*).');
+    }
+  });
+}
+
+/* === Modale 1 : sélection champions ======================================= */
+function renderChampionSelect(){
+  const body  = document.getElementById("gameModalBody");
+  const title = document.getElementById("gameModalTitle");
+  if(!body) return;
+  title && (title.textContent = 'League of Legends — Champions');
+
+  body.innerHTML = `
+    <div class="modal-search">
+      <input id="championSearch" type="search" placeholder="Rechercher un champion…" />
+    </div>
+  `;
+  const grid = document.createElement('div');
+  grid.className = 'champ-grid';
+
+  const slugs = Array.from(state.runesByChampion.keys()).sort();
+  slugs.forEach(slug=>{
+    const r = state.runesByChampion.get(slug);
+    const c = state.championsIndex.get(slug);
+    const name = c?.name || r?.name || slug;
+    const icon = c?.icon || r?.portrait || '';
+
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'champ-card';
+    card.setAttribute('data-slug', slug);
+    card.innerHTML = `
+      <img src="${icon}" alt="${name}">
+      <div class="champ-name">${name}</div>
+    `;
+    card.addEventListener('click', ()=>{
+      state.selectedChampionSlug = slug;
+      state.selectedChampionName = name;
+      renderPresetsForChampion(slug);
+      closeModal('gameModal');
+      openModalById('presetModal');
+    });
+    grid.appendChild(card);
+  });
+
+  body.appendChild(grid);
+
+  ensureGameModalOverlay();   // overlay + spinner
+  wireLolSearch();            // wiring de la recherche avec animations
+
+}
+// Crée l'overlay de chargement (spinner) si absent
+function ensureGameModalOverlay() {
+  const gm = document.getElementById('gameModal');
+  if (!gm || gm.querySelector('.loading-overlay')) return;
+  const ov = document.createElement('div');
+  ov.className = 'loading-overlay';
+  ov.innerHTML = '<div class="spinner" aria-hidden="true"></div>';
+  gm.appendChild(ov);
+}
+
+// Branche la recherche + animations (stagger)
+function wireLolSearch() {
+  const gm = document.getElementById('gameModal');
+  if (!gm) return;
+
+  // Sélecteurs ADAPTÉS à ton code :
+  const input = gm.querySelector('#championSearch');  // ton input existant
+  const grid  = gm.querySelector('.champ-grid');      // ta grille
+  const cards = () => Array.from(grid.querySelectorAll('.champ-card')); // tes cartes
+
+  if (!input || !grid) return;
+
+  const startLoading = () => gm.classList.add('is-loading');
+  const endLoading   = () => gm.classList.remove('is-loading');
+
+  const readName = (card) => {
+    // Tu utilises déjà .champ-name → on lit ce texte
+    const el = card.querySelector('.champ-name') || card;
+    return el.textContent || '';
+  };
+
+  const applyStagger = (visible) => {
+    visible.forEach((card, i) => {
+      card.classList.remove('anim-in');
+      card.style.setProperty('--delay', (i * 18) + 'ms');
+      void card.offsetWidth; // reset animation
+      card.classList.add('anim-in');
+    });
+  };
+
+  const showNoResults = (show) => {
+    let n = gm.querySelector('.no-results');
+    if (!n) {
+      n = document.createElement('div');
+      n.className = 'no-results';
+      n.textContent = 'Aucun champion trouvé.';
+      grid.parentElement.appendChild(n);
+    }
+    n.style.display = show ? '' : 'none';
+  };
+
+  const doFilter = (qRaw) => {
+    const q = (qRaw || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    const all = cards();
+    if (!all.length) return;
+
+    startLoading();
+    requestAnimationFrame(() => {
+      const visible = [];
+      for (const c of all) {
+        const name = readName(c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+        const match = !q || name.includes(q);
+        c.style.display = match ? '' : 'none';
+        if (match) visible.push(c);
+      }
+      showNoResults(visible.length === 0);
+      applyStagger(visible);
+      setTimeout(endLoading, 120);
+    });
+  };
+
+  // Premier rendu + écouteur (debounced)
+  doFilter('');
+  input.removeEventListener('input', input._lolSearchHandler || (()=>{}));
+  input._lolSearchHandler = (e) => debounce(doFilter, 220)(e.target.value);
+  input.addEventListener('input', input._lolSearchHandler);
+}
+/* === Modale 2 : presets ==================================================== */
+function renderPresetsForChampion(slug){
+  const body  = document.getElementById("presetModalBody");
+  const title = document.getElementById("presetModalTitle");
+  if(!body) return;
+  title && (title.textContent = 'Configurations');
+
+  const entry = state.runesByChampion.get(slug);
+  const configs = Array.isArray(entry?.configs) ? entry.configs : [];
+
+  if(!configs.length){
+    body.innerHTML = `<p class="empty">Aucun preset pour ${state.selectedChampionName}.</p>`;
+    return;
+  }
+
+  const wrap = document.createElement('div');
+  wrap.style.display = 'grid';
+  wrap.style.gridTemplateColumns = 'repeat(auto-fit,minmax(240px,1fr))';
+  wrap.style.gap = '12px';
+
+  configs.forEach(cfg=>{
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'game-trigger';
+    card.setAttribute('data-game','lol');
+    const kIcon = cfg?.primary?.keystone?.icon || '';
+    const kLbl  = cfg?.primary?.keystone?.label || '';
+    const label = cfg?.label || cfg?.id || 'Preset';
+    const title2= cfg?.title ? ` – ${cfg.title}` : '';
+
+    card.innerHTML = `
+      ${kIcon ? `<img src="${kIcon}" alt="${kLbl}" style="width:28px;height:28px;border-radius:6px;object-fit:cover;">` : ''}
+      <div style="display:grid;gap:2px;text-align:left">
+        <strong>${label}${title2}</strong>
+        <small style="opacity:.8">${cfg?.primary?.tree?.name || '—'} • ${cfg?.secondary?.tree?.name || '—'}</small>
+      </div>
+    `;
+    card.addEventListener('click', ()=>{
+      state.selectedConfig = cfg;
+      renderRunesPreset(cfg);           // remplit la modale 3
+      closeModal('presetModal');
+      openModalById('runesModal');      // ouvre la modale 3
+    });
+    wrap.appendChild(card);
+  });
+
+  body.innerHTML = '';
+  body.appendChild(wrap);
+}
+
+/* === Modale 3 : résultat (runes + shards à côté + objets dessous en 4 sections) */
+function renderRunesPreset(cfg){
+  const body  = document.getElementById("runesModalBody");
+  const title = document.getElementById("runesModalTitle");
+  if(!body) return;
+
+  title && (title.textContent =
+    `Runes — ${state.selectedChampionName} — ${cfg.label || cfg.id || 'Build'}`);
+
+  const primary   = cfg.primary   || {};
+  const secondary = cfg.secondary || {};
+  const shards    = Array.isArray(cfg.shards) ? cfg.shards : [];
+
+  // Items: supporte itemsByStage (starter/early/core/situational) sinon fallback à cfg.items -> Core
+  const byStage = cfg.itemsByStage || {};
+  const flat = Array.isArray(cfg.items) ? cfg.items.map(x => ({ name: x.name, icon: x.icon })) : [];
+  const itemsStarter = Array.isArray(byStage.starter) ? byStage.starter : [];
+  const itemsEarly   = Array.isArray(byStage.early)   ? byStage.early   : [];
+  const itemsCore    = Array.isArray(byStage.core)    ? byStage.core    : (flat.length ? flat : []);
+  const itemsSitu    = Array.isArray(byStage.situational) ? byStage.situational : [];
+
+  // Helpers UI
+  const el = (tag, cls, html) => { const n = document.createElement(tag); if(cls) n.className = cls; if(html!==undefined) n.innerHTML = html; return n; };
+
+  const runeRow = (r) => {
+    if(!r) return null;
+    const row = el('div','rune-row');
+    const ic  = el('div','rune-icon');
+    if(r.icon){ const img = new Image(); img.src = r.icon; img.alt = r.label||''; img.width=28; img.height=28; ic.appendChild(img); }
+    const name= el('div','rune-name', r.label||'');
+    row.append(ic, name);
+    return row;
+  };
+
+  const shardRow = (s) => {
+    const row = el('div','shard-row');
+    const ic  = el('div','shard-icon');
+    if(s?.icon){ const img = new Image(); img.src = s.icon; img.alt = s.label||''; img.width=24; img.height=24; ic.appendChild(img); }
+    row.append(ic, el('div','shard-label', s?.label||''));
+    return row;
+  };
+
+  const itemRow = (it) => {
+    const row = el('div','item-row');
+    const ic  = el('div','item-icon');
+    if(it?.icon){ const img = new Image(); img.src = it.icon; img.alt = it.name||''; img.width=32; img.height=32; ic.appendChild(img); }
+    row.append(ic, el('div','item-name', it?.name||''));
+    return row;
+  };
+
+  const mkTreeBlock = (tree, fallbackName) => {
+    const wrap = el('div', 'runes-head');
+    if(tree?.emblem){
+      const img = new Image(); img.src = tree.emblem; img.alt = tree?.name || fallbackName || ''; img.className = 'runes-emblem';
+      wrap.appendChild(img);
+    }
+    const h = el('h3', null, (tree?.name || fallbackName || '—').toUpperCase());
+    wrap.appendChild(h);
+    return wrap;
+  };
+
+  // Grille
+  const grid = el('div','runes-modal__grid');
+
+  // Panneau : voie principale
+  const prim = el('div','rm-panel runes-primary');
+  prim.appendChild(mkTreeBlock(primary.tree, 'Voie principale'));
+  if(primary.keystone) prim.appendChild(runeRow(primary.keystone));
+  (primary.minors||[]).forEach(m => prim.appendChild(runeRow(m)));
+
+  // Panneau : voie secondaire
+  const sec = el('div','rm-panel runes-secondary');
+  sec.appendChild(mkTreeBlock(secondary.tree, 'Voie secondaire'));
+  (secondary.minors||[]).forEach(m => sec.appendChild(runeRow(m)));
+
+  // Panneau : shards (à côté)
+  const sh = el('div','rm-panel runes-shards');
+  sh.append(el('h3', null, 'Fragments (Shards)'));
+  shards.forEach(s => sh.appendChild(shardRow(s)));
+
+  // Section items (4 colonnes dessous)
+  const itemsSection = el('div','items-section');
+  const itemsGrid = el('div','items-grid');
+
+  const mkSection = (label, list) => {
+    const card = el('div','item-card');
+    card.append(el('h4', null, label));
+    const lst = el('div','item-list');
+    (list||[]).forEach(it => lst.appendChild(itemRow(it)));
+    if(!list || list.length===0){
+      const empty = el('div','item-row');
+      empty.append(el('div','item-icon'), el('div','item-name','<span style="opacity:.6">—</span>'));
+      lst.appendChild(empty);
+    }
+    card.appendChild(lst);
+    return card;
+  };
+
+  itemsGrid.append(
+    mkSection('Starter', itemsStarter),
+    mkSection('Early',   itemsEarly),
+    mkSection('Core',    itemsCore),
+    mkSection('Items Situationnels', itemsSitu)
+  );
+  itemsSection.appendChild(itemsGrid);
+
+  // Injecte dans la modale
+  grid.append(prim, sec, sh, itemsSection);
+  body.innerHTML = '';
+  body.appendChild(grid);
+}
