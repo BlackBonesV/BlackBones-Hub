@@ -11851,11 +11851,11 @@
                 "label": "Ruban de mana"
               },
               {
-                "icon": "assets/lol/runes/sorcery/transcendence.png",
+                "icon": "assets/lol/runes/Sorcery/transcendence.png",
                 "label": "Transcendance"
               },
               {
-                "icon": "assets/lol/runes/sorcery/gatheringstorm.png",
+                "icon": "assets/lol/runes/Sorcery/gatheringstorm.png",
                 "label": "Tempête menaçante"
               }
             ]
